@@ -104,21 +104,21 @@ Varying parameters like \(\theta\), \(v_0\), or \(g\) leads to a family of possi
 
 Projectile motion underpins many real-world scenarios:
 
-1. **Sports**  
-   - **Football (Soccer)**: Kicking the ball with an optimal angle to maximize distance.  
-   - **Basketball**: Adjusting angle and velocity to achieve precise arcs into the hoop.  
+## Sports
+- **Football (Soccer):** Kicking the ball with an optimal angle to maximize distance.
+- **Basketball:** Adjusting angle and velocity to achieve precise arcs into the hoop.
 
-2. **Engineering**  
-   - **Cannons and Ballistics**: Calculating the range for shells or projectiles under Earth’s gravity.  
-   - **Launch Systems**: Designing rocket trajectories for short suborbital flights.
+## Engineering
+- **Cannons and Ballistics:** Calculating the range for shells or projectiles under Earth’s gravity.
+- **Launch Systems:** Designing rocket trajectories for short suborbital flights.
 
-3. **Astrophysics**  
-   - **Satellite Launches**: Transfer orbits rely on projectile-like arcs under planetary gravity.  
-   - **Interplanetary Missions**: Calculating gravitational assists and slingshots around celestial bodies.
+## Astrophysics
+- **Satellite Launches:** Transfer orbits rely on projectile-like arcs under planetary gravity.
+- **Interplanetary Missions:** Calculating gravitational assists and slingshots around celestial bodies.
 
-4. **Environmental Studies**  
-   - **Pollutant Dispersion**: Modeling how particles travel in the atmosphere or water.  
-   - **Wildfire Smoke Trajectories**: Predicting how far smoke travels and in which direction.
+## Environmental Studies
+- **Pollutant Dispersion:** Modeling how particles travel in the atmosphere or water.
+- **Wildfire Smoke Trajectories:** Predicting how far smoke travels and in which direction.
 
 ---
 
