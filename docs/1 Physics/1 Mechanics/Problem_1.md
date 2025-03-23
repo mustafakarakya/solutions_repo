@@ -126,22 +126,22 @@ Projectile motion underpins many real-world scenarios:
 
 Below is a comprehensive Python script that demonstrates several simulations:
 
-1. **Three different initial velocities** on the same plot (angle fixed).  
+**1. Three different initial velocities** on the same plot (angle fixed).  
 
 
 ![alt text](1.png)
 
-2. **Same initial conditions on three different gravitational fields** (e.g., Earth, Moon, Jupiter). 
+**2. Same initial conditions on three different gravitational fields** (e.g., Earth, Moon, Jupiter). 
 
 
 ![alt text](2.png)
   
-3. **Different initial heights** with the same velocity and angle.  
+  **3. Different initial heights** with the same velocity and angle.  
 
 
 ![alt text](3.png)   
 
-4. **With and without air resistance** for a chosen angle and velocity.
+**4. With and without air resistance** for a chosen angle and velocity.
 
 
 ![alt text](4.png)
