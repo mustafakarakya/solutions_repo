@@ -112,8 +112,6 @@ Below is a comprehensive Python script that demonstrates several simulations:
 3. **Different initial heights** with the same velocity and angle.
 4. **With and without air resistance** for a chosen angle and velocity.
 
-You can copy this code into a Jupyter Notebook or a `.py` file to visualize the results.
-
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
