@@ -325,10 +325,7 @@ R = x(T)
 <pre><code class="language-python">import numpy as np
 import matplotlib.pyplot as plt
 
-# -------------------------
-# 1. Projectile Trajectory (No Air Resistance)
-# -------------------------
-def projectile_no_drag(v0, angle_deg, g=9.81, h=0, dt=0.02):
+def projectile_no_drag(v0, angle_deg, g=9.81, h=0.0, dt=0.02):
     """
     Returns the (x, y) arrays for a projectile launched
     with initial velocity v0 (m/s), at angle_deg (degrees),
@@ -338,24 +335,24 @@ def projectile_no_drag(v0, angle_deg, g=9.81, h=0, dt=0.02):
     vx = v0 * np.cos(angle_rad)
     vy = v0 * np.sin(angle_rad)
 
-    x, y = [0], [h]
-    t = 0
-    while y[-1] &gt;= 0:  # Continue until the projectile hits the ground
-        t += dt
-        x_new = x[-1] + vx * dt
+    x, y = [0.0], [h]
+    while y[-1] &gt;= 0:
+        # Update velocities
         vy_new = vy - g * dt
+        # Update positions
+        x_new = x[-1] + vx * dt
         y_new = y[-1] + vy * dt - 0.5 * g * dt**2
 
         x.append(x_new)
         y.append(y_new)
         vy = vy_new
 
+        if y_new &lt; 0:
+            break
+
     return np.array(x), np.array(y)
 
-# -------------------------
-# 2. Projectile Trajectory (With Air Resistance)
-# -------------------------
-def projectile_with_drag(v0, angle_deg, g=9.81, h=0, k=0.1, dt=0.02):
+def projectile_with_drag(v0, angle_deg, g=9.81, h=0.0, k=0.1, dt=0.02):
     """
     Returns the (x, y) arrays for a projectile launched
     with initial velocity v0 (m/s), at angle_deg (degrees),
@@ -366,77 +363,89 @@ def projectile_with_drag(v0, angle_deg, g=9.81, h=0, k=0.1, dt=0.02):
     vx = v0 * np.cos(angle_rad)
     vy = v0 * np.sin(angle_rad)
 
-    x, y = [0], [h]
-    t = 0
+    x, y = [0.0], [h]
     while y[-1] &gt;= 0:
-        t += dt
-        # Drag force approximated as -k * v
+        # Drag forces
         ax = -k * vx
         ay = -g - k * vy
 
-        # Update velocities
-        vx += ax * dt
-        vy += ay * dt
+        vx = vx + ax * dt
+        vy_new = vy + ay * dt
 
-        # Update positions
         x_new = x[-1] + vx * dt
         y_new = y[-1] + vy * dt
 
         x.append(x_new)
         y.append(y_new)
+        vy = vy_new
+
+        if y_new &lt; 0:
+            break
 
     return np.array(x), np.array(y)
 
-# -------------------------
-# Example Simulations
-# -------------------------
-
-# 1. Three different velocities, same angle
-plt.figure(figsize=(8,5))
+###############################
+# 1) Three different velocities
+###############################
+plt.figure(figsize=(6,4))
 velocities = [10, 20, 30]
 angle = 45
 for v in velocities:
-    x_arr, y_arr = projectile_no_drag(v, angle)
-    plt.plot(x_arr, y_arr, label=f'v0 = {v} m/s')
+    x_arr, y_arr = projectile_no_drag(v, angle, g=9.81, h=0.0, dt=0.02)
+    plt.plot(x_arr, y_arr, label=f"v0 = {v} m/s")
+
 plt.title("Projectile Motion with Different Initial Velocities (Angle = 45°)")
 plt.xlabel("Horizontal Distance (m)")
 plt.ylabel("Vertical Distance (m)")
 plt.grid(True)
 plt.legend()
-plt.show()
+# Save figure
+plt.savefig("figure_velocities.png", dpi=150, bbox_inches='tight')
+plt.close()
 
-# 2. Same initial velocity and angle, different gravitational accelerations
-plt.figure(figsize=(8,5))
-g_planets = {'Earth': 9.81, 'Moon': 1.62, 'Jupiter': 24.79}
+###############################
+# 2) Different gravitational fields
+###############################
+plt.figure(figsize=(6,4))
+g_planets = {"Earth": 9.81, "Moon": 1.62, "Jupiter": 24.79}
 v0 = 20
 angle = 45
 for planet, g_val in g_planets.items():
-    x_arr, y_arr = projectile_no_drag(v0, angle, g=g_val)
-    plt.plot(x_arr, y_arr, label=f'{planet} (g={g_val:.2f} m/s^2)')
+    x_arr, y_arr = projectile_no_drag(v0, angle, g=g_val, h=0.0, dt=0.02)
+    plt.plot(x_arr, y_arr, label=f"{planet} (g={g_val:.2f} m/s²)")
+
 plt.title("Projectile Motion on Different Planets (v0=20 m/s, Angle=45°)")
 plt.xlabel("Horizontal Distance (m)")
 plt.ylabel("Vertical Distance (m)")
 plt.grid(True)
 plt.legend()
-plt.show()
+plt.savefig("figure_planets.png", dpi=150, bbox_inches='tight')
+plt.close()
 
-# 3. Different initial heights, same velocity and angle
-plt.figure(figsize=(8,5))
+###############################
+# 3) Different initial heights
+###############################
+plt.figure(figsize=(6,4))
 heights = [0, 10, 20]
 for h in heights:
-    x_arr, y_arr = projectile_no_drag(20, 45, h=h)
-    plt.plot(x_arr, y_arr, label=f'Height = {h} m')
+    x_arr, y_arr = projectile_no_drag(20, 45, g=9.81, h=h, dt=0.02)
+    plt.plot(x_arr, y_arr, label=f"Height = {h} m")
+
 plt.title("Projectile Motion with Different Launch Heights")
 plt.xlabel("Horizontal Distance (m)")
 plt.ylabel("Vertical Distance (m)")
 plt.grid(True)
 plt.legend()
-plt.show()
+plt.savefig("figure_heights.png", dpi=150, bbox_inches='tight')
+plt.close()
 
-# 4. With and without air resistance
-plt.figure(figsize=(8,5))
-x_no_drag, y_no_drag = projectile_no_drag(20, 45)
-x_drag, y_drag = projectile_with_drag(20, 45, k=0.08)
+###############################
+# 4) With and without air resistance
+###############################
+plt.figure(figsize=(6,4))
+x_no_drag, y_no_drag = projectile_no_drag(20, 45, g=9.81, h=0.0, dt=0.02)
+x_drag, y_drag = projectile_with_drag(20, 45, g=9.81, h=0.0, k=0.08, dt=0.02)
+
 plt.plot(x_no_drag, y_no_drag, label="No Air Resistance")
 plt.plot(x_drag, y_drag, '--', label="With Air Resistance (k=0.08)")
 plt.title("Projectile Motion Comparison: No Drag vs. With Drag")
@@ -444,7 +453,8 @@ plt.xlabel("Horizontal Distance (m)")
 plt.ylabel("Vertical Distance (m)")
 plt.grid(True)
 plt.legend()
-plt.show()
+plt.savefig("figure_drag.png", dpi=150, bbox_inches='tight')
+plt.close()
 </code></pre>
 </div>
 </div><footer>
