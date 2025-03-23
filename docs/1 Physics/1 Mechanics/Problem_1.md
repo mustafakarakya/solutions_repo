@@ -130,7 +130,6 @@ Below is a comprehensive Python script that demonstrates several simulations:
 2. **Same initial conditions on three different gravitational fields** (e.g., Earth, Moon, Jupiter).  
 3. **Different initial heights** with the same velocity and angle.  
 4. **With and without air resistance** for a chosen angle and velocity.
-
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
@@ -147,9 +146,7 @@ def projectile_no_drag(v0, angle_deg, g=9.81, h=0.0, dt=0.02):
     
     x, y = [0.0], [h]
     while y[-1] >= 0:
-        # Update velocities
         vy_new = vy - g * dt
-        # Update positions
         x_new = x[-1] + vx * dt
         y_new = y[-1] + vy * dt - 0.5 * g * dt**2
         
@@ -175,7 +172,6 @@ def projectile_with_drag(v0, angle_deg, g=9.81, h=0.0, k=0.1, dt=0.02):
     
     x, y = [0.0], [h]
     while y[-1] >= 0:
-        # Drag forces
         ax = -k * vx
         ay = -g - k * vy
         
@@ -194,28 +190,21 @@ def projectile_with_drag(v0, angle_deg, g=9.81, h=0.0, k=0.1, dt=0.02):
     
     return np.array(x), np.array(y)
 
-###############################
-# 1) Three different velocities
-###############################
+# 1) Three different velocities at 45°
 plt.figure(figsize=(6,4))
 velocities = [10, 20, 30]
 angle = 45
 for v in velocities:
     x_arr, y_arr = projectile_no_drag(v, angle, g=9.81, h=0.0, dt=0.02)
     plt.plot(x_arr, y_arr, label=f"v0 = {v} m/s")
-
 plt.title("Projectile Motion with Different Initial Velocities (Angle = 45°)")
 plt.xlabel("Horizontal Distance (m)")
 plt.ylabel("Vertical Distance (m)")
 plt.grid(True)
 plt.legend()
-# Save figure
-plt.savefig("figure_velocities.png", dpi=150, bbox_inches='tight')
-plt.close()
+plt.show()
 
-###############################
-# 2) Different gravitational fields
-###############################
+# 2) Different gravitational fields (Earth, Moon, Jupiter)
 plt.figure(figsize=(6,4))
 g_planets = {"Earth": 9.81, "Moon": 1.62, "Jupiter": 24.79}
 v0 = 20
@@ -223,39 +212,30 @@ angle = 45
 for planet, g_val in g_planets.items():
     x_arr, y_arr = projectile_no_drag(v0, angle, g=g_val, h=0.0, dt=0.02)
     plt.plot(x_arr, y_arr, label=f"{planet} (g={g_val:.2f} m/s²)")
-
 plt.title("Projectile Motion on Different Planets (v0=20 m/s, Angle=45°)")
 plt.xlabel("Horizontal Distance (m)")
 plt.ylabel("Vertical Distance (m)")
 plt.grid(True)
 plt.legend()
-plt.savefig("figure_planets.png", dpi=150, bbox_inches='tight')
-plt.close()
+plt.show()
 
-###############################
 # 3) Different initial heights
-###############################
 plt.figure(figsize=(6,4))
 heights = [0, 10, 20]
 for h in heights:
     x_arr, y_arr = projectile_no_drag(20, 45, g=9.81, h=h, dt=0.02)
     plt.plot(x_arr, y_arr, label=f"Height = {h} m")
-
 plt.title("Projectile Motion with Different Launch Heights")
 plt.xlabel("Horizontal Distance (m)")
 plt.ylabel("Vertical Distance (m)")
 plt.grid(True)
 plt.legend()
-plt.savefig("figure_heights.png", dpi=150, bbox_inches='tight')
-plt.close()
+plt.show()
 
-###############################
 # 4) With and without air resistance
-###############################
 plt.figure(figsize=(6,4))
 x_no_drag, y_no_drag = projectile_no_drag(20, 45, g=9.81, h=0.0, dt=0.02)
 x_drag, y_drag = projectile_with_drag(20, 45, g=9.81, h=0.0, k=0.08, dt=0.02)
-
 plt.plot(x_no_drag, y_no_drag, label="No Air Resistance")
 plt.plot(x_drag, y_drag, '--', label="With Air Resistance (k=0.08)")
 plt.title("Projectile Motion Comparison: No Drag vs. With Drag")
@@ -263,6 +243,5 @@ plt.xlabel("Horizontal Distance (m)")
 plt.ylabel("Vertical Distance (m)")
 plt.grid(True)
 plt.legend()
-plt.savefig("figure_drag.png", dpi=150, bbox_inches='tight')
-plt.close()
+plt.show()
 ```
