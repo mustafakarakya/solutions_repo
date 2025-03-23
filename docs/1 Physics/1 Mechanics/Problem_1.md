@@ -4,6 +4,8 @@
 
 Projectile motion is a cornerstone of classical mechanics, illustrating how an object behaves under uniform gravitational acceleration after being launched with an initial velocity. Although the basic equations of projectile motion are straightforward, the problem offers a rich landscape of analysis. In this report, we investigate how the horizontal range depends on the angle of projection, exploring the theoretical foundation, computational implementation, and real-world applications. We also discuss how variations in initial conditions—such as velocity, gravity, and launch height—expand the family of solutions, giving rise to multiple trajectories that can model diverse physical phenomena.
 
+---
+
 ## 2. Theoretical Foundation
 
 ### 2.1 Governing Equations
@@ -33,7 +35,7 @@ These simplify to:
    \quad \Longrightarrow \quad
    \frac{dy}{dt} = v_0 \sin(\theta) - g t, 
    \quad
-   y(t) = v_0 \sin(\theta)\, t - \frac{1}{2} g t^2.
+   y(t) = v_0 \sin(\theta)\, t - \tfrac{1}{2} g t^2.
    $$
 
 Here, 
@@ -41,12 +43,14 @@ Here,
 - \(\theta\) is the angle of projection (relative to the horizontal), 
 - \(x(t)\) and \(y(t)\) are the horizontal and vertical positions as functions of time.
 
+---
+
 ### 2.2 Time of Flight and Range
 
 For a projectile launched from ground level and returning to the same vertical level \((y = 0)\), the time of flight \(T\) is obtained by solving \(y(T) = 0\):
 
 $$
-y(T) = v_0 \sin(\theta)\, T \;-\; \tfrac{1}{2} g\, T^2 = 0.
+y(T) = v_0 \sin(\theta)\, T - \tfrac{1}{2} g\, T^2 = 0.
 $$
 
 This yields two solutions: \(T = 0\) (initial launch) and
@@ -63,6 +67,8 @@ R = x(T)
   = \frac{v_0^2 \sin(2\theta)}{g}.
 $$
 
+---
+
 ### 2.3 Family of Solutions
 
 Varying parameters like \(\theta\), \(v_0\), or \(g\) leads to a family of possible trajectories:
@@ -72,20 +78,27 @@ Varying parameters like \(\theta\), \(v_0\), or \(g\) leads to a family of possi
 - **Gravitational Acceleration \(g\)**: Lower \(g\) (e.g., on the Moon) increases the range; higher \(g\) (e.g., on Jupiter) reduces it.
 - **Initial Height \(h\)**: If launched from a nonzero height, the time in the air changes, altering the total range and trajectory shape.
 
+---
+
 ## 3. Analysis of the Range
 
-1. **Range vs. Angle**:
-   $$
-   R(\theta) = \frac{v_0^2}{g}\,\sin(2\theta).
-   $$
-   - **Maximum Range**: \(\theta = 45^\circ\).
-   - **Symmetry**: \(\sin(2\theta)\) has the same value for angles \(\theta\) and \((90^\circ - \theta)\). For example, \(30^\circ\) and \(60^\circ\) produce the same range (neglecting air resistance).
+1. **Range vs. Angle**
 
-2. **Influence of Velocity**:
+   $$
+   R(\theta) = \frac{v_0^2}{g} \,\sin(2\theta).
+   $$
+
+   - **Maximum Range**: \(\theta = 45^\circ\).
+   - **Symmetry**: \(\sin(2\theta)\) has the same value for angles \(\theta\) and \((90^\circ - \theta)\).  
+     For example, \(30^\circ\) and \(60^\circ\) produce the same range (neglecting air resistance).
+
+2. **Influence of Velocity**  
    - Higher launch velocity shifts the entire range curve upward (since \(v_0^2\) appears in the numerator).
 
-3. **Impact of Gravity**:
+3. **Impact of Gravity**  
    - A smaller \(g\) value extends the flight time and range; a larger \(g\) reduces both.
+
+---
 
 ## 4. Practical Applications
 
@@ -107,12 +120,15 @@ Projectile motion underpins many real-world scenarios:
    - **Pollutant Dispersion**: Modeling how particles travel in the atmosphere or water.  
    - **Wildfire Smoke Trajectories**: Predicting how far smoke travels and in which direction.
 
+---
+
 ## 5. Implementation
 
 Below is a comprehensive Python script that demonstrates several simulations:
-1. **Three different initial velocities** on the same plot (angle fixed).
-2. **Same initial conditions on three different gravitational fields** (e.g., Earth, Moon, Jupiter).
-3. **Different initial heights** with the same velocity and angle.
+
+1. **Three different initial velocities** on the same plot (angle fixed).  
+2. **Same initial conditions on three different gravitational fields** (e.g., Earth, Moon, Jupiter).  
+3. **Different initial heights** with the same velocity and angle.  
 4. **With and without air resistance** for a chosen angle and velocity.
 
 ```python
