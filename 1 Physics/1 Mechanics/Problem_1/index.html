@@ -200,43 +200,50 @@
 <h3 id="21-governing-equations">2.1 Governing Equations</h3>
 <p>The motion of a projectile in two-dimensional space <span class="arithmatex">\((x, y)\)</span> can be derived from Newton’s laws under constant gravitational acceleration <span class="arithmatex">\(g\)</span>. Neglecting air resistance, the differential equations of motion are:</p>
 <div class="arithmatex">\[
-\frac{d^2x}{dt^2} = 0, 
+\frac{d^2 x}{dt^2} = 0, 
 \quad
-\frac{d^2y}{dt^2} = -g.
+\frac{d^2 y}{dt^2} = -g.
 \]</div>
-<p>These simplify to:
-1. <strong>Horizontal Motion</strong> (no acceleration):
-   [
-   \frac{d^2x}{dt^2} = 0 
+<p>These simplify to:</p>
+<ol>
+<li>
+<p><strong>Horizontal Motion</strong> (no acceleration):
+   $$
+   \frac{d^2 x}{dt^2} = 0 
    \quad \Longrightarrow \quad
    \frac{dx}{dt} = v_0 \cos(\theta), 
    \quad
-   x(t) = v_0 \cos(\theta) \, t.
-   ]
-2. <strong>Vertical Motion</strong> (constant acceleration <span class="arithmatex">\(-g\)</span>):
-   [
-   \frac{d^2y}{dt^2} = -g 
+   x(t) = v_0 \cos(\theta)\, t.
+   $$</p>
+</li>
+<li>
+<p><strong>Vertical Motion</strong> (constant acceleration <span class="arithmatex">\(-g\)</span>):
+   $$
+   \frac{d^2 y}{dt^2} = -g 
    \quad \Longrightarrow \quad
    \frac{dy}{dt} = v_0 \sin(\theta) - g t, 
    \quad
-   y(t) = v_0 \sin(\theta) \, t \;-\; \frac{1}{2} g t^2.
-   ]</p>
+   y(t) = v_0 \sin(\theta)\, t - \frac{1}{2} g t^2.
+   $$</p>
+</li>
+</ol>
 <p>Here, 
 - <span class="arithmatex">\(v_0\)</span> is the initial speed, 
 - <span class="arithmatex">\(\theta\)</span> is the angle of projection (relative to the horizontal), 
 - <span class="arithmatex">\(x(t)\)</span> and <span class="arithmatex">\(y(t)\)</span> are the horizontal and vertical positions as functions of time.</p>
 <h3 id="22-time-of-flight-and-range">2.2 Time of Flight and Range</h3>
-<p>For a projectile launched from ground level and returning to the same vertical level (<span class="arithmatex">\(y = 0\)</span>), the time of flight <span class="arithmatex">\(T\)</span> is obtained by solving <span class="arithmatex">\(y(T) = 0\)</span>:</p>
+<p>For a projectile launched from ground level and returning to the same vertical level <span class="arithmatex">\((y = 0)\)</span>, the time of flight <span class="arithmatex">\(T\)</span> is obtained by solving <span class="arithmatex">\(y(T) = 0\)</span>:</p>
 <div class="arithmatex">\[
-y(T) = v_0 \sin(\theta) \, T - \frac{1}{2} g \, T^2 = 0.
+y(T) = v_0 \sin(\theta)\, T \;-\; \tfrac{1}{2} g\, T^2 = 0.
 \]</div>
-<p>This yields two solutions: <span class="arithmatex">\(T = 0\)</span> (initial launch) and </p>
+<p>This yields two solutions: <span class="arithmatex">\(T = 0\)</span> (initial launch) and</p>
 <div class="arithmatex">\[
-T = \frac{2 \, v_0 \sin(\theta)}{g}.
+T = \frac{2\,v_0 \sin(\theta)}{g}.
 \]</div>
 <p>Substituting <span class="arithmatex">\(T\)</span> into the expression for <span class="arithmatex">\(x(t)\)</span> gives the <strong>range</strong> <span class="arithmatex">\(R\)</span>:</p>
 <div class="arithmatex">\[
-R = x(T) = v_0 \cos(\theta) \, \frac{2 \, v_0 \sin(\theta)}{g} 
+R = x(T) 
+  = v_0 \cos(\theta)\,\frac{2\,v_0 \sin(\theta)}{g}
   = \frac{v_0^2 \sin(2\theta)}{g}.
 \]</div>
 <h3 id="23-family-of-solutions">2.3 Family of Solutions</h3>
@@ -249,16 +256,16 @@ R = x(T) = v_0 \cos(\theta) \, \frac{2 \, v_0 \sin(\theta)}{g}
 </ul>
 <h2 id="3-analysis-of-the-range">3. Analysis of the Range</h2>
 <ol>
-<li><strong>Range vs. Angle</strong>: 
-   [
-   R(\theta) = \frac{v_0^2}{g} \sin(2\theta).
-   ]</li>
+<li><strong>Range vs. Angle</strong>:
+   $$
+   R(\theta) = \frac{v_0^2}{g}\,\sin(2\theta).
+   $$</li>
 <li><strong>Maximum Range</strong>: <span class="arithmatex">\(\theta = 45^\circ\)</span>.</li>
 <li>
 <p><strong>Symmetry</strong>: <span class="arithmatex">\(\sin(2\theta)\)</span> has the same value for angles <span class="arithmatex">\(\theta\)</span> and <span class="arithmatex">\((90^\circ - \theta)\)</span>. For example, <span class="arithmatex">\(30^\circ\)</span> and <span class="arithmatex">\(60^\circ\)</span> produce the same range (neglecting air resistance).</p>
 </li>
 <li>
-<p><strong>Influence of Velocity</strong>: </p>
+<p><strong>Influence of Velocity</strong>:</p>
 </li>
 <li>
 <p>Higher launch velocity shifts the entire range curve upward (since <span class="arithmatex">\(v_0^2\)</span> appears in the numerator).</p>
