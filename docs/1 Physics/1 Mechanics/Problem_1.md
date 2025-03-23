@@ -10,29 +10,31 @@ Projectile motion is a cornerstone of classical mechanics, illustrating how an o
 
 The motion of a projectile in two-dimensional space \((x, y)\) can be derived from Newton’s laws under constant gravitational acceleration \(g\). Neglecting air resistance, the differential equations of motion are:
 
-\[
-\frac{d^2x}{dt^2} = 0, 
+$$
+\frac{d^2 x}{dt^2} = 0, 
 \quad
-\frac{d^2y}{dt^2} = -g.
-\]
+\frac{d^2 y}{dt^2} = -g.
+$$
 
 These simplify to:
+
 1. **Horizontal Motion** (no acceleration):
-   \[
-   \frac{d^2x}{dt^2} = 0 
+   $$
+   \frac{d^2 x}{dt^2} = 0 
    \quad \Longrightarrow \quad
    \frac{dx}{dt} = v_0 \cos(\theta), 
    \quad
-   x(t) = v_0 \cos(\theta) \, t.
-   \]
+   x(t) = v_0 \cos(\theta)\, t.
+   $$
+
 2. **Vertical Motion** (constant acceleration \(-g\)):
-   \[
-   \frac{d^2y}{dt^2} = -g 
+   $$
+   \frac{d^2 y}{dt^2} = -g 
    \quad \Longrightarrow \quad
    \frac{dy}{dt} = v_0 \sin(\theta) - g t, 
    \quad
-   y(t) = v_0 \sin(\theta) \, t \;-\; \frac{1}{2} g t^2.
-   \]
+   y(t) = v_0 \sin(\theta)\, t - \frac{1}{2} g t^2.
+   $$
 
 Here, 
 - \(v_0\) is the initial speed, 
@@ -41,24 +43,25 @@ Here,
 
 ### 2.2 Time of Flight and Range
 
-For a projectile launched from ground level and returning to the same vertical level (\(y = 0\)), the time of flight \(T\) is obtained by solving \(y(T) = 0\):
+For a projectile launched from ground level and returning to the same vertical level \((y = 0)\), the time of flight \(T\) is obtained by solving \(y(T) = 0\):
 
-\[
-y(T) = v_0 \sin(\theta) \, T - \frac{1}{2} g \, T^2 = 0.
-\]
+$$
+y(T) = v_0 \sin(\theta)\, T \;-\; \tfrac{1}{2} g\, T^2 = 0.
+$$
 
-This yields two solutions: \(T = 0\) (initial launch) and 
+This yields two solutions: \(T = 0\) (initial launch) and
 
-\[
-T = \frac{2 \, v_0 \sin(\theta)}{g}.
-\]
+$$
+T = \frac{2\,v_0 \sin(\theta)}{g}.
+$$
 
 Substituting \(T\) into the expression for \(x(t)\) gives the **range** \(R\):
 
-\[
-R = x(T) = v_0 \cos(\theta) \, \frac{2 \, v_0 \sin(\theta)}{g} 
+$$
+R = x(T) 
+  = v_0 \cos(\theta)\,\frac{2\,v_0 \sin(\theta)}{g}
   = \frac{v_0^2 \sin(2\theta)}{g}.
-\]
+$$
 
 ### 2.3 Family of Solutions
 
@@ -71,14 +74,14 @@ Varying parameters like \(\theta\), \(v_0\), or \(g\) leads to a family of possi
 
 ## 3. Analysis of the Range
 
-1. **Range vs. Angle**: 
-   \[
-   R(\theta) = \frac{v_0^2}{g} \sin(2\theta).
-   \]
+1. **Range vs. Angle**:
+   $$
+   R(\theta) = \frac{v_0^2}{g}\,\sin(2\theta).
+   $$
    - **Maximum Range**: \(\theta = 45^\circ\).
    - **Symmetry**: \(\sin(2\theta)\) has the same value for angles \(\theta\) and \((90^\circ - \theta)\). For example, \(30^\circ\) and \(60^\circ\) produce the same range (neglecting air resistance).
 
-2. **Influence of Velocity**: 
+2. **Influence of Velocity**:
    - Higher launch velocity shifts the entire range curve upward (since \(v_0^2\) appears in the numerator).
 
 3. **Impact of Gravity**:
