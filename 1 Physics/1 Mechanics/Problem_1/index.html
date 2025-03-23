@@ -6,13 +6,13 @@
 <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <link href="../../../img/favicon.ico" rel="shortcut icon"/>
-<title>Problem 1 - Physics and Mathematics</title>
+<title>Investigating the Range as a Function of the Angle of Projection - Physics and Mathematics</title>
 <link href="../../../css/theme.css" rel="stylesheet"/>
 <link href="../../../css/theme_extra.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
 <script>
         // Current page data
-        var mkdocs_page_name = "Problem 1";
+        var mkdocs_page_name = "Investigating the Range as a Function of the Angle of Projection";
         var mkdocs_page_input_path = "1 Physics/1 Mechanics/Problem_1.md";
         var mkdocs_page_url = null;
       </script>
@@ -50,11 +50,25 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal current">1 Mechanics</a>
 <ul class="current">
-<li class="toctree-l2 current"><a class="reference internal current" href="#">Problem 1</a>
+<li class="toctree-l2 current"><a class="reference internal current" href="#">Investigating the Range as a Function of the Angle of Projection</a>
 <ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="#tasks-111">TASKS 111</a>
+<li class="toctree-l3"><a class="reference internal" href="#1-introduction">1. Introduction</a>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#mustafa-karakaya">MUSTAFA KARAKAYA</a>
+<li class="toctree-l3"><a class="reference internal" href="#2-theoretical-foundation">2. Theoretical Foundation</a>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#21-governing-equations">2.1 Governing Equations</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#22-time-of-flight-and-range">2.2 Time of Flight and Range</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#23-family-of-solutions">2.3 Family of Solutions</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#3-analysis-of-the-range">3. Analysis of the Range</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#4-practical-applications">4. Practical Applications</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#5-implementation">5. Implementation</a>
 </li>
 </ul>
 </li>
@@ -171,7 +185,7 @@
 <li><a aria-label="Docs" class="icon icon-home" href="../../.."></a></li>
 <li class="breadcrumb-item">1 Physics</li>
 <li class="breadcrumb-item">1 Mechanics</li>
-<li class="breadcrumb-item active">Problem 1</li>
+<li class="breadcrumb-item active">Investigating the Range as a Function of the Angle of Projection</li>
 <li class="wy-breadcrumbs-aside">
 </li>
 </ul>
@@ -179,10 +193,233 @@
 </div>
 <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
 <div class="section" itemprop="articleBody">
-<h1 id="problem-1">Problem 1</h1>
-<h2 id="tasks-111">TASKS 111</h2>
-<h2 id="mustafa-karakaya">MUSTAFA KARAKAYA</h2>
-<p><img alt="alt text" src="../image.png"/></p>
+<h1 id="investigating-the-range-as-a-function-of-the-angle-of-projection">Investigating the Range as a Function of the Angle of Projection</h1>
+<h2 id="1-introduction">1. Introduction</h2>
+<p>Projectile motion is a cornerstone of classical mechanics, illustrating how an object behaves under uniform gravitational acceleration after being launched with an initial velocity. Although the basic equations of projectile motion are straightforward, the problem offers a rich landscape of analysis. In this report, we investigate how the horizontal range depends on the angle of projection, exploring the theoretical foundation, computational implementation, and real-world applications. We also discuss how variations in initial conditions—such as velocity, gravity, and launch height—expand the family of solutions, giving rise to multiple trajectories that can model diverse physical phenomena.</p>
+<h2 id="2-theoretical-foundation">2. Theoretical Foundation</h2>
+<h3 id="21-governing-equations">2.1 Governing Equations</h3>
+<p>The motion of a projectile in two-dimensional space <span class="arithmatex">\((x, y)\)</span> can be derived from Newton’s laws under constant gravitational acceleration <span class="arithmatex">\(g\)</span>. Neglecting air resistance, the differential equations of motion are:</p>
+<div class="arithmatex">\[
+\frac{d^2x}{dt^2} = 0, 
+\quad
+\frac{d^2y}{dt^2} = -g.
+\]</div>
+<p>These simplify to:
+1. <strong>Horizontal Motion</strong> (no acceleration):
+   [
+   \frac{d^2x}{dt^2} = 0 
+   \quad \Longrightarrow \quad
+   \frac{dx}{dt} = v_0 \cos(\theta), 
+   \quad
+   x(t) = v_0 \cos(\theta) \, t.
+   ]
+2. <strong>Vertical Motion</strong> (constant acceleration <span class="arithmatex">\(-g\)</span>):
+   [
+   \frac{d^2y}{dt^2} = -g 
+   \quad \Longrightarrow \quad
+   \frac{dy}{dt} = v_0 \sin(\theta) - g t, 
+   \quad
+   y(t) = v_0 \sin(\theta) \, t \;-\; \frac{1}{2} g t^2.
+   ]</p>
+<p>Here, 
+- <span class="arithmatex">\(v_0\)</span> is the initial speed, 
+- <span class="arithmatex">\(\theta\)</span> is the angle of projection (relative to the horizontal), 
+- <span class="arithmatex">\(x(t)\)</span> and <span class="arithmatex">\(y(t)\)</span> are the horizontal and vertical positions as functions of time.</p>
+<h3 id="22-time-of-flight-and-range">2.2 Time of Flight and Range</h3>
+<p>For a projectile launched from ground level and returning to the same vertical level (<span class="arithmatex">\(y = 0\)</span>), the time of flight <span class="arithmatex">\(T\)</span> is obtained by solving <span class="arithmatex">\(y(T) = 0\)</span>:</p>
+<div class="arithmatex">\[
+y(T) = v_0 \sin(\theta) \, T - \frac{1}{2} g \, T^2 = 0.
+\]</div>
+<p>This yields two solutions: <span class="arithmatex">\(T = 0\)</span> (initial launch) and </p>
+<div class="arithmatex">\[
+T = \frac{2 \, v_0 \sin(\theta)}{g}.
+\]</div>
+<p>Substituting <span class="arithmatex">\(T\)</span> into the expression for <span class="arithmatex">\(x(t)\)</span> gives the <strong>range</strong> <span class="arithmatex">\(R\)</span>:</p>
+<div class="arithmatex">\[
+R = x(T) = v_0 \cos(\theta) \, \frac{2 \, v_0 \sin(\theta)}{g} 
+  = \frac{v_0^2 \sin(2\theta)}{g}.
+\]</div>
+<h3 id="23-family-of-solutions">2.3 Family of Solutions</h3>
+<p>Varying parameters like <span class="arithmatex">\(\theta\)</span>, <span class="arithmatex">\(v_0\)</span>, or <span class="arithmatex">\(g\)</span> leads to a family of possible trajectories:</p>
+<ul>
+<li><strong>Angle <span class="arithmatex">\(\theta\)</span></strong>: Influences the shape of the trajectory. The maximum range is achieved when <span class="arithmatex">\(\sin(2\theta) = 1 \implies \theta = 45^\circ\)</span>.</li>
+<li><strong>Initial Velocity <span class="arithmatex">\(v_0\)</span></strong>: The range depends quadratically on <span class="arithmatex">\(v_0\)</span>. Doubling <span class="arithmatex">\(v_0\)</span> quadruples the theoretical range.</li>
+<li><strong>Gravitational Acceleration <span class="arithmatex">\(g\)</span></strong>: Lower <span class="arithmatex">\(g\)</span> (e.g., on the Moon) increases the range; higher <span class="arithmatex">\(g\)</span> (e.g., on Jupiter) reduces it.</li>
+<li><strong>Initial Height <span class="arithmatex">\(h\)</span></strong>: If launched from a nonzero height, the time in the air changes, altering the total range and trajectory shape.</li>
+</ul>
+<h2 id="3-analysis-of-the-range">3. Analysis of the Range</h2>
+<ol>
+<li><strong>Range vs. Angle</strong>: 
+   [
+   R(\theta) = \frac{v_0^2}{g} \sin(2\theta).
+   ]</li>
+<li><strong>Maximum Range</strong>: <span class="arithmatex">\(\theta = 45^\circ\)</span>.</li>
+<li>
+<p><strong>Symmetry</strong>: <span class="arithmatex">\(\sin(2\theta)\)</span> has the same value for angles <span class="arithmatex">\(\theta\)</span> and <span class="arithmatex">\((90^\circ - \theta)\)</span>. For example, <span class="arithmatex">\(30^\circ\)</span> and <span class="arithmatex">\(60^\circ\)</span> produce the same range (neglecting air resistance).</p>
+</li>
+<li>
+<p><strong>Influence of Velocity</strong>: </p>
+</li>
+<li>
+<p>Higher launch velocity shifts the entire range curve upward (since <span class="arithmatex">\(v_0^2\)</span> appears in the numerator).</p>
+</li>
+<li>
+<p><strong>Impact of Gravity</strong>:</p>
+</li>
+<li>A smaller <span class="arithmatex">\(g\)</span> value extends the flight time and range; a larger <span class="arithmatex">\(g\)</span> reduces both.</li>
+</ol>
+<h2 id="4-practical-applications">4. Practical Applications</h2>
+<p>Projectile motion underpins many real-world scenarios:</p>
+<ol>
+<li><strong>Sports</strong> </li>
+<li><strong>Football (Soccer)</strong>: Kicking the ball with an optimal angle to maximize distance.  </li>
+<li>
+<p><strong>Basketball</strong>: Adjusting angle and velocity to achieve precise arcs into the hoop.  </p>
+</li>
+<li>
+<p><strong>Engineering</strong> </p>
+</li>
+<li><strong>Cannons and Ballistics</strong>: Calculating the range for shells or projectiles under Earth’s gravity.  </li>
+<li>
+<p><strong>Launch Systems</strong>: Designing rocket trajectories for short suborbital flights.</p>
+</li>
+<li>
+<p><strong>Astrophysics</strong> </p>
+</li>
+<li><strong>Satellite Launches</strong>: Transfer orbits rely on projectile-like arcs under planetary gravity.  </li>
+<li>
+<p><strong>Interplanetary Missions</strong>: Calculating gravitational assists and slingshots around celestial bodies.</p>
+</li>
+<li>
+<p><strong>Environmental Studies</strong> </p>
+</li>
+<li><strong>Pollutant Dispersion</strong>: Modeling how particles travel in the atmosphere or water.  </li>
+<li><strong>Wildfire Smoke Trajectories</strong>: Predicting how far smoke travels and in which direction.</li>
+</ol>
+<h2 id="5-implementation">5. Implementation</h2>
+<p>Below is a comprehensive Python script that demonstrates several simulations:
+1. <strong>Three different initial velocities</strong> on the same plot (angle fixed).
+2. <strong>Same initial conditions on three different gravitational fields</strong> (e.g., Earth, Moon, Jupiter).
+3. <strong>Different initial heights</strong> with the same velocity and angle.
+4. <strong>With and without air resistance</strong> for a chosen angle and velocity.</p>
+<p>You can copy this code into a Jupyter Notebook or a <code>.py</code> file to visualize the results.</p>
+<p>```python
+import numpy as np
+import matplotlib.pyplot as plt</p>
+<h1 id="-">-------------------------</h1>
+<h1 id="1-projectile-trajectory-no-air-resistance">1. Projectile Trajectory (No Air Resistance)</h1>
+<h1 id="-_1">-------------------------</h1>
+<p>def projectile_no_drag(v0, angle_deg, g=9.81, h=0, dt=0.02):
+    """
+    Returns the (x, y) arrays for a projectile launched
+    with initial velocity v0 (m/s), at angle_deg (degrees),
+    from height h (m), under gravitational acceleration g (m/s^2).
+    """
+    angle_rad = np.radians(angle_deg)
+    vx = v0 * np.cos(angle_rad)
+    vy = v0 * np.sin(angle_rad)</p>
+<pre><code>x, y = [0], [h]
+t = 0
+while y[-1] &gt;= 0:  # Continue until the projectile hits the ground
+    t += dt
+    x_new = x[-1] + vx * dt
+    vy_new = vy - g * dt
+    y_new = y[-1] + vy * dt - 0.5 * g * dt**2
+
+    x.append(x_new)
+    y.append(y_new)
+    vy = vy_new
+
+return np.array(x), np.array(y)
+</code></pre>
+<h1 id="-_2">-------------------------</h1>
+<h1 id="2-projectile-trajectory-with-air-resistance">2. Projectile Trajectory (With Air Resistance)</h1>
+<h1 id="-_3">-------------------------</h1>
+<p>def projectile_with_drag(v0, angle_deg, g=9.81, h=0, k=0.1, dt=0.02):
+    """
+    Returns the (x, y) arrays for a projectile launched
+    with initial velocity v0 (m/s), at angle_deg (degrees),
+    from height h (m), under gravity g (m/s^2),
+    with a linear drag coefficient k (kg/s).
+    """
+    angle_rad = np.radians(angle_deg)
+    vx = v0 * np.cos(angle_rad)
+    vy = v0 * np.sin(angle_rad)</p>
+<pre><code>x, y = [0], [h]
+t = 0
+while y[-1] &gt;= 0:
+    t += dt
+    # Drag force approximated as -k * v
+    ax = -k * vx
+    ay = -g - k * vy
+
+    # Update velocities
+    vx += ax * dt
+    vy += ay * dt
+
+    # Update positions
+    x_new = x[-1] + vx * dt
+    y_new = y[-1] + vy * dt
+
+    x.append(x_new)
+    y.append(y_new)
+
+return np.array(x), np.array(y)
+</code></pre>
+<h1 id="-_4">-------------------------</h1>
+<h1 id="example-simulations">Example Simulations</h1>
+<h1 id="-_5">-------------------------</h1>
+<h1 id="1-three-different-velocities-same-angle">1. Three different velocities, same angle</h1>
+<p>plt.figure(figsize=(8,5))
+velocities = [10, 20, 30]
+angle = 45
+for v in velocities:
+    x_arr, y_arr = projectile_no_drag(v, angle)
+    plt.plot(x_arr, y_arr, label=f'v0 = {v} m/s')
+plt.title("Projectile Motion with Different Initial Velocities (Angle = 45°)")
+plt.xlabel("Horizontal Distance (m)")
+plt.ylabel("Vertical Distance (m)")
+plt.grid(True)
+plt.legend()
+plt.show()</p>
+<h1 id="2-same-initial-velocity-and-angle-different-gravitational-accelerations">2. Same initial velocity and angle, different gravitational accelerations</h1>
+<p>plt.figure(figsize=(8,5))
+g_planets = {'Earth': 9.81, 'Moon': 1.62, 'Jupiter': 24.79}
+v0 = 20
+angle = 45
+for planet, g_val in g_planets.items():
+    x_arr, y_arr = projectile_no_drag(v0, angle, g=g_val)
+    plt.plot(x_arr, y_arr, label=f'{planet} (g={g_val:.2f} m/s^2)')
+plt.title("Projectile Motion on Different Planets (v0=20 m/s, Angle=45°)")
+plt.xlabel("Horizontal Distance (m)")
+plt.ylabel("Vertical Distance (m)")
+plt.grid(True)
+plt.legend()
+plt.show()</p>
+<h1 id="3-different-initial-heights-same-velocity-and-angle">3. Different initial heights, same velocity and angle</h1>
+<p>plt.figure(figsize=(8,5))
+heights = [0, 10, 20]
+for h in heights:
+    x_arr, y_arr = projectile_no_drag(20, 45, h=h)
+    plt.plot(x_arr, y_arr, label=f'Height = {h} m')
+plt.title("Projectile Motion with Different Launch Heights")
+plt.xlabel("Horizontal Distance (m)")
+plt.ylabel("Vertical Distance (m)")
+plt.grid(True)
+plt.legend()
+plt.show()</p>
+<h1 id="4-with-and-without-air-resistance">4. With and without air resistance</h1>
+<p>plt.figure(figsize=(8,5))
+x_no_drag, y_no_drag = projectile_no_drag(20, 45)
+x_drag, y_drag = projectile_with_drag(20, 45, k=0.08)
+plt.plot(x_no_drag, y_no_drag, label="No Air Resistance")
+plt.plot(x_drag, y_drag, '--', label="With Air Resistance (k=0.08)")
+plt.title("Projectile Motion Comparison: No Drag vs. With Drag")
+plt.xlabel("Horizontal Distance (m)")
+plt.ylabel("Vertical Distance (m)")
+plt.grid(True)
+plt.legend()
+plt.show()</p>
 </div>
 </div><footer>
 <div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
