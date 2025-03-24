@@ -152,7 +152,7 @@ Below is a comprehensive Python script that demonstrates several simulations:
 
 ```python
 import matplotlib
-matplotlib.use('Agg')  # Etkileşimli olmayan backend, GUI açmadan .gif kaydı yapar
+matplotlib.use('Agg')  
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -232,11 +232,11 @@ def create_animation(x_arrays, y_arrays, labels, title, gif_name,
     ax.grid(True)
     ax.legend()
     
-    # Eksen sınırları
+    
     if xlim: ax.set_xlim(xlim)
     if ylim: ax.set_ylim(ylim)
     
-    # Tick aralıkları
+    
     if xtick:
         ax.xaxis.set_major_locator(mticker.MultipleLocator(xtick))
     if ytick:
@@ -277,7 +277,7 @@ def scenario1():
     
     # horizontal: 0..103, step 20
     # vertical:   -2..28, step 10
-    #  (ymin=-2 ile 0'ı biraz yukarıda başlatıyoruz)
+   
     create_animation(
         x_arrays, y_arrays, labels,
         title="Projectile Motion with Different Initial Velocities (Angle = 45°)",
