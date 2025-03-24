@@ -129,135 +129,236 @@ Below is a comprehensive Python script that demonstrates several simulations:
 **1. Three different initial velocities** on the same plot (angle fixed).  
 
 
-![alt text](1.png)
+![alt text](scenario1.gif)
+
 
 **2. Same initial conditions on three different gravitational fields** (e.g., Earth, Moon, Jupiter). 
 
 
-![alt text](2.png)
-  
+![alt text](scenario2.gif)
+
+
   **3. Different initial heights** with the same velocity and angle.  
 
 
-![alt text](3.png)   
+![alt text](scenario3.gif)
+
 
 **4. With and without air resistance** for a chosen angle and velocity.
 
 
-![alt text](4.png)
-   
+![alt text](scenario4.gif)
+
+
 ```python
+import matplotlib
+matplotlib.use('Agg')  # Etkileşimli olmayan backend, GUI açmadan .gif kaydı yapar
+
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation, PillowWriter
+import matplotlib.ticker as mticker
 
+############################################
+# 1) Projectile with no drag
+############################################
 def projectile_no_drag(v0, angle_deg, g=9.81, h=0.0, dt=0.02):
-    """
-    Returns the (x, y) arrays for a projectile launched
-    with initial velocity v0 (m/s), at angle_deg (degrees),
-    from height h (m), under gravitational acceleration g (m/s^2).
-    """
     angle_rad = np.radians(angle_deg)
     vx = v0 * np.cos(angle_rad)
     vy = v0 * np.sin(angle_rad)
     
-    x, y = [0.0], [h]
-    while y[-1] >= 0:
-        vy_new = vy - g * dt
-        x_new = x[-1] + vx * dt
-        y_new = y[-1] + vy * dt - 0.5 * g * dt**2
+    x_vals, y_vals = [0.0], [h]
+    t = 0.0
+    while True:
+        t += dt
+        x_new = vx * t
+        y_new = h + vy * t - 0.5*g*(t**2)
         
-        x.append(x_new)
-        y.append(y_new)
-        vy = vy_new
+        x_vals.append(x_new)
+        y_vals.append(y_new)
         
-        if y_new < 0:
+        if y_new <= 0:
             break
-    
-    return np.array(x), np.array(y)
+    return np.array(x_vals), np.array(y_vals)
 
+############################################
+# 2) Projectile with linear drag
+############################################
 def projectile_with_drag(v0, angle_deg, g=9.81, h=0.0, k=0.1, dt=0.02):
-    """
-    Returns the (x, y) arrays for a projectile launched
-    with initial velocity v0 (m/s), at angle_deg (degrees),
-    from height h (m), under gravity g (m/s^2),
-    with a linear drag coefficient k (kg/s).
-    """
     angle_rad = np.radians(angle_deg)
     vx = v0 * np.cos(angle_rad)
     vy = v0 * np.sin(angle_rad)
     
-    x, y = [0.0], [h]
-    while y[-1] >= 0:
+    x_vals, y_vals = [0.0], [h]
+    while True:
         ax = -k * vx
         ay = -g - k * vy
         
-        vx = vx + ax * dt
+        vx += ax * dt
         vy_new = vy + ay * dt
         
-        x_new = x[-1] + vx * dt
-        y_new = y[-1] + vy * dt
+        x_new = x_vals[-1] + vx * dt
+        y_new = y_vals[-1] + vy * dt
         
-        x.append(x_new)
-        y.append(y_new)
+        x_vals.append(x_new)
+        y_vals.append(y_new)
         vy = vy_new
         
-        if y_new < 0:
+        if y_new <= 0:
             break
+    return np.array(x_vals), np.array(y_vals)
+
+############################################
+# Create animation and save as .gif
+############################################
+def create_animation(x_arrays, y_arrays, labels, title, gif_name, 
+                     xlim=None, ylim=None, xtick=None, ytick=None):
+    """
+    Creates a FuncAnimation that draws each trajectory step by step,
+    then saves it as a .gif file using PillowWriter.
+    xlim, ylim: (xmin, xmax), (ymin, ymax)
+    xtick, ytick: major tick intervals for x and y
+    """
+    fig, ax = plt.subplots(figsize=(6,4))
+    lines = []
     
-    return np.array(x), np.array(y)
+    for lab in labels:
+        (line,) = ax.plot([], [], label=lab)
+        lines.append(line)
+    
+    ax.set_title(title)
+    ax.set_xlabel("Horizontal Distance (m)")
+    ax.set_ylabel("Vertical Distance (m)")
+    ax.grid(True)
+    ax.legend()
+    
+    # Eksen sınırları
+    if xlim: ax.set_xlim(xlim)
+    if ylim: ax.set_ylim(ylim)
+    
+    # Tick aralıkları
+    if xtick:
+        ax.xaxis.set_major_locator(mticker.MultipleLocator(xtick))
+    if ytick:
+        ax.yaxis.set_major_locator(mticker.MultipleLocator(ytick))
+    
+    max_len = max(len(x) for x in x_arrays)
+    
+    def init():
+        for line in lines:
+            line.set_data([], [])
+        return lines
+    
+    def update(frame):
+        for i in range(len(x_arrays)):
+            xs = x_arrays[i][:frame]
+            ys = y_arrays[i][:frame]
+            lines[i].set_data(xs, ys)
+        return lines
+    
+    anim = FuncAnimation(fig, update, frames=range(max_len), init_func=init, blit=False)
+    anim.save(gif_name, writer=PillowWriter(fps=15))
+    plt.close(fig)
 
-# 1) Three different velocities at 45°
-plt.figure(figsize=(6,4))
-velocities = [10, 20, 30]
-angle = 45
-for v in velocities:
-    x_arr, y_arr = projectile_no_drag(v, angle, g=9.81, h=0.0, dt=0.02)
-    plt.plot(x_arr, y_arr, label=f"v0 = {v} m/s")
-plt.title("Projectile Motion with Different Initial Velocities (Angle = 45°)")
-plt.xlabel("Horizontal Distance (m)")
-plt.ylabel("Vertical Distance (m)")
-plt.grid(True)
-plt.legend()
-plt.show()
+############################################
+# SCENARIO 1: Three different initial velocities
+############################################
+def scenario1():
+    velocities = [10, 20, 30]
+    angle = 45
+    x_arrays, y_arrays = [], []
+    labels = []
+    
+    for v0 in velocities:
+        x, y = projectile_no_drag(v0, angle, 9.81, 0.0, dt=0.02)
+        x_arrays.append(x)
+        y_arrays.append(y)
+        labels.append(f"v0 = {v0} m/s")
+    
+    # horizontal: 0..103, step 20
+    # vertical:   -2..28, step 10
+    #  (ymin=-2 ile 0'ı biraz yukarıda başlatıyoruz)
+    create_animation(
+        x_arrays, y_arrays, labels,
+        title="Projectile Motion with Different Initial Velocities (Angle = 45°)",
+        gif_name="scenario1.gif",
+        xlim=(0,103), ylim=(-2,28),
+        xtick=20, ytick=10
+    )
 
-# 2) Different gravitational fields (Earth, Moon, Jupiter)
-plt.figure(figsize=(6,4))
-g_planets = {"Earth": 9.81, "Moon": 1.62, "Jupiter": 24.79}
-v0 = 20
-angle = 45
-for planet, g_val in g_planets.items():
-    x_arr, y_arr = projectile_no_drag(v0, angle, g=g_val, h=0.0, dt=0.02)
-    plt.plot(x_arr, y_arr, label=f"{planet} (g={g_val:.2f} m/s²)")
-plt.title("Projectile Motion on Different Planets (v0=20 m/s, Angle=45°)")
-plt.xlabel("Horizontal Distance (m)")
-plt.ylabel("Vertical Distance (m)")
-plt.grid(True)
-plt.legend()
-plt.show()
+############################################
+# SCENARIO 2: Different gravitational fields
+############################################
+def scenario2():
+    g_planets = {"Earth": 9.81, "Moon": 1.62, "Jupiter": 24.79}
+    v0, angle = 20, 45
+    x_arrays, y_arrays, labels = [], [], []
+    
+    for planet, g_val in g_planets.items():
+        x, y = projectile_no_drag(v0, angle, g_val, 0.0, dt=0.02)
+        x_arrays.append(x)
+        y_arrays.append(y)
+        labels.append(f"{planet} (g={g_val:.2f} m/s^2)")
+    
+    # horizontal: 0..253, step 50
+    # vertical:   -2..73, step 10
+    create_animation(
+        x_arrays, y_arrays, labels,
+        title="Projectile Motion on Different Planets (v0=20 m/s, Angle=45°)",
+        gif_name="scenario2.gif",
+        xlim=(0,253), ylim=(-2,73),
+        xtick=50, ytick=10
+    )
 
-# 3) Different initial heights
-plt.figure(figsize=(6,4))
-heights = [0, 10, 20]
-for h in heights:
-    x_arr, y_arr = projectile_no_drag(20, 45, g=9.81, h=h, dt=0.02)
-    plt.plot(x_arr, y_arr, label=f"Height = {h} m")
-plt.title("Projectile Motion with Different Launch Heights")
-plt.xlabel("Horizontal Distance (m)")
-plt.ylabel("Vertical Distance (m)")
-plt.grid(True)
-plt.legend()
-plt.show()
+############################################
+# SCENARIO 3: Different initial heights
+############################################
+def scenario3():
+    heights = [0, 10, 20]
+    v0, angle = 20, 45
+    x_arrays, y_arrays, labels = [], [], []
+    
+    for h in heights:
+        x, y = projectile_no_drag(v0, angle, 9.81, h, dt=0.02)
+        x_arrays.append(x)
+        y_arrays.append(y)
+        labels.append(f"Height = {h} m")
+    
+    # horizontal: 0..68, step 10
+    # vertical:   -2..38, step 5
+    create_animation(
+        x_arrays, y_arrays, labels,
+        title="Projectile Motion with Different Launch Heights",
+        gif_name="scenario3.gif",
+        xlim=(0,68), ylim=(-2,38),
+        xtick=10, ytick=5
+    )
 
-# 4) With and without air resistance
-plt.figure(figsize=(6,4))
-x_no_drag, y_no_drag = projectile_no_drag(20, 45, g=9.81, h=0.0, dt=0.02)
-x_drag, y_drag = projectile_with_drag(20, 45, g=9.81, h=0.0, k=0.08, dt=0.02)
-plt.plot(x_no_drag, y_no_drag, label="No Air Resistance")
-plt.plot(x_drag, y_drag, '--', label="With Air Resistance (k=0.08)")
-plt.title("Projectile Motion Comparison: No Drag vs. With Drag")
-plt.xlabel("Horizontal Distance (m)")
-plt.ylabel("Vertical Distance (m)")
-plt.grid(True)
-plt.legend()
-plt.show()
+############################################
+# SCENARIO 4: With and without air resistance
+############################################
+def scenario4():
+    x_no_drag, y_no_drag = projectile_no_drag(20, 45, 9.81, 0.0, dt=0.02)
+    x_drag, y_drag = projectile_with_drag(20, 45, 9.81, 0.0, k=0.08, dt=0.02)
+    
+    x_arrays = [x_no_drag, x_drag]
+    y_arrays = [y_no_drag, y_drag]
+    labels = ["No Air Resistance", "With Air Resistance (k=0.08)"]
+    
+    # horizontal: 0..58, step 10
+    # vertical:   -1..15, step 2
+    create_animation(
+        x_arrays, y_arrays, labels,
+        title="Projectile Motion Comparison: No Drag vs. With Drag",
+        gif_name="scenario4.gif",
+        xlim=(0,58), ylim=(-1,15),
+        xtick=10, ytick=2
+    )
+
+if __name__ == "__main__":
+    scenario1()
+    scenario2()
+    scenario3()
+    scenario4()
+    print("All GIFs created (scenario1.gif, scenario2.gif, scenario3.gif, scenario4.gif).")
 ```
