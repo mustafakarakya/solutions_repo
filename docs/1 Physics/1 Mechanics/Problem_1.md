@@ -124,7 +124,7 @@ Projectile motion underpins many real-world scenarios:
 
 ## 5. Implementation
 
-Below is a comprehensive Python script that demonstrates several simulations:
+Below you can see the various simulations and just below the simulations there is a comprehensive Python script:
 
 **1. Three different initial velocities** on the same plot (angle fixed).  
 
