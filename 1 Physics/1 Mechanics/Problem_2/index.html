@@ -176,6 +176,222 @@
 <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
 <div class="section" itemprop="articleBody">
 <h1 id="problem-2">Problem 2</h1>
+<h1 id="problem-2-investigating-the-dynamics-of-a-forced-damped-pendulum">Problem 2: Investigating the Dynamics of a Forced Damped Pendulum</h1>
+<h2 id="1-introduction">1. Introduction</h2>
+<p>The forced damped pendulum is a rich example of how external driving and energy dissipation can lead to diverse behaviors—from simple periodic motion to resonance and chaos. In this report, we compare four main scenarios, following the instructor’s notes:</p>
+<ol>
+<li><strong>Pure Pendulum (no damping, no forcing)</strong></li>
+<li><strong>Damped Pendulum (damping <span class="arithmatex">\(\neq 0\)</span>, forcing <span class="arithmatex">\(=0\)</span>)</strong></li>
+<li><strong>Forced Pendulum (forcing <span class="arithmatex">\(\neq 0\)</span>, damping <span class="arithmatex">\(=0\)</span>)</strong></li>
+<li><strong>Forced Damped Pendulum (damping <span class="arithmatex">\(\neq 0\)</span>, forcing <span class="arithmatex">\(\neq 0\)</span>)</strong></li>
+</ol>
+<p>We will produce time-domain plots (showing <span class="arithmatex">\(\theta\)</span> vs. <span class="arithmatex">\(t\)</span>) and phase portraits (showing <span class="arithmatex">\(\theta'\)</span> vs. <span class="arithmatex">\(\theta\)</span>). The transition from regular to chaotic motion, resonance peaks, and other phenomena can be explored by systematically changing parameters such as damping coefficient <span class="arithmatex">\(b\)</span>, driving amplitude <span class="arithmatex">\(A\)</span>, and driving frequency <span class="arithmatex">\(\Omega\)</span>.</p>
+<hr/>
+<h2 id="2-theoretical-foundation">2. Theoretical Foundation</h2>
+<p>A forced damped pendulum can be described by the equation:</p>
+<div class="arithmatex">\[
+\frac{d^2 \theta}{dt^2} \;+\; b \,\frac{d\theta}{dt} \;+\; \omega_0^2 \,\sin(\theta) \;=\; A \,\sin(\Omega t),
+\]</div>
+<p>where
+- <span class="arithmatex">\(\theta\)</span> is the angular displacement,
+- <span class="arithmatex">\(b\)</span> is the damping coefficient,
+- <span class="arithmatex">\(\omega_0\)</span> is the natural frequency of the pendulum (e.g., <span class="arithmatex">\(\sqrt{g/L}\)</span> for length <span class="arithmatex">\(L\)</span>),
+- <span class="arithmatex">\(A\)</span> and <span class="arithmatex">\(\Omega\)</span> are the amplitude and frequency of the external driving force.</p>
+<p><strong>Scenarios</strong>:
+1. <strong>Pure Pendulum</strong>: <span class="arithmatex">\(b=0\)</span>, <span class="arithmatex">\(A=0\)</span>.
+2. <strong>Damped Pendulum</strong>: <span class="arithmatex">\(b&gt;0\)</span>, <span class="arithmatex">\(A=0\)</span>.
+3. <strong>Forced Pendulum</strong>: <span class="arithmatex">\(b=0\)</span>, <span class="arithmatex">\(A&gt;0\)</span>.
+4. <strong>Forced Damped Pendulum</strong>: <span class="arithmatex">\(b&gt;0\)</span>, <span class="arithmatex">\(A&gt;0\)</span>.</p>
+<p>Approximations for small angles (<span class="arithmatex">\(\sin\theta \approx \theta\)</span>) lead to near-harmonic solutions, but large-angle or chaotic behavior requires numerical methods (e.g., Runge-Kutta).</p>
+<hr/>
+<h2 id="3-implementation">3. Implementation</h2>
+<p>Below you can see the various simulations, and just below the simulations there is a comprehensive Python script. Each scenario outputs two types of plots (time series and phase portrait) as <strong>GIF</strong> animations:</p>
+<ol>
+<li><strong>Pure Pendulum</strong> </li>
+<li><strong>Damped Pendulum</strong> </li>
+<li><strong>Forced Pendulum</strong> </li>
+<li><strong>Forced Damped Pendulum</strong> </li>
+</ol>
+<p>These comparisons highlight how damping reduces amplitude over time, how forcing can drive resonance, and how combining both can yield complex or chaotic motion.</p>
+<p>````python</p>
+<p>import matplotlib
+matplotlib.use('Agg')  # Non-interactive backend to save GIFs without GUI</p>
+<p>import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation, PillowWriter</p>
+<h6 id="_1"></h6>
+<h1 id="1-equation-of-motion">1) Equation of Motion</h1>
+<h6 id="_2"></h6>
+<p>def forced_damped_pendulum(t, state, b, omega0, A, Omega):
+    """
+    state = [theta, theta_dot]
+    b = damping coefficient
+    omega0 = natural frequency
+    A = driving amplitude
+    Omega = driving frequency
+    Returns dtheta/dt, d^2theta/dt^2
+    """
+    theta, theta_dot = state
+    # dtheta_dt = theta_dot
+    # d^2theta_dt^2 = -b * theta_dot - omega0^2 sin(theta) + A sin(Omega t)
+    dtheta = theta_dot
+    dtheta_dot = -b * theta_dot - omega0**2 * np.sin(theta) + A * np.sin(Omega * t)
+    return np.array([dtheta, dtheta_dot])</p>
+<p>def rk4_step(func, t, state, dt, <em>params):
+    """
+    One step of RK4 integration.
+    func(t, state, </em>params) -&gt; derivatives
+    """
+    k1 = func(t, state, <em>params)
+    k2 = func(t + dt/2, state + dt</em>k1/2, <em>params)
+    k3 = func(t + dt/2, state + dt</em>k2/2, <em>params)
+    k4 = func(t + dt,   state + dt</em>k3,   <em>params)
+    return state + (dt/6)</em>(k1 + 2<em>k2 + 2</em>k3 + k4)</p>
+<p>def simulate_pendulum(b, A, Omega, omega0, theta0, theta_dot0, tmax=20, dt=0.01):
+    """
+    Simulate the forced damped pendulum with given parameters.
+    Returns arrays of time, theta(t), and theta_dot(t).
+    """
+    steps = int(tmax/dt)
+    t_vals = np.zeros(steps)
+    theta_vals = np.zeros(steps)
+    theta_dot_vals = np.zeros(steps)</p>
+<pre><code>state = np.array([theta0, theta_dot0])
+time = 0.0
+for i in range(steps):
+    t_vals[i] = time
+    theta_vals[i] = state[0]
+    theta_dot_vals[i] = state[1]
+    # RK4 step
+    state = rk4_step(forced_damped_pendulum, time, state, dt, b, omega0, A, Omega)
+    time += dt
+return t_vals, theta_vals, theta_dot_vals
+</code></pre>
+<h6 id="_3"></h6>
+<h1 id="2-animation-functions">2) Animation Functions</h1>
+<h6 id="_4"></h6>
+<p>def animate_time_series(t, theta, scenario_name, gif_name):
+    """
+    Animate the time series of theta(t) as a GIF.
+    """
+    fig, ax = plt.subplots(figsize=(6,4))
+    ax.set_title(f"{scenario_name}: Time Series")
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Theta (rad)")
+    ax.grid(True)</p>
+<pre><code>line, = ax.plot([], [], lw=2)
+
+ax.set_xlim(t[0], t[-1])
+ax.set_ylim(1.1*min(theta), 1.1*max(theta))  # some margin
+
+def init():
+    line.set_data([], [])
+    return line,
+
+def update(frame):
+    line.set_data(t[:frame], theta[:frame])
+    return line,
+
+frames = len(t)
+anim = FuncAnimation(fig, update, frames=range(frames), init_func=init, blit=False)
+anim.save(gif_name, writer=PillowWriter(fps=30))
+plt.close(fig)
+</code></pre>
+<p>def animate_phase_portrait(theta, theta_dot, scenario_name, gif_name):
+    """
+    Animate the phase portrait (theta_dot vs. theta).
+    """
+    fig, ax = plt.subplots(figsize=(6,4))
+    ax.set_title(f"{scenario_name}: Phase Portrait")
+    ax.set_xlabel("Theta (rad)")
+    ax.set_ylabel("Theta Dot (rad/s)")
+    ax.grid(True)</p>
+<pre><code>line, = ax.plot([], [], lw=2)
+
+ax.set_xlim(1.1*min(theta), 1.1*max(theta))
+ax.set_ylim(1.1*min(theta_dot), 1.1*max(theta_dot))
+
+def init():
+    line.set_data([], [])
+    return line,
+
+def update(frame):
+    line.set_data(theta[:frame], theta_dot[:frame])
+    return line,
+
+frames = len(theta)
+anim = FuncAnimation(fig, update, frames=range(frames), init_func=init, blit=False)
+anim.save(gif_name, writer=PillowWriter(fps=30))
+plt.close(fig)
+</code></pre>
+<h6 id="_5"></h6>
+<h1 id="3-scenarios">3) Scenarios</h1>
+<h6 id="_6"></h6>
+<p>def scenario_pure_pendulum():
+    """
+    b=0, A=0
+    """
+    # Example parameters
+    b=0.0
+    A=0.0
+    Omega=1.0
+    omega0=3.0
+    theta0=0.2
+    theta_dot0=0.0</p>
+<pre><code>t, theta, theta_dot = simulate_pendulum(b, A, Omega, omega0, theta0, theta_dot0, tmax=20, dt=0.01)
+animate_time_series(t, theta, "Pure Pendulum", "scenario_pure_timeseries.gif")
+animate_phase_portrait(theta, theta_dot, "Pure Pendulum", "scenario_pure_phase.gif")
+</code></pre>
+<p>def scenario_damped_pendulum():
+    """
+    b&gt;0, A=0
+    """
+    b=0.2
+    A=0.0
+    Omega=1.0
+    omega0=3.0
+    theta0=0.2
+    theta_dot0=0.0</p>
+<pre><code>t, theta, theta_dot = simulate_pendulum(b, A, Omega, omega0, theta0, theta_dot0, tmax=20, dt=0.01)
+animate_time_series(t, theta, "Damped Pendulum", "scenario_damped_timeseries.gif")
+animate_phase_portrait(theta, theta_dot, "Damped Pendulum", "scenario_damped_phase.gif")
+</code></pre>
+<p>def scenario_forced_pendulum():
+    """
+    b=0, A&gt;0
+    """
+    b=0.0
+    A=0.5
+    Omega=2.0
+    omega0=3.0
+    theta0=0.2
+    theta_dot0=0.0</p>
+<pre><code>t, theta, theta_dot = simulate_pendulum(b, A, Omega, omega0, theta0, theta_dot0, tmax=20, dt=0.01)
+animate_time_series(t, theta, "Forced Pendulum", "scenario_forced_timeseries.gif")
+animate_phase_portrait(theta, theta_dot, "Forced Pendulum", "scenario_forced_phase.gif")
+</code></pre>
+<p>def scenario_forced_damped_pendulum():
+    """
+    b&gt;0, A&gt;0
+    """
+    b=0.2
+    A=0.5
+    Omega=2.0
+    omega0=3.0
+    theta0=0.2
+    theta_dot0=0.0</p>
+<pre><code>t, theta, theta_dot = simulate_pendulum(b, A, Omega, omega0, theta0, theta_dot0, tmax=30, dt=0.01)
+animate_time_series(t, theta, "Forced Damped Pendulum", "scenario_forced_damped_timeseries.gif")
+animate_phase_portrait(theta, theta_dot, "Forced Damped Pendulum", "scenario_forced_damped_phase.gif")
+</code></pre>
+<p>if <strong>name</strong> == "<strong>main</strong>":
+    scenario_pure_pendulum()
+    scenario_damped_pendulum()
+    scenario_forced_pendulum()
+    scenario_forced_damped_pendulum()
+    print("All scenarios done. GIF files generated for each scenario.")</p>
+<pre><code>````
+</code></pre>
 </div>
 </div><footer>
 <div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
