@@ -40,10 +40,5 @@ Below you can see various simulations, and immediately beneath them is a compreh
 3. **Forced Pendulum**  
 4. **Forced Damped Pendulum**
 
-These visualizations help illustrate how damping reduces amplitude, how external forcing drives resonance, and how the combined effects lead to complex dynamics. Additionally, for math rendering in markdown code use expressions like `$x^2$` and 
-$$
-x^2
-$$
-instead of using `\(...\)` or `\[...\]`, which may not render correctly.
 
 
