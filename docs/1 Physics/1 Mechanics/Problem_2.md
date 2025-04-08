@@ -33,12 +33,21 @@ This differential equation has both homogeneous and particular solutions:
   $$
   Depending on the value of \(b\), the solutions can be real or complex, leading to underdamped or critically damped responses.
 
-- **Particular Solution:**  
-  For the forcing term \(A\cos(\omega_d t)\), we try a solution of the form  
-  $$
-  \theta_p(t)=C\cos(\omega_d t-\varphi).
-  $$
-  This solution shows maximum amplitude near resonance, where \(\omega_d \approx \omega_0 = \sqrt{\frac{g}{L}}\).
+### Particular Solution
+
+For the forcing term $A\cos(\omega_d t)$, we try a solution of the form
+
+$$
+\theta_p(t) = C\cos\bigl(\omega_d t - \varphi\bigr).
+$$
+
+This solution shows maximum amplitude near resonance, where
+
+$$
+\omega_d \approx \omega_0 = \sqrt{\frac{g}{L}}.
+$$
+
+
 
 ### 1.2 Energy Considerations and Resonance
 
