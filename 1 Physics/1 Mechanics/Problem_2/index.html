@@ -58,8 +58,6 @@
 <ul>
 <li class="toctree-l4"><a class="reference internal" href="#11-small-angle-approximation">1.1 Small-Angle Approximation</a>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="#particular-solution">Particular Solution</a>
-</li>
 <li class="toctree-l4"><a class="reference internal" href="#12-energy-considerations-and-resonance">1.2 Energy Considerations and Resonance</a>
 </li>
 </ul>
@@ -200,34 +198,44 @@
 <h3 id="11-small-angle-approximation">1.1 Small-Angle Approximation</h3>
 <p>For small angles, we use the approximation</p>
 <div class="arithmatex">\[
-\sin\theta \approx \theta,
+\sin\theta \approx \theta
 \]</div>
 <p>which linearizes the equation to</p>
 <div class="arithmatex">\[
-\frac{d^2\theta}{dt^2} + b\frac{d\theta}{dt} + \frac{g}{L}\theta = A\cos(\omega_d t).
+\frac{d^2\theta}{dt^2} + b\frac{d\theta}{dt} + \frac{g}{L}\theta = A\cos(\omega_d t)
 \]</div>
 <p>This differential equation has both homogeneous and particular solutions:</p>
 <ul>
 <li><strong>Homogeneous Solution:</strong><br/>
-  The characteristic equation is<br/>
-  $$
-  r^2 + b\,r + \frac{g}{L} = 0.
-  $$<br/>
-  Depending on the value of <span class="arithmatex">\(b\)</span>, the solutions can be real or complex, leading to underdamped or critically damped responses.</li>
+  The characteristic equation is</li>
 </ul>
-<h3 id="particular-solution">Particular Solution</h3>
-<p>For the forcing term <span class="arithmatex">\(A\cos(\omega_d t)\)</span>, we try a solution of the form</p>
-<div class="arithmatex">\[
-\theta_p(t) = C\cos\bigl(\omega_d t - \varphi\bigr).
-\]</div>
+<p>$$
+  r^2 + b\,r + \frac{g}{L} = 0
+  $$</p>
+<p>Depending on the value of<br/>
+  $$
+  b
+  $$<br/>
+  the solutions can be real or complex, leading to underdamped or critically damped responses.</p>
+<ul>
+<li><strong>Particular Solution:</strong><br/>
+  For the forcing term</li>
+</ul>
+<p>$$
+  A\cos(\omega_d t)
+  $$</p>
+<p>we try a solution of the form</p>
+<p>$$
+  \theta_p(t) = C\cos\bigl(\omega_d t - \varphi\bigr)
+  $$</p>
 <p>This solution shows maximum amplitude near resonance, where</p>
-<div class="arithmatex">\[
-\omega_d \approx \omega_0 = \sqrt{\frac{g}{L}}.
-\]</div>
+<p>$$
+  \omega_d \approx \omega_0 = \sqrt{\frac{g}{L}}
+  $$</p>
 <h3 id="12-energy-considerations-and-resonance">1.2 Energy Considerations and Resonance</h3>
 <p>The total energy of the pendulum is given by the sum of the kinetic and potential energies:</p>
 <div class="arithmatex">\[
-E(t)= \frac{1}{2}m (L\dot{\theta})^2 + mgL(1-\cos\theta).
+E(t)= \frac{1}{2}m \Bigl(L\dot{\theta}\Bigr)^2 + mgL\Bigl(1-\cos\theta\Bigr)
 \]</div>
 <ul>
 <li>In the resonance condition (especially in the undamped or weakly damped case), energy is pumped into the system from the driving force, increasing the oscillation amplitude.</li>
@@ -239,18 +247,31 @@ E(t)= \frac{1}{2}m (L\dot{\theta})^2 + mgL(1-\cos\theta).
 <ul>
 <li>
 <p><strong>Pure Pendulum:</strong><br/>
-<span class="arithmatex">\(b=0\)</span> and <span class="arithmatex">\(A=0\)</span>. The system exhibits undriven, periodic oscillations.</p>
+  $$
+  b=0 \quad \text{and} \quad A=0
+  $$<br/>
+  The system exhibits undriven, periodic oscillations.</p>
 </li>
 <li>
 <p><strong>Damped Pendulum:</strong><br/>
-<span class="arithmatex">\(b \neq 0\)</span> and <span class="arithmatex">\(A=0\)</span>. Due to energy loss from damping, the amplitude decays over time and the phase space trajectory spirals into the origin.</p>
+  $$
+  b \neq 0 \quad \text{and} \quad A=0
+  $$<br/>
+  Due to energy loss from damping, the amplitude decays over time and the phase space trajectory spirals into the origin.</p>
 </li>
 <li>
 <p><strong>Forced (Driven) Pendulum:</strong><br/>
-<span class="arithmatex">\(b=0\)</span> and <span class="arithmatex">\(A \neq 0\)</span>. The external forcing leads to complex behaviors that can range from periodic motion to chaotic dynamics.</p>
+  $$
+  b=0 \quad \text{and} \quad A \neq 0
+  $$<br/>
+  The external forcing leads to complex behaviors that can range from periodic motion to chaotic dynamics.</p>
 </li>
 </ul>
-<p>In addition, phase diagrams (plotting <span class="arithmatex">\(\theta\)</span> versus <span class="arithmatex">\(\dot{\theta}\)</span>) illustrate the system's evolution in state space, and the Poincaré section (sampling the state every driving period) for the forced pendulum reveals transitions to chaotic behavior.</p>
+<p>In addition, phase diagrams (plotting</p>
+<div class="arithmatex">\[
+\theta \quad \text{versus} \quad \dot{\theta}
+\]</div>
+<p>) illustrate the system's evolution in state space, and the Poincaré section (sampling the state every driving period) for the forced pendulum reveals transitions to chaotic behavior.</p>
 <h2 id="3-practical-applications">3. Practical Applications</h2>
 <p>The forced damped pendulum model applies in various real-world scenarios, including:</p>
 <ul>
@@ -323,8 +344,8 @@ plt.xlabel("θ (rad)")
 plt.ylabel("ω (rad/s)")
 plt.title("Poincaré Section for Forced Pendulum")
 plt.grid()
-plt.show()
-````</p>
+plt.show()</p>
+<p>````</p>
 <h2 id="5-discussion-and-extensions">5. Discussion and Extensions</h2>
 <p><strong>Resonance and Energy Transfer:</strong><br/>
 Under the small-angle approximation, the system is linear, and resonance occurs when the driving frequency aligns with the natural frequency, i.e., 
