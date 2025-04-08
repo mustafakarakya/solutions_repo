@@ -139,7 +139,7 @@ plt.title("Poincaré Section for Forced Pendulum")
 plt.grid()
 plt.show()
 
-````
+```
 
 ## 5. Discussion and Extensions
 
