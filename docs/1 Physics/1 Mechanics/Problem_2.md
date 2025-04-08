@@ -13,44 +13,55 @@ $$
 For small angles, we use the approximation
 
 $$
-\sin\theta \approx \theta,
+\sin\theta \approx \theta
 $$
 
 which linearizes the equation to
 
 $$
-\frac{d^2\theta}{dt^2} + b\frac{d\theta}{dt} + \frac{g}{L}\theta = A\cos(\omega_d t).
+\frac{d^2\theta}{dt^2} + b\frac{d\theta}{dt} + \frac{g}{L}\theta = A\cos(\omega_d t)
 $$
 
 This differential equation has both homogeneous and particular solutions:
 
 - **Homogeneous Solution:**  
-  The characteristic equation is  
+  The characteristic equation is
+
   $$
-  r^2 + b\,r + \frac{g}{L} = 0.
+  r^2 + b\,r + \frac{g}{L} = 0
+  $$
+
+  Depending on the value of  
+  $$
+  b
   $$  
-  Depending on the value of \(b\), the solutions can be real or complex, leading to underdamped or critically damped responses.
+  the solutions can be real or complex, leading to underdamped or critically damped responses.
 
-### Particular Solution
+- **Particular Solution:**  
+  For the forcing term
 
-For the forcing term $A\cos(\omega_d t)$, we try a solution of the form
+  $$
+  A\cos(\omega_d t)
+  $$
 
-$$
-\theta_p(t) = C\cos\bigl(\omega_d t - \varphi\bigr).
-$$
+  we try a solution of the form
 
-This solution shows maximum amplitude near resonance, where
+  $$
+  \theta_p(t) = C\cos\bigl(\omega_d t - \varphi\bigr)
+  $$
 
-$$
-\omega_d \approx \omega_0 = \sqrt{\frac{g}{L}}.
-$$
+  This solution shows maximum amplitude near resonance, where
+
+  $$
+  \omega_d \approx \omega_0 = \sqrt{\frac{g}{L}}
+  $$
 
 ### 1.2 Energy Considerations and Resonance
 
 The total energy of the pendulum is given by the sum of the kinetic and potential energies:
 
 $$
-E(t)= \frac{1}{2}m (L\dot{\theta})^2 + mgL(1-\cos\theta).
+E(t)= \frac{1}{2}m \Bigl(L\dot{\theta}\Bigr)^2 + mgL\Bigl(1-\cos\theta\Bigr)
 $$
 
 - In the resonance condition (especially in the undamped or weakly damped case), energy is pumped into the system from the driving force, increasing the oscillation amplitude.
@@ -62,15 +73,30 @@ $$
 We analyze three cases:
 
 - **Pure Pendulum:**  
-  \(b=0\) and \(A=0\). The system exhibits undriven, periodic oscillations.
+  $$
+  b=0 \quad \text{and} \quad A=0
+  $$  
+  The system exhibits undriven, periodic oscillations.
   
 - **Damped Pendulum:**  
-  \(b \neq 0\) and \(A=0\). Due to energy loss from damping, the amplitude decays over time and the phase space trajectory spirals into the origin.
+  $$
+  b \neq 0 \quad \text{and} \quad A=0
+  $$  
+  Due to energy loss from damping, the amplitude decays over time and the phase space trajectory spirals into the origin.
   
 - **Forced (Driven) Pendulum:**  
-  \(b=0\) and \(A \neq 0\). The external forcing leads to complex behaviors that can range from periodic motion to chaotic dynamics.
+  $$
+  b=0 \quad \text{and} \quad A \neq 0
+  $$  
+  The external forcing leads to complex behaviors that can range from periodic motion to chaotic dynamics.
 
-In addition, phase diagrams (plotting \(\theta\) versus \(\dot{\theta}\)) illustrate the system's evolution in state space, and the Poincaré section (sampling the state every driving period) for the forced pendulum reveals transitions to chaotic behavior.
+In addition, phase diagrams (plotting
+
+$$
+\theta \quad \text{versus} \quad \dot{\theta}
+$$
+
+) illustrate the system's evolution in state space, and the Poincaré section (sampling the state every driving period) for the forced pendulum reveals transitions to chaotic behavior.
 
 ## 3. Practical Applications
 
@@ -157,6 +183,7 @@ plt.ylabel("ω (rad/s)")
 plt.title("Poincaré Section for Forced Pendulum")
 plt.grid()
 plt.show()
+
 ````
 
 ## 5. Discussion and Extensions
