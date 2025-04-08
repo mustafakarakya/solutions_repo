@@ -190,7 +190,10 @@ plt.show()
 
 **Resonance and Energy Transfer:**  
 Under the small-angle approximation, the system is linear, and resonance occurs when the driving frequency aligns with the natural frequency, i.e., 
-$$\omega_d \approx \frac{g}{L}.$$  
+$$
+\omega_d \approx \frac{g}{L}.
+$$
+
 In this state, the driving force continuously feeds energy into the system, raising the oscillation amplitude.
 
 **Effect of Damping:**  
