@@ -1,6 +1,4 @@
-# Problem 2:
-
-# Investigating the Dynamics of a Forced Damped Pendulum
+# Problem 2: Investigating the Dynamics of a Forced Damped Pendulum
 
 ## 1. Theoretical Foundation
 
@@ -30,7 +28,7 @@ This differential equation has both homogeneous and particular solutions:
   The characteristic equation is  
   $$
   r^2 + b\,r + \frac{g}{L} = 0.
-  $$
+  $$  
   Depending on the value of \(b\), the solutions can be real or complex, leading to underdamped or critically damped responses.
 
 ### Particular Solution
@@ -46,8 +44,6 @@ This solution shows maximum amplitude near resonance, where
 $$
 \omega_d \approx \omega_0 = \sqrt{\frac{g}{L}}.
 $$
-
-
 
 ### 1.2 Energy Considerations and Resonance
 
@@ -161,7 +157,6 @@ plt.ylabel("ω (rad/s)")
 plt.title("Poincaré Section for Forced Pendulum")
 plt.grid()
 plt.show()
-
 ````
 
 ## 5. Discussion and Extensions
