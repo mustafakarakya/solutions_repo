@@ -40,9 +40,7 @@ This differential equation has both homogeneous and particular solutions:
 - **Particular Solution:**  
   For the forcing term
 
-  $$
-  A\cos(\omega_d t)
-  $$
+  $$A\cos(\omega_d t)$$
 
   we try a solution of the form
 
