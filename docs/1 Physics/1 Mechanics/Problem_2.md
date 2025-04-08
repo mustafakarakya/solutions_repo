@@ -68,7 +68,7 @@ The forced damped pendulum model applies in various real-world scenarios, includ
 
 ## 4. Implementation
 
-```python
+```
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
