@@ -6,13 +6,13 @@
 <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <link href="../../../img/favicon.ico" rel="shortcut icon"/>
-<title>Problem 2: - Physics and Mathematics</title>
+<title>Problem 2: Investigating the Dynamics of a Forced Damped Pendulum - Physics and Mathematics</title>
 <link href="../../../css/theme.css" rel="stylesheet"/>
 <link href="../../../css/theme_extra.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
 <script>
         // Current page data
-        var mkdocs_page_name = "Problem 2:";
+        var mkdocs_page_name = "Problem 2: Investigating the Dynamics of a Forced Damped Pendulum";
         var mkdocs_page_input_path = "1 Physics/1 Mechanics/Problem_2.md";
         var mkdocs_page_url = null;
       </script>
@@ -52,8 +52,24 @@
 <ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../Problem_1/">Investigating the Range as a Function of the Angle of Projection</a>
 </li>
-<li class="toctree-l2 current"><a class="reference internal current" href="#">Problem 2:</a>
+<li class="toctree-l2 current"><a class="reference internal current" href="#">Problem 2: Investigating the Dynamics of a Forced Damped Pendulum</a>
 <ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="#1-theoretical-foundation">1. Theoretical Foundation</a>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#11-small-angle-approximation">1.1 Small-Angle Approximation</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#particular-solution">Particular Solution</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#12-energy-considerations-and-resonance">1.2 Energy Considerations and Resonance</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#2-analysis-of-dynamics">2. Analysis of Dynamics</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#3-practical-applications">3. Practical Applications</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#4-implementation">4. Implementation</a>
+</li>
 </ul>
 </li>
 </ul>
@@ -167,7 +183,7 @@
 <li><a aria-label="Docs" class="icon icon-home" href="../../.."></a></li>
 <li class="breadcrumb-item">1 Physics</li>
 <li class="breadcrumb-item">1 Mechanics</li>
-<li class="breadcrumb-item active">Problem 2:</li>
+<li class="breadcrumb-item active">Problem 2: Investigating the Dynamics of a Forced Damped Pendulum</li>
 <li class="wy-breadcrumbs-aside">
 </li>
 </ul>
@@ -175,8 +191,7 @@
 </div>
 <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
 <div class="section" itemprop="articleBody">
-<h1 id="problem-2">Problem 2:</h1>
-<h1 id="investigating-the-dynamics-of-a-forced-damped-pendulum">Investigating the Dynamics of a Forced Damped Pendulum</h1>
+<h1 id="problem-2-investigating-the-dynamics-of-a-forced-damped-pendulum">Problem 2: Investigating the Dynamics of a Forced Damped Pendulum</h1>
 <h2 id="1-theoretical-foundation">1. Theoretical Foundation</h2>
 <p>We start from the forced damped pendulum equation:</p>
 <div class="arithmatex">\[
@@ -197,7 +212,7 @@
   The characteristic equation is<br/>
   $$
   r^2 + b\,r + \frac{g}{L} = 0.
-  $$
+  $$<br/>
   Depending on the value of <span class="arithmatex">\(b\)</span>, the solutions can be real or complex, leading to underdamped or critically damped responses.</li>
 </ul>
 <h3 id="particular-solution">Particular Solution</h3>
@@ -308,8 +323,8 @@ plt.xlabel("θ (rad)")
 plt.ylabel("ω (rad/s)")
 plt.title("Poincaré Section for Forced Pendulum")
 plt.grid()
-plt.show()</p>
-<p>````</p>
+plt.show()
+````</p>
 <h2 id="5-discussion-and-extensions">5. Discussion and Extensions</h2>
 <p><strong>Resonance and Energy Transfer:</strong><br/>
 Under the small-angle approximation, the system is linear, and resonance occurs when the driving frequency aligns with the natural frequency, i.e., 
