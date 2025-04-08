@@ -144,25 +144,26 @@ plt.show()
 ## 5. Discussion and Extensions
 
 **Resonance and Energy Transfer:**  
-Under the small-angle approximation, the system is linear, and resonance occurs when the driving frequency aligns with the natural frequency, i.e., 
-$$
-\omega_d \approx \frac{g}{L}.
-$$
-
+Under the small-angle approximation, the system is linear, and resonance occurs when the driving frequency aligns with the natural frequency, i.e.,
+$$\omega_d\approx\frac{g}{L}$$  
 In this state, the driving force continuously feeds energy into the system, raising the oscillation amplitude.
 
 **Effect of Damping:**  
-In the damped scenario (e.g., $b=0.5$), energy is dissipated, causing the oscillations to decay over time. The phase space diagram shows a spiral trajectory converging toward the origin.
+In the damped scenario (e.g.,
+$$b=0.5$$),
+energy is dissipated, causing the oscillations to decay over time. The phase space diagram shows a spiral trajectory converging toward the origin.
 
 **Forced Scenario and Chaos:**  
-In the forced pendulum case (e.g., $A=1.0$ and $b=0$), the external force may lead to complex behavior, ranging from periodic to chaotic dynamics. The time series, phase diagram, and especially the Poincaré section reveal the transition from regular to chaotic motion.
+In the forced pendulum case (e.g.,
+$$A=1.0\quad\text{and}\quad b=0$$),
+the external force may lead to complex behavior, ranging from periodic to chaotic dynamics. The time series, phase diagram, and especially the Poincaré section reveal the transition from regular to chaotic motion.
 
 **Limitations and Extensions:**  
-While the model uses the full nonlinear term $\sin\theta$, for small angles the approximation $\sin\theta \approx \theta$ could simplify the analysis. Extensions to the model may include nonlinear damping (e.g., air resistance) or non-periodic driving forces, and further analysis may be conducted via bifurcation diagrams and detailed Poincaré sections.
+While the model uses the full nonlinear term $$\sin\theta$$ for small angles the approximation $$\sin\theta\approx\theta$$ could simplify the analysis. Extensions to the model may include nonlinear damping (e.g., air resistance) or non-periodic driving forces, and further analysis may be conducted via bifurcation diagrams and detailed Poincaré sections.
 
 ## 6. Conclusion
 
-This work investigates the dynamics of the forced damped pendulum through both analytical approximations and numerical simulations. By comparing the time series, phase space diagrams, and Poincaré sections across three scenarios—pure, damped, and forced pendulums—we illustrate the system's transition from regular harmonic motion to complex, potentially chaotic behavior. The model provides insights applicable to energy harvesting, vibration control in structures, driven oscillatory circuits, and many other real-world systems. Parameter variations, such as changes in the damping coefficient $b$, driving amplitude $A$, and driving frequency $\omega_d$, offer a rich context for further exploration of resonance, bifurcation, and chaotic transitions.
+This work investigates the dynamics of the forced damped pendulum through both analytical approximations and numerical simulations. By comparing the time series, phase space diagrams, and Poincaré sections across three scenarios—pure, damped, and forced pendulums—we illustrate the system's transition from regular harmonic motion to complex, potentially chaotic behavior. The model provides insights applicable to energy harvesting, vibration control in structures, driven oscillatory circuits, and many other real-world systems. Parameter variations, such as changes in the damping coefficient $$b$$, driving amplitude $$A$$, and driving frequency $$\omega_d$$, offer a rich context for further exploration of resonance, bifurcation, and chaotic transitions.
 
 ![alt text](<time series.png>)
 
