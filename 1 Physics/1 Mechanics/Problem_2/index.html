@@ -196,31 +196,45 @@
 <h1 id="problem-2-investigating-the-dynamics-of-a-forced-damped-pendulum">Problem 2: Investigating the Dynamics of a Forced Damped Pendulum</h1>
 <h2 id="1-theoretical-foundation">1. Theoretical Foundation</h2>
 <p>We start from the forced damped pendulum equation:
-<span class="arithmatex">\(<span class="arithmatex">\(\frac{d^2\theta}{dt^2}+b\frac{d\theta}{dt}+\frac{g}{L}\sin\theta=A\cos(\omega_d t)\)</span>\)</span></p>
+$$
+\frac{d^2\theta}{dt^2}+b\frac{d\theta}{dt}+\frac{g}{L}\sin\theta=A\cos(\omega_d t)
+$$</p>
 <h3 id="11-small-angle-approximation">1.1 Small-Angle Approximation</h3>
 <p>For small angles, we use the approximation
-<span class="arithmatex">\(<span class="arithmatex">\(\sin\theta\approx\theta\)</span>\)</span>
+$$
+\sin\theta\approx\theta
+$$
 which linearizes the equation to
-<span class="arithmatex">\(<span class="arithmatex">\(\frac{d^2\theta}{dt^2}+b\frac{d\theta}{dt}+\frac{g}{L}\theta=A\cos(\omega_d t)\)</span>\)</span></p>
+$$
+\frac{d^2\theta}{dt^2}+b\frac{d\theta}{dt}+\frac{g}{L}\theta=A\cos(\omega_d t)
+$$</p>
 <p>This differential equation has both homogeneous and particular solutions:</p>
 <ul>
 <li>
 <p><strong>Homogeneous Solution:</strong><br/>
   The characteristic equation is
-  <span class="arithmatex">\(<span class="arithmatex">\(r^2+b\,r+\frac{g}{L}=0\)</span>\)</span><br/>
+$$
+r^2+b\,r+\frac{g}{L}=0
+$$<br/>
   Depending on the value of <span class="arithmatex">\(<span class="arithmatex">\(b\)</span>\)</span> the solutions can be real or complex, leading to underdamped or critically damped responses.</p>
 </li>
 <li>
 <p><strong>Particular Solution:</strong><br/>
   For the forcing term <span class="arithmatex">\(<span class="arithmatex">\(A\cos(\omega_d t)\)</span>\)</span> we try a solution of the form
-  <span class="arithmatex">\(<span class="arithmatex">\(\theta_p(t)=C\cos\bigl(\omega_d t-\varphi\bigr)\)</span>\)</span><br/>
+$$
+\theta_p(t)=C\cos\bigl(\omega_d t-\varphi\bigr)
+$$<br/>
   This solution shows maximum amplitude near resonance, where
-  <span class="arithmatex">\(<span class="arithmatex">\(\omega_d\approx\omega_0=\sqrt{\frac{g}{L}}\)</span>\)</span></p>
+$$
+\omega_d\approx\omega_0=\sqrt{\frac{g}{L}}
+$$</p>
 </li>
 </ul>
 <h3 id="12-energy-considerations-and-resonance">1.2 Energy Considerations and Resonance</h3>
 <p>The total energy of the pendulum is given by the sum of the kinetic and potential energies:
-<span class="arithmatex">\(<span class="arithmatex">\(E(t)=\frac{1}{2}m\Bigl(L\dot{\theta}\Bigr)^2+mgL\Bigl(1-\cos\theta\Bigr)\)</span>\)</span></p>
+$$
+E(t)=\frac{1}{2}m\Bigl(L\dot{\theta}\Bigr)^2+mgL\Bigl(1-\cos\theta\Bigr)
+$$</p>
 <ul>
 <li>In the resonance condition (especially in the undamped or weakly damped case), energy is pumped into the system from the driving force, increasing the oscillation amplitude.</li>
 <li>In the damped scenario, energy dissipates over time, causing the amplitude to decay.</li>
@@ -231,22 +245,31 @@ which linearizes the equation to
 <ul>
 <li>
 <p><strong>Pure Pendulum:</strong><br/>
-<span class="arithmatex">\(<span class="arithmatex">\(b=0\quad\text{and}\quad A=0\)</span>\)</span><br/>
+$$
+b=0\quad\text{and}\quad A=0
+$$<br/>
   The system exhibits undriven, periodic oscillations.</p>
 </li>
 <li>
 <p><strong>Damped Pendulum:</strong><br/>
-<span class="arithmatex">\(<span class="arithmatex">\(b\neq0\quad\text{and}\quad A=0\)</span>\)</span><br/>
+$$
+b\neq0\quad\text{and}\quad A=0
+$$<br/>
   Due to energy loss from damping, the amplitude decays over time and the phase space trajectory spirals into the origin.</p>
 </li>
 <li>
 <p><strong>Forced (Driven) Pendulum:</strong><br/>
-<span class="arithmatex">\(<span class="arithmatex">\(b=0\quad\text{and}\quad A\neq0\)</span>\)</span><br/>
+$$
+b=0\quad\text{and}\quad A\neq0
+$$<br/>
   The external forcing leads to complex behaviors that can range from periodic motion to chaotic dynamics.</p>
 </li>
 </ul>
 <p>In addition, phase diagrams (plotting
-<span class="arithmatex">\(<span class="arithmatex">\(\theta\quad\text{versus}\quad\dot{\theta}\)</span>\)</span>) illustrate the system's evolution in state space, and the Poincaré section (sampling the state every driving period) for the forced pendulum reveals transitions to chaotic behavior.</p>
+$$
+\theta\quad\text{versus}\quad\dot{\theta}
+$$
+) illustrate the system's evolution in state space, and the Poincaré section (sampling the state every driving period) for the forced pendulum reveals transitions to chaotic behavior.</p>
 <h2 id="3-practical-applications">3. Practical Applications</h2>
 <p>The forced damped pendulum model applies in various real-world scenarios, including:</p>
 <ul>
