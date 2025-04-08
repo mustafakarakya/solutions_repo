@@ -48,7 +48,7 @@ $$
 E(t) = \frac{1}{2}m\Bigl(L\dot{\theta}\Bigr)^2 + mgL\Bigl(1-\cos\theta\Bigr)
 $$
 
-- Under resonance conditions (especially in undamped or weakly damped regimes), the driving force continuously feeds energy into the system, raising the oscillation amplitude.
+- Under resonance conditions (especially in undamped or weakly damped regimes), the driving force continuously feeds energy into the system, increasing the oscillation amplitude.
 - In the damped scenario, energy dissipates over time, causing the amplitude to decay.
 - In the forced pendulum, the external force introduces complex behaviors—including periodic, quasiperiodic, and chaotic dynamics—which will be examined in the following sections.
 
@@ -65,8 +65,7 @@ We analyze three main cases:
   Due to energy loss from damping, the oscillation amplitude decays over time and the phase space trajectory spirals into the origin.
 
 - **Forced (Driven) Pendulum:**  
-  For realistic forced chaotic behavior, a small but nonzero damping is appropriate; hence we choose  
-  \(b = 0.25\) and \(A \neq 0\).  
+  To comply with the teacher’s request, the forced pendulum is simulated using \(b = 0\) and a nonzero driving amplitude \(A\) (e.g., \(A = 1.0\)).  
   The external forcing leads to complex behavior that may range from regular periodic motion to chaos. Phase diagrams and Poincaré sections will illustrate these transitions.
 
 In addition, varying the parameters (damping coefficient \(b\), driving amplitude \(A\), and driving frequency \(\omega_d\)) systematically reveals transitions in the dynamics, including resonant amplification and chaotic regimes. The use of bifurcation diagrams will help visualize how changes in, for example, the driving amplitude \(A\) affect the system’s attractors.
@@ -86,9 +85,9 @@ The forced damped pendulum model applies in various real-world scenarios, includ
 
 ## 4. Implementation
 
-The following Python code implements the simulations for the three cases, generates time series, phase space diagrams, a Poincaré section, and includes a bifurkasyon (bifurcation) diagram by varying the driving amplitude \(A\).
+The following Python code implements the simulations for the three cases, generates time series, phase space diagrams, a Poincaré section, and includes a bifurcation diagram by varying the driving amplitude \(A\). Note that for the forced pendulum, the damping coefficient is set to \(b = 0\) as requested.
 
-```
+```python
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
@@ -116,9 +115,8 @@ sol_pure = solve_ivp(pendulum_ode, t_span, y0, t_eval=t_eval, args=(0.0, 0.0, 0.
 # --- Case 2: Damped Pendulum (b=0.5, A=0) ---
 sol_damped = solve_ivp(pendulum_ode, t_span, y0, t_eval=t_eval, args=(0.5, 0.0, 0.0))
 
-# --- Case 3: Forced (Driven) Pendulum ---
-# For chaotic behavior, we use a small damping b = 0.25, nonzero driving amplitude and omega_drive = 2/3.
-b_forced = 0.25
+# --- Case 3: Forced (Driven) Pendulum (b=0, A non-zero) ---
+b_forced = 0.0
 A_forced = 1.0
 omega_drive = 2/3
 sol_forced = solve_ivp(pendulum_ode, t_span, y0, t_eval=t_eval, args=(b_forced, A_forced, omega_drive))
@@ -149,7 +147,6 @@ plt.show()
 
 # --- Poincaré Section for Forced Pendulum ---
 T_drive = 2 * np.pi / omega_drive  # Driving period
-# Select points with t mod T_drive ~ 0 (with tolerance), using all points
 indices = [i for i, t in enumerate(t_eval) if np.isclose(t % T_drive, 0, atol=0.01)]
 theta_poincare = sol_forced.y[0][indices]
 omega_poincare = sol_forced.y[1][indices]
@@ -165,18 +162,16 @@ plt.show()
 # --- Bifurcation Diagram ---
 # Vary the driving amplitude A from 0.5 to 1.5 and record the theta values (Poincaré section) after a transient.
 A_values = np.linspace(0.5, 1.5, 100)
-b_value = 0.25  # fixed damping for forced pendulum
+b_value = b_forced  # Using b=0 for forced pendulum as requested
 theta_bifurcation = []  # will store tuples (A, theta)
 transient_time = 20  # discard initial transient period
 
 for A in A_values:
     sol = solve_ivp(pendulum_ode, t_span, y0, t_eval=t_eval, args=(b_value, A, omega_drive))
-    # Select Poincaré points after transient (t > transient_time)
     indices = [i for i, t in enumerate(t_eval) if (t > transient_time) and (np.isclose(t % T_drive, 0, atol=0.01))]
     for i in indices:
         theta_bifurcation.append((A, sol.y[0][i]))
 
-# Separate the data for plotting
 A_bif = [pt[0] for pt in theta_bifurcation]
 theta_bif = [pt[1] for pt in theta_bifurcation]
 
@@ -187,6 +182,7 @@ plt.ylabel("θ (rad) from Poincaré Section")
 plt.title("Bifurcation Diagram: Dependence on Driving Amplitude")
 plt.grid(True)
 plt.show()
+
 ```
 
 ## 5. Discussion and Extensions
@@ -202,7 +198,7 @@ In this resonant condition, the driving force continuously feeds energy into the
 In the damped scenario (e.g., \(b = 0.5\)), energy dissipates over time, causing the oscillation amplitude to decay. The phase space diagram shows a spiral trajectory converging toward the origin.
 
 **Forced Scenario and Chaos:**  
-In the forced pendulum case, a small but nonzero damping (e.g., \(b = 0.25\)) is chosen along with a nonzero driving amplitude (e.g., \(A = 1.0\)) to facilitate the observation of complex behavior. The time series, phase space diagram, and especially the Poincaré section reveal transitions from regular periodic motion to chaotic dynamics.
+In the forced pendulum case, the simulation now uses \(b = 0\) with a nonzero driving amplitude (e.g., \(A = 1.0\)). The time series, phase space diagram, and especially the Poincaré section reveal how the system behaves under pure forcing conditions, as requested.
 
 **Bifurcation Analysis:**  
 By systematically varying the driving amplitude \(A\) and plotting the corresponding Poincaré section values (after removing transients), a bifurcation diagram is obtained. This diagram provides insight into how the system transitions from periodic to chaotic behavior as \(A\) is varied.
