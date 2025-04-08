@@ -213,11 +213,14 @@ By systematically varying the driving amplitude \(A\) and plotting the correspon
 This work investigates the dynamics of the forced damped pendulum through both analytical approximations and numerical simulations. By comparing the time series, phase space diagrams, Poincaré sections, and a bifurcation diagram across various scenarios (pure, damped, and forced pendulums), the study illustrates the transition from regular harmonic motion to complex, potentially chaotic behavior. The model provides insights applicable to energy harvesting, vibration control in structures, driven oscillatory circuits, and many other real-world systems. Parameter variations—such as changes in the damping coefficient \(b\), driving amplitude \(A\), and driving frequency \(\omega_d\)—offer a rich context for further exploration of resonance, bifurcation, and chaotic transitions.
 
 
-![alt text](<time series.png>)
+![alt text](<time series1.png>)
 
 
-![alt text](<phase space.png>)
+![alt text](<phase space1.png>)
 
 
-![alt text](forced.png)
+![alt text](forced1.png)
+
+
+![alt text](bifurcation1.png)
 
