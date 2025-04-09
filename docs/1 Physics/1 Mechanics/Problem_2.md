@@ -1,6 +1,3 @@
-Below is the final version of the assignment entirely in English, formatted in Markdown:
-
----
 
 # Problem 2: Investigating the Dynamics of a Forced Damped Pendulum
 
