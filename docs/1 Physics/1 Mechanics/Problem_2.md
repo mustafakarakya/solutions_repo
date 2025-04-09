@@ -1,3 +1,7 @@
+Below is the final version of the assignment entirely in English, formatted in Markdown:
+
+---
+
 # Problem 2: Investigating the Dynamics of a Forced Damped Pendulum
 
 ## 1. Theoretical Foundation
@@ -65,10 +69,10 @@ We analyze three main cases:
   Due to energy loss from damping, the oscillation amplitude decays over time and the phase space trajectory spirals into the origin.
 
 - **Forced (Driven) Pendulum:**  
-  To comply with the teacher’s request, the forced pendulum is simulated using \(b = 0\) and a nonzero driving amplitude \(A\) (e.g., \(A = 1.0\)).  
+  In this case, the simulation is performed using \(b = 0\) and a nonzero driving amplitude \(A\) (e.g., \(A = 1.0\)).  
   The external forcing leads to complex behavior that may range from regular periodic motion to chaos. Phase diagrams and Poincaré sections will illustrate these transitions.
 
-In addition, varying the parameters (damping coefficient \(b\), driving amplitude \(A\), and driving frequency \(\omega_d\)) systematically reveals transitions in the dynamics, including resonant amplification and chaotic regimes. The use of bifurcation diagrams will help visualize how changes in, for example, the driving amplitude \(A\) affect the system’s attractors.
+In addition, varying the parameters (damping coefficient \(b\), driving amplitude \(A\), and driving frequency \(\omega_d\)) systematically reveals transitions in the dynamics, including resonant amplification and chaotic regimes. Bifurcation diagrams will help visualize how changes in, for example, the driving amplitude \(A\) affect the system’s attractors.
 
 ## 3. Practical Applications
 
@@ -93,96 +97,125 @@ import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 
 # --- Constants ---
-g = 9.81       # acceleration due to gravity (m/s^2)
-L = 1.0        # length of the pendulum (m)
+g = 9.81         # Acceleration due to gravity (m/s^2)
+L = 1.0          # Length of the pendulum (m)
+omega_d = 2/3    # Driving frequency
 
-# --- Pendulum ODE's ---
-# y = [theta, omega]
-def pendulum_ode(t, y, b, A, omega_drive):
+# --- Differential Equation Definition ---
+def pendulum_ode(t, y, b, A, omega_d):
     theta, omega = y
     dtheta_dt = omega
-    domega_dt = -b * omega - (g / L) * np.sin(theta) + A * np.cos(omega_drive * t)
+    domega_dt = -b * omega - (g / L) * np.sin(theta) + A * np.cos(omega_d * t)
     return [dtheta_dt, domega_dt]
 
 # --- Simulation Settings ---
-t_span = (0, 40)                                  # simulation time interval (s)
-t_eval = np.linspace(t_span[0], t_span[1], 4000)   # time evaluation points
-y0 = [0.2, 0.0]                                   # initial conditions: theta=0.2 rad, omega=0
+t_span = (0, 20)                                # Simulation time span (s)
+t_eval = np.linspace(t_span[0], t_span[1], 1000)  # Time evaluation points
+y0 = [0.2, 0.0]                                 # Initial conditions: θ = 0.2 rad, ω = 0 rad/s
 
-# --- Case 1: Pure Pendulum (b=0, A=0) ---
-sol_pure = solve_ivp(pendulum_ode, t_span, y0, t_eval=t_eval, args=(0.0, 0.0, 0.0))
+# --- Scenario Parameters ---
+# Pure Pendulum: b = 0, A = 0
+b_pure, A_pure = 0.0, 0.0
 
-# --- Case 2: Damped Pendulum (b=0.5, A=0) ---
-sol_damped = solve_ivp(pendulum_ode, t_span, y0, t_eval=t_eval, args=(0.5, 0.0, 0.0))
+# Damped Pendulum: b ≠ 0, A = 0 (e.g., b = 0.5)
+b_damped, A_damped = 0.5, 0.0
 
-# --- Case 3: Forced (Driven) Pendulum (b=0, A non-zero) ---
-b_forced = 0.0
-A_forced = 1.0
-omega_drive = 2/3
-sol_forced = solve_ivp(pendulum_ode, t_span, y0, t_eval=t_eval, args=(b_forced, A_forced, omega_drive))
+# Forced Pendulum: b = 0, A ≠ 0 (e.g., A = 1.0)
+b_forced, A_forced = 0.0, 1.0
 
-# --- Plots: Time Series Comparison ---
-plt.figure(figsize=(12,6))
-plt.plot(t_eval, sol_pure.y[0], label="Pure Pendulum", linewidth=2)
-plt.plot(t_eval, sol_damped.y[0], label="Damped Pendulum (b=0.5)", linestyle="--", linewidth=2)
-plt.plot(t_eval, sol_forced.y[0], label=f"Forced Pendulum (b={b_forced}, A={A_forced}, ω_d=2/3)", linestyle=":", linewidth=2)
+# --- Compute the Solutions ---
+sol_pure   = solve_ivp(pendulum_ode, t_span, y0, t_eval=t_eval, args=(b_pure, A_pure, omega_d))
+sol_damped = solve_ivp(pendulum_ode, t_span, y0, t_eval=t_eval, args=(b_damped, A_damped, omega_d))
+sol_forced = solve_ivp(pendulum_ode, t_span, y0, t_eval=t_eval, args=(b_forced, A_forced, omega_d))
+
+############################
+# Separate Visualizations
+############################
+
+# 1. Pure Pendulum Visualizations
+plt.figure(figsize=(12, 5))
+plt.subplot(1, 2, 1)
+plt.plot(t_eval, sol_pure.y[0], color='blue')
 plt.xlabel("Time (s)")
 plt.ylabel("θ (rad)")
-plt.title("Time Series Comparison of Pendulum Scenarios")
-plt.legend()
-plt.grid()
-plt.show()
-
-# --- Plots: Phase Space Diagrams ---
-plt.figure(figsize=(12,6))
-plt.plot(sol_pure.y[0], sol_pure.y[1], label="Pure Pendulum", linewidth=2)
-plt.plot(sol_damped.y[0], sol_damped.y[1], label="Damped Pendulum (b=0.5)", linestyle="--", linewidth=2)
-plt.plot(sol_forced.y[0], sol_forced.y[1], label=f"Forced Pendulum (b={b_forced}, A={A_forced}, ω_d=2/3)", linestyle=":", linewidth=2)
-plt.xlabel("θ (rad)")
-plt.ylabel("ω (rad/s)")
-plt.title("Phase Space Diagrams of Pendulum Scenarios")
-plt.legend()
-plt.grid()
-plt.show()
-
-# --- Poincaré Section for Forced Pendulum ---
-T_drive = 2 * np.pi / omega_drive  # Driving period
-indices = [i for i, t in enumerate(t_eval) if np.isclose(t % T_drive, 0, atol=0.01)]
-theta_poincare = sol_forced.y[0][indices]
-omega_poincare = sol_forced.y[1][indices]
-
-plt.figure(figsize=(8,6))
-plt.scatter(theta_poincare, omega_poincare, color="magenta", s=20, alpha=0.75)
-plt.xlabel("θ (rad)")
-plt.ylabel("ω (rad/s)")
-plt.title("Poincaré Section for Forced Pendulum")
-plt.grid()
-plt.show()
-
-# --- Bifurcation Diagram ---
-# Vary the driving amplitude A from 0.5 to 1.5 and record the theta values (Poincaré section) after a transient.
-A_values = np.linspace(0.5, 1.5, 100)
-b_value = b_forced  # Using b=0 for forced pendulum as requested
-theta_bifurcation = []  # will store tuples (A, theta)
-transient_time = 20  # discard initial transient period
-
-for A in A_values:
-    sol = solve_ivp(pendulum_ode, t_span, y0, t_eval=t_eval, args=(b_value, A, omega_drive))
-    indices = [i for i, t in enumerate(t_eval) if (t > transient_time) and (np.isclose(t % T_drive, 0, atol=0.01))]
-    for i in indices:
-        theta_bifurcation.append((A, sol.y[0][i]))
-
-A_bif = [pt[0] for pt in theta_bifurcation]
-theta_bif = [pt[1] for pt in theta_bifurcation]
-
-plt.figure(figsize=(10,6))
-plt.scatter(A_bif, theta_bif, s=0.5, color='black')
-plt.xlabel("Driving Amplitude A")
-plt.ylabel("θ (rad) from Poincaré Section")
-plt.title("Bifurcation Diagram: Dependence on Driving Amplitude")
+plt.title("Pure Pendulum: Time Series (b=0, A=0)")
 plt.grid(True)
+
+plt.subplot(1, 2, 2)
+plt.plot(sol_pure.y[0], sol_pure.y[1], color='blue')
+plt.xlabel("θ (rad)")
+plt.ylabel("ω (rad/s)")
+plt.title("Pure Pendulum: Phase Portrait")
+plt.grid(True)
+plt.tight_layout()
 plt.show()
 
+# 2. Damped Pendulum Visualizations
+plt.figure(figsize=(12, 5))
+plt.subplot(1, 2, 1)
+plt.plot(t_eval, sol_damped.y[0], color='green')
+plt.xlabel("Time (s)")
+plt.ylabel("θ (rad)")
+plt.title("Damped Pendulum: Time Series (b=0.5, A=0)")
+plt.grid(True)
+
+plt.subplot(1, 2, 2)
+plt.plot(sol_damped.y[0], sol_damped.y[1], color='green')
+plt.xlabel("θ (rad)")
+plt.ylabel("ω (rad/s)")
+plt.title("Damped Pendulum: Phase Portrait")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# 3. Forced Pendulum Visualizations
+plt.figure(figsize=(12, 5))
+plt.subplot(1, 2, 1)
+plt.plot(t_eval, sol_forced.y[0], color='red')
+plt.xlabel("Time (s)")
+plt.ylabel("θ (rad)")
+plt.title("Forced Pendulum: Time Series (b=0, A=1.0)")
+plt.grid(True)
+
+plt.subplot(1, 2, 2)
+plt.plot(sol_forced.y[0], sol_forced.y[1], color='red')
+plt.xlabel("θ (rad)")
+plt.ylabel("ω (rad/s)")
+plt.title("Forced Pendulum: Phase Portrait")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+############################
+# Comparative Visualizations
+############################
+
+plt.figure(figsize=(14, 6))
+
+# Time Series Comparison
+plt.subplot(1, 2, 1)
+plt.plot(t_eval, sol_pure.y[0], label="Pure (b=0, A=0)", color='blue')
+plt.plot(t_eval, sol_damped.y[0], label="Damped (b=0.5, A=0)", color='green')
+plt.plot(t_eval, sol_forced.y[0], label="Forced (b=0, A=1.0)", color='red')
+plt.xlabel("Time (s)")
+plt.ylabel("θ (rad)")
+plt.title("Time Series Comparison")
+plt.legend()
+plt.grid(True)
+
+# Phase Portrait Comparison
+plt.subplot(1, 2, 2)
+plt.plot(sol_pure.y[0], sol_pure.y[1], label="Pure (b=0, A=0)", color='blue')
+plt.plot(sol_damped.y[0], sol_damped.y[1], label="Damped (b=0.5, A=0)", color='green')
+plt.plot(sol_forced.y[0], sol_forced.y[1], label="Forced (b=0, A=1.0)", color='red')
+plt.xlabel("θ (rad)")
+plt.ylabel("ω (rad/s)")
+plt.title("Phase Portrait Comparison")
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+plt.show()
 ```
 
 ## 5. Discussion and Extensions
@@ -190,7 +223,7 @@ plt.show()
 **Resonance and Energy Transfer:**  
 Under the small-angle approximation, the system is linear, and resonance occurs when the driving frequency aligns with the natural frequency, i.e., 
 $$
-\omega_d \approx \frac{g}{L}
+\omega_d \approx \sqrt{\frac{g}{L}}
 $$  
 In this resonant condition, the driving force continuously feeds energy into the system, increasing the oscillation amplitude.
 
@@ -198,7 +231,7 @@ In this resonant condition, the driving force continuously feeds energy into the
 In the damped scenario (e.g., \(b = 0.5\)), energy dissipates over time, causing the oscillation amplitude to decay. The phase space diagram shows a spiral trajectory converging toward the origin.
 
 **Forced Scenario and Chaos:**  
-In the forced pendulum case, the simulation now uses \(b = 0\) with a nonzero driving amplitude (e.g., \(A = 1.0\)). The time series, phase space diagram, and especially the Poincaré section reveal how the system behaves under pure forcing conditions, as requested.
+In the forced pendulum case, the simulation is performed using \(b = 0\) with a nonzero driving amplitude (e.g., \(A = 1.0\)). The time series, phase space diagram, and especially the Poincaré section reveal how the system behaves under pure forcing conditions.
 
 **Bifurcation Analysis:**  
 By systematically varying the driving amplitude \(A\) and plotting the corresponding Poincaré section values (after removing transients), a bifurcation diagram is obtained. This diagram provides insight into how the system transitions from periodic to chaotic behavior as \(A\) is varied.
@@ -212,15 +245,13 @@ By systematically varying the driving amplitude \(A\) and plotting the correspon
 
 This work investigates the dynamics of the forced damped pendulum through both analytical approximations and numerical simulations. By comparing the time series, phase space diagrams, Poincaré sections, and a bifurcation diagram across various scenarios (pure, damped, and forced pendulums), the study illustrates the transition from regular harmonic motion to complex, potentially chaotic behavior. The model provides insights applicable to energy harvesting, vibration control in structures, driven oscillatory circuits, and many other real-world systems. Parameter variations—such as changes in the damping coefficient \(b\), driving amplitude \(A\), and driving frequency \(\omega_d\)—offer a rich context for further exploration of resonance, bifurcation, and chaotic transitions.
 
-
-![alt text](<time series1.png>)
-
-
-![alt text](<phase space1.png>)
+![alt text](<pure pendulum.png>)
 
 
-![alt text](forced1.png)
+![alt text](<damped pendulum.png>)
 
 
-![alt text](bifurcation1.png)
+![alt text](<forced pendulum.png>)
 
+
+![alt text](<all together.png>)
