@@ -4,7 +4,7 @@
 
 ## 1. Introduction
 
-This document explores the fundamental principles and applications of Kepler's Third Law. According to the law, there is a linear relationship between the square of the orbital period and the cube of the orbital radius for a body in orbit. This law is crucial in analyzing the orbits of planets, moons, and other celestial objects. The work covers theoretical derivation, real-world examples (such as the Moon's orbit around the Earth and the orbits of planets in the Solar System), and computational verification using Python simulations.
+This document explores the fundamental principles and applications of Kepler's Third Law. According to the law, there is a linear relationship between the square of the orbital period and the cube of the orbital radius for a body in orbit. This law is crucial in analyzing the orbits of planets, moons, and other celestial objects. The solution covers theoretical derivation, real-world examples (such as the Moon's orbit around the Earth and the orbits of planets in the Solar System), and computational verification using Python simulations with animated GIFs.
 
 ---
 
@@ -107,16 +107,20 @@ The derived relationship indicates:
 
 ## 4. Computational Model and Simulation Using Python
 
-The following Python scripts simulate both circular orbits and the linear relationship between \(T^2\) and \(r^3\).
+The following Python scripts simulate both circular orbits and the linear relationship between \(T^2\) and \(r^3\). Both animations are generated and saved as animated GIFs.
 
-### 4.1 Circular Orbit Simulation
+### 4.1 Circular Orbit Animation
 
-In this section, we simulate the Earth’s circular orbit around the Sun.
+The animated GIF below displays the simulation of Earth's circular orbit around the Sun. In the animation, the orbit is gradually traced while a moving point represents the planet. The Python code used to generate this animation is provided below.
+
+![alt text](circular_orbit.gif)
+
 
 ```python
 # Import necessary libraries
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation, PillowWriter
 
 # Universal constants and parameters
 G = 6.67430e-11  # Universal gravitational constant (m^3 kg^-1 s^-2)
@@ -131,33 +135,68 @@ T = 2 * np.pi * np.sqrt(r**3 / (G * M))
 print(f"Orbital Period (T): {T:.2e} s")
 
 # Simulation parameters
-num_points = 1000
-t = np.linspace(0, T, num_points)
+num_frames = 200  # Number of frames for the animation
+t = np.linspace(0, T, num_frames)
 theta = 2 * np.pi * t / T  # Angular position as a function of time
 
 # Orbit coordinates in the x-y plane
 x = r * np.cos(theta)
 y = r * np.sin(theta)
 
-# Plotting the circular orbit
-plt.figure(figsize=(6,6))
-plt.plot(x, y, label="Circular Orbit")
-plt.scatter(0, 0, color='orange', s=200, label="Sun")
-plt.xlabel("x (m)")
-plt.ylabel("y (m)")
-plt.title("Circular Orbit Simulation")
-plt.legend()
-plt.grid(True)
-plt.axis('equal')
-plt.show()
+# Create the figure and axis
+fig, ax = plt.subplots(figsize=(6,6))
+ax.set_xlim(-1.2 * r, 1.2 * r)
+ax.set_ylim(-1.2 * r, 1.2 * r)
+ax.set_title("Circular Orbit Animation")
+ax.set_xlabel("x (m)")
+ax.set_ylabel("y (m)")
+ax.grid(True)
+ax.set_aspect('equal')
+
+# Initialize plot elements: orbit line and moving point for the planet
+orbit_line, = ax.plot([], [], 'b-', label="Orbit")
+planet_point, = ax.plot([], [], 'ro', markersize=5)  # moving point for the planet
+ax.scatter(0, 0, color='orange', s=200, label="Sun")
+ax.legend()
+
+def init():
+    orbit_line.set_data([], [])
+    planet_point.set_data([], [])
+    return orbit_line, planet_point
+
+def update(frame):
+    # Update the orbit trace and the current position of the planet
+    orbit_line.set_data(x[:frame], y[:frame])
+    # Wrap the single x,y values in lists to provide sequences
+    planet_point.set_data([x[frame-1]], [y[frame-1]])
+    return orbit_line, planet_point
+
+# Create the animation using frames from 1 to num_frames (avoiding frame 0)
+anim = FuncAnimation(fig, update, frames=range(1, num_frames+1), init_func=init, blit=True, interval=50)
+
+# Save the animation as an animated GIF
+anim.save('circular_orbit.gif', writer=PillowWriter(fps=20))
+plt.close()
 ```
 
-### 4.2 Graph of the Linear Relation between \(T^2\) and \(r^3\)
+### 4.2 \(T^2\) vs.\(r^3\) Animation
 
-The following code calculates orbital periods for different orbital radii and plots \(T^2\) against \(r^3\) to demonstrate the linear relationship.
+The animated GIF below illustrates how the scatter plot of \(T^2\) versus \(r^3\) is built up incrementally, along with the gradual drawing of the theoretical linear relation. Following the GIF, the Python code used to generate this animation is provided.
+
+![alt text](T2_vs_r3.gif)
+
 
 ```python
-# Examples with different orbital radii (from 0.5 AU to 3 AU)
+# Import necessary libraries
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation, PillowWriter
+
+# Universal constants and parameters
+G = 6.67430e-11  # Universal gravitational constant (m^3 kg^-1 s^-2)
+M = 1.989e30     # Mass of the Sun (kg)
+
+# Generate values for different orbital radii (from 0.5 AU to 3 AU)
 r_vals = np.linspace(0.5, 3, 50) * 1.496e11  # Converting AU to meters (1 AU = 1.496e11 m)
 T_vals = 2 * np.pi * np.sqrt(r_vals**3 / (G * M))
 
@@ -165,40 +204,64 @@ T_vals = 2 * np.pi * np.sqrt(r_vals**3 / (G * M))
 T_squared = T_vals**2
 r_cubed = r_vals**3
 
-# Plotting the graph
-plt.figure(figsize=(8,6))
-plt.scatter(r_cubed, T_squared, color='blue', label="$T^2$ Values")
-# Plot the theoretical linear relationship: T^2 = (4π^2/GM)*r^3
-slope = 4 * np.pi**2 / (G * M)
-r_cubed_fit = np.linspace(min(r_cubed), max(r_cubed), 100)
-T_squared_fit = slope * r_cubed_fit
-plt.plot(r_cubed_fit, T_squared_fit, color='red', label="Theoretical Linear Relation")
-plt.xlabel("$r^3$ (m$^3$)")
-plt.ylabel("$T^2$ (s$^2$)")
-plt.title("Linear Relation between $T^2$ and $r^3$")
-plt.legend()
-plt.grid(True)
-plt.show()
+# Create the figure and axis
+fig2, ax2 = plt.subplots(figsize=(8,6))
+ax2.set_xlabel("$r^3$ (m$^3$)")
+ax2.set_ylabel("$T^2$ (s$^2$)")
+ax2.set_title("Linear Relation between $T^2$ and $r^3$")
+ax2.grid(True)
+ax2.set_xlim(np.min(r_cubed)*0.9, np.max(r_cubed)*1.1)
+ax2.set_ylim(np.min(T_squared)*0.9, np.max(T_squared)*1.1)
+
+# Initialize plot elements: scatter plot and the theoretical line
+scatter = ax2.scatter([], [], color='blue', label="$T^2$ Values")
+line_plot, = ax2.plot([], [], 'r-', label="Theoretical Linear Relation")
+ax2.legend()
+
+num_points = len(r_cubed)
+
+def init2():
+    # Initialize with an empty 2D array of shape (0,2) to avoid indexing errors
+    scatter.set_offsets(np.empty((0, 2)))
+    line_plot.set_data([], [])
+    return scatter, line_plot
+
+def update2(frame):
+    # Update scatter points incrementally
+    current_points = np.column_stack((r_cubed[:frame], T_squared[:frame]))
+    scatter.set_offsets(current_points)
+    
+    # Compute and update the theoretical linear relation
+    slope = 4 * np.pi**2 / (G * M)
+    x_fit = np.linspace(np.min(r_cubed), np.max(r_cubed), 100)
+    y_fit = slope * x_fit
+    # Animate the drawing of the line gradually
+    fraction = frame / num_points
+    idx = int(len(x_fit) * fraction)
+    line_plot.set_data(x_fit[:idx], y_fit[:idx])
+    return scatter, line_plot
+
+# Create the animation
+anim2 = FuncAnimation(fig2, update2, frames=num_points, init_func=init2, blit=True, interval=100)
+
+# Save the animation as an animated GIF
+anim2.save('T2_vs_r3.gif', writer=PillowWriter(fps=10))
+plt.close()
 ```
-
-These codes allow us to:
-
-- **Circular Orbit Simulation:** Visualize the Earth's orbit around the Sun.
-- **\(T^2\) vs.\(r^3\) Graph:** Demonstrate that the computed orbital period values conform to the linear relationship predicted by theory.
 
 ---
 
 ## 5. Graphical Representations
 
-The Python code yields two main visualizations:
+The animated GIFs generated from the Python code illustrate the following:
 
-- **Orbit Simulation Graph:** This graph displays the circular orbit along with the Sun at the center.
-- **\(T^2\) vs.\(r^3\) Graph:** This scatter plot shows the relationship between the computed values, which aligns closely with the theoretical prediction 
+- **Orbit Animation:** Displays the circular orbit of a planet (Earth) around the Sun in motion, with the orbit traced gradually and a moving point representing the planet.
+- **\(T^2\) vs.\(r^3\) Animation:** Demonstrates incrementally how the computed \(T^2\) values versus \(r^3\) build up, along with the progressive drawing of the theoretical linear relation  
   $$
-  T^2=\frac{4\pi^2}{GM}r^3
+  T^2=\frac{4\pi^2}{GM}r^3.
   $$
 
-These graphics confirm that Kepler’s Third Law is both mathematically consistent and practically observable.
+These animations confirm that Kepler’s Third Law is both mathematically consistent and practically observable.
 
 ---
 
@@ -214,7 +277,7 @@ Here:
 
 - \(a\): The semi-major axis of the elliptical orbit
 
-This extension is essential when analyzing slightly eccentric orbits. Although minor corrections might be necessary for very elliptical cases, the basic proportionality remains valid.
+This extension is essential when analyzing slightly eccentric orbits. Although minor corrections might be necessary for highly elliptical cases, the basic proportionality remains valid.
 
 ---
 
@@ -222,11 +285,11 @@ This extension is essential when analyzing slightly eccentric orbits. Although m
 
 In this solution:
 
-- **Derivation:** The gravitational and centripetal forces were equated to derive the relation 
+- **Derivation:** The gravitational and centripetal forces were equated to derive the relation  
   $$
   T^2=\frac{4\pi^2}{GM}r^3
   $$  
   for circular orbits.
 - **Astrophysical Applications:** The formula is used to analyze planetary and satellite orbits and to calculate the masses of central objects (e.g., the Sun or the Earth).
-- **Simulation:** Python simulations were conducted to visualize both the circular orbit and the linear relationship between \(T^2\) and \(r^3\).
+- **Simulation:** Python simulations with animated GIFs have been used to visualize both the circular orbit and the linear relationship between \(T^2\) and \(r^3\).
 - **Extension to Elliptical Orbits:** The solution extends to elliptical orbits using the semi-major axis, maintaining the validity of the relationship.
