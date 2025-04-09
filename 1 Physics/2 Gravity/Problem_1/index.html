@@ -176,6 +176,190 @@
 <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
 <div class="section" itemprop="articleBody">
 <h1 id="problem-1">Problem 1</h1>
+<h1 id="orbital-period-and-orbital-radius-applications-of-keplers-third-law">Orbital Period and Orbital Radius: Applications of Kepler's Third Law</h1>
+<h2 id="1-introduction">1. Introduction</h2>
+<p>This document explores the fundamental principles and applications of Kepler's Third Law. According to the law, there is a linear relationship between the square of the orbital period and the cube of the orbital radius for a body in orbit. This law is crucial in analyzing the orbits of planets, moons, and other celestial objects. The work covers theoretical derivation, real-world examples (such as the Moon's orbit around the Earth and the orbits of planets in the Solar System), and computational verification using Python simulations.</p>
+<hr/>
+<h2 id="2-theoretical-background">2. Theoretical Background</h2>
+<h3 id="21-derivation-of-keplers-third-law-for-circular-orbits">2.1 Derivation of Kepler's Third Law for Circular Orbits</h3>
+<p>For a circular orbit, a planet or satellite moves around a central mass (e.g., the Sun or the Earth) along a path with a constant radius. In such an orbit, the gravitational force supplies the necessary centripetal force for circular motion.</p>
+<ol>
+<li><strong>Gravitational Force:</strong><br/>
+   [
+   F_{g} = \frac{GMm}{r^2}
+   ]</li>
+<li><span class="arithmatex">\(G\)</span>: Universal gravitational constant  </li>
+<li><span class="arithmatex">\(M\)</span>: Mass of the central body  </li>
+<li><span class="arithmatex">\(m\)</span>: Mass of the orbiting object  </li>
+<li>
+<p><span class="arithmatex">\(r\)</span>: Orbital radius  </p>
+</li>
+<li>
+<p><strong>Centripetal Force for Circular Motion:</strong><br/>
+   [
+   F_{c} = m \frac{v^2}{r}
+   ]</p>
+</li>
+<li>
+<p><span class="arithmatex">\(v\)</span>: Orbital speed of the object  </p>
+</li>
+<li>
+<p><strong>Equating the Forces:</strong><br/>
+   In a circular orbit the gravitational force provides the required centripetal force:
+   [
+   \frac{GMm}{r^2} = m \frac{v^2}{r}
+   ]
+   Cancelling the mass <span class="arithmatex">\(m\)</span>:
+   [
+   v^2 = \frac{GM}{r}
+   ]</p>
+</li>
+<li>
+<p><strong>Expressing the Orbital Period:</strong><br/>
+   The orbital period <span class="arithmatex">\(T\)</span> is the time required to complete one full orbit. Given that the orbit's circumference is <span class="arithmatex">\(2\pi r\)</span>, we have:
+   [
+   T = \frac{2\pi r}{v}
+   ]
+   Substituting the expression for <span class="arithmatex">\(v\)</span>:
+   [
+   T = \frac{2\pi r}{\sqrt{GM/r}} = 2\pi \sqrt{\frac{r^3}{GM}}
+   ]</p>
+</li>
+<li>
+<p><strong>Kepler's Third Law:</strong><br/>
+   Squaring both sides gives:
+   [
+   T^2 = \frac{4\pi^2}{GM} \, r^3
+   ]
+   This result shows that the square of the orbital period is directly proportional to the cube of the orbital radius. The proportionality constant is <span class="arithmatex">\(\frac{4\pi^2}{GM}\)</span>.</p>
+</li>
+</ol>
+<h3 id="22-conclusion-and-interpretation">2.2 Conclusion and Interpretation</h3>
+<p>The derived relationship indicates:
+- <strong>Fundamental Relation:</strong><br/>
+  [
+  T^2 \propto r^3
+  ]
+- Although derived for circular orbits, this proportionality holds for elliptical orbits when the orbital radius is replaced by the semi-major axis.</p>
+<hr/>
+<h2 id="3-astrophysical-applications">3. Astrophysical Applications</h2>
+<h3 id="31-analysis-of-planetary-and-satellite-orbits">3.1 Analysis of Planetary and Satellite Orbits</h3>
+<ul>
+<li>
+<p><strong>Planetary Orbits:</strong><br/>
+  In the Solar System, the orbital periods and radii of the planets adhere to the relationship defined by Kepler's Third Law. For instance, the Earth's orbital radius is approximately <span class="arithmatex">\(1.496 \times 10^{11}\)</span> m and its orbital period is about <span class="arithmatex">\(3.16 \times 10^7\)</span> s, which are consistent with the theoretical formula.</p>
+</li>
+<li>
+<p><strong>Moon’s Orbit:</strong><br/>
+  The Moon’s orbit around the Earth can be similarly analyzed. With an orbital radius of roughly 384,400 km and a period of about 27.3 days, these values enable calculations of other system properties and central masses using Kepler's relation.</p>
+</li>
+</ul>
+<h3 id="32-mass-and-distance-calculations">3.2 Mass and Distance Calculations</h3>
+<ul>
+<li>
+<p><strong>Calculating the Central Mass:</strong><br/>
+  If the orbital period and radius are known for a satellite or planet, the mass of the central body (e.g., the Sun) can be calculated by rearranging Kepler’s law:
+  [
+  M = \frac{4\pi^2 r^3}{G T^2}
+  ]</p>
+</li>
+<li>
+<p><strong>Spacecraft and Artificial Satellites:</strong><br/>
+  This law is also applicable in orbit determination for spacecraft and artificial satellites, providing critical insights for mission design and orbital maintenance.</p>
+</li>
+</ul>
+<hr/>
+<h2 id="4-computational-model-and-simulation-using-python">4. Computational Model and Simulation Using Python</h2>
+<p>The following Python scripts simulate both circular orbits and the linear relationship between <span class="arithmatex">\(T^2\)</span> and <span class="arithmatex">\(r^3\)</span>. </p>
+<h3 id="41-circular-orbit-simulation">4.1 Circular Orbit Simulation</h3>
+<p>In this section, we simulate the Earth’s circular orbit around the Sun.</p>
+<pre><code class="language-python"># Import necessary libraries
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Universal constants and parameters
+G = 6.67430e-11  # Universal gravitational constant (m^3 kg^-1 s^-2)
+M = 1.989e30     # Mass of the Sun (kg)
+r = 1.496e11     # Average distance of Earth from the Sun (m)
+
+# Earth's orbital speed
+v = np.sqrt(G * M / r)
+
+# Orbital period calculation
+T = 2 * np.pi * np.sqrt(r**3 / (G * M))
+print(f"Orbital Period (T): {T:.2e} s")
+
+# Simulation parameters
+num_points = 1000
+t = np.linspace(0, T, num_points)
+theta = 2 * np.pi * t / T  # Angular position as a function of time
+
+# Orbit coordinates in the x-y plane
+x = r * np.cos(theta)
+y = r * np.sin(theta)
+
+# Plotting the circular orbit
+plt.figure(figsize=(6,6))
+plt.plot(x, y, label="Circular Orbit")
+plt.scatter(0, 0, color='orange', s=200, label="Sun")
+plt.xlabel("x (m)")
+plt.ylabel("y (m)")
+plt.title("Circular Orbit Simulation")
+plt.legend()
+plt.grid(True)
+plt.axis('equal')
+plt.show()
+</code></pre>
+<h3 id="42-graph-of-the-linear-relation-between-t2-and-r3">4.2 Graph of the Linear Relation between <span class="arithmatex">\(T^2\)</span> and <span class="arithmatex">\(r^3\)</span></h3>
+<p>The following code calculates orbital periods for different orbital radii and plots <span class="arithmatex">\(T^2\)</span> against <span class="arithmatex">\(r^3\)</span> to demonstrate the linear relationship.</p>
+<pre><code class="language-python"># Examples with different orbital radii (from 0.5 AU to 3 AU)
+r_vals = np.linspace(0.5, 3, 50) * 1.496e11  # Converting AU to meters (1 AU = 1.496e11 m)
+T_vals = 2 * np.pi * np.sqrt(r_vals**3 / (G * M))
+
+# Calculate T^2 and r^3 values
+T_squared = T_vals**2
+r_cubed = r_vals**3
+
+# Plotting the graph
+plt.figure(figsize=(8,6))
+plt.scatter(r_cubed, T_squared, color='blue', label="$T^2$ Values")
+# Plot the theoretical linear relationship: T^2 = (4π^2/GM)*r^3
+slope = 4 * np.pi**2 / (G * M)
+r_cubed_fit = np.linspace(min(r_cubed), max(r_cubed), 100)
+T_squared_fit = slope * r_cubed_fit
+plt.plot(r_cubed_fit, T_squared_fit, color='red', label="Theoretical Linear Relation")
+plt.xlabel("$r^3$ (m$^3$)")
+plt.ylabel("$T^2$ (s$^2$)")
+plt.title("Linear Relation between $T^2$ and $r^3$")
+plt.legend()
+plt.grid(True)
+plt.show()
+</code></pre>
+<p>The codes above enable the following:
+- <strong>Circular Orbit Simulation:</strong> Visualizes the Earth's orbit around the Sun.
+- <strong><span class="arithmatex">\(T^2\)</span> vs. <span class="arithmatex">\(r^3\)</span> Graph:</strong> Demonstrates that the computed orbital period values conform to the linear relationship predicted by theory.</p>
+<hr/>
+<h2 id="5-graphical-representations">5. Graphical Representations</h2>
+<p>The Python code yields two main visualizations:
+- <strong>Orbit Simulation Graph:</strong> This graph displays the circular orbit along with the Sun at the center.
+- <strong><span class="arithmatex">\(T^2\)</span> vs. <span class="arithmatex">\(r^3\)</span> Graph:</strong> This scatter plot shows the relationship between the computed values, aligning closely with the theoretical prediction <span class="arithmatex">\(T^2 = \frac{4\pi^2}{GM} r^3\)</span>.</p>
+<p>These graphics confirm that Kepler’s Third Law is both mathematically consistent and practically observable.</p>
+<hr/>
+<h2 id="6-extension-to-elliptical-orbits">6. Extension to Elliptical Orbits</h2>
+<p>In reality, many planets and satellites follow elliptical orbits rather than perfect circles. Kepler’s Third Law still applies for elliptical orbits when the orbital radius is replaced by the <strong>semi-major axis (a)</strong>:</p>
+<div class="arithmatex">\[
+T^2 = \frac{4\pi^2}{GM} a^3
+\]</div>
+<p>Here:
+- <span class="arithmatex">\(a\)</span>: The semi-major axis of the elliptical orbit</p>
+<p>This extension is essential when analyzing slightly eccentric orbits. Although minor corrections might be necessary for very elliptical cases, the basic proportionality remains valid.</p>
+<hr/>
+<h2 id="7-conclusion">7. Conclusion</h2>
+<p>In this solution:
+- <strong>Derivation:</strong> The gravitational and centripetal forces were equated to derive the relation <span class="arithmatex">\(T^2 = \frac{4\pi^2}{GM} r^3\)</span> for circular orbits.
+- <strong>Astrophysical Applications:</strong> The formula is used to analyze planetary and satellite orbits and to calculate the masses of central objects (e.g., the Sun or Earth).
+- <strong>Simulation:</strong> Python simulations were conducted to visualize both the circular orbit and the linear relationship between <span class="arithmatex">\(T^2\)</span> and <span class="arithmatex">\(r^3\)</span>.
+- <strong>Extension to Elliptical Orbits:</strong> The solution extends to elliptical orbits using the semi-major axis, maintaining the validity of the relationship.</p>
 </div>
 </div><footer>
 <div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
