@@ -350,6 +350,60 @@ This extension is essential when analyzing slightly eccentric orbits. Although m
 
 ---
 
+## Mass of Earth and Sun 
+
+### 🌍 Mass of the Earth
+
+From Newton's law:
+
+$$
+g = \frac{G M_\oplus}{R_\oplus^2}
+$$
+
+Solving for $M_\oplus$:
+
+$$
+M_\oplus = \frac{g R_\oplus^2}{G}
+$$
+
+Using:
+- $g \approx 9.81 \, \text{m/s}^2$
+- $R_\oplus \approx 6.371 \times 10^6 \, \text{m}$
+- $G \approx 6.674 \times 10^{-11} \, \text{m}^3/\text{kg}/\text{s}^2$
+
+We get:
+
+$$
+M_\oplus \approx 5.97 \times 10^{24} \, \text{kg}
+$$
+
+---
+
+### ☀️ Mass of the Sun
+
+From Kepler’s third law:
+
+$$
+T^2 = \frac{4\pi^2 a^3}{G M_\odot}
+$$
+
+Solving for $M_\odot$:
+
+$$
+M_\odot = \frac{4\pi^2 a^3}{G T^2}
+$$
+
+Using:
+- $a \approx 1.496 \times 10^{11} \, \text{m}$
+- $T \approx 3.156 \times 10^7 \, \text{s}$
+
+We get:
+
+$$
+M_\odot \approx 1.989 \times 10^{30} \, \text{kg}
+$$
+
+
 ## 7. Conclusion
 
 In this solution:
@@ -362,3 +416,5 @@ In this solution:
 - **Astrophysical Applications:** The formula is used to analyze planetary and satellite orbits and to calculate the masses of central objects (e.g., the Sun or the Earth).
 - **Simulation:** Python simulations with animated GIFs have been used to visualize both the circular orbit and the linear relationship between \(T^2\) and \(r^3\).
 - **Extension to Elliptical Orbits:** The solution extends to elliptical orbits using the semi-major axis, maintaining the validity of the relationship.
+
+
