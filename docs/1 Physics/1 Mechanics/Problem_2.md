@@ -254,3 +254,6 @@ This work investigates the dynamics of the forced damped pendulum through both a
 
 
 ![alt text](<all together.png>)
+
+
+![alt text](image.png)
