@@ -245,66 +245,77 @@ The animated GIF below illustrates how the scatter plot of \(T^2\) versus \(r^3\
 
 
 ```python
-# Import necessary libraries
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, PillowWriter
 
-# Universal constants and parameters
-G = 6.67430e-11  # Universal gravitational constant (m^3 kg^-1 s^-2)
-M = 1.989e30     # Mass of the Sun (kg)
+# Universal constant and Sun's mass
+G = 6.67430e-11       # Gravitational constant (m^3 kg^-1 s^-2)
+M = 1.989e30          # Mass of the Sun (kg)
 
-# Generate values for different orbital radii (from 0.5 AU to 3 AU)
-r_vals = np.linspace(0.5, 3, 50) * 1.496e11  # Converting AU to meters (1 AU = 1.496e11 m)
-T_vals = 2 * np.pi * np.sqrt(r_vals**3 / (G * M))
+# Define the planetary data
+# Orbital radii (in meters) for Mercury, Venus, Earth, and Mars
+planet_names = ["Mercury", "Venus", "Earth", "Mars"]
+planet_r = np.array([5.79e10, 1.082e11, 1.496e11, 2.279e11])
+planet_r_cubed = planet_r**3
 
-# Calculate T^2 and r^3 values
-T_squared = T_vals**2
-r_cubed = r_vals**3
+# Calculate the orbital period (T) for each planet using Kepler's law:
+planet_T = 2 * np.pi * np.sqrt(planet_r**3 / (G * M))
+planet_T_squared = planet_T**2
+
+# Theoretical slope from Kepler's Third Law: T^2 = (4π^2/(GM)) * r^3
+slope = 4 * np.pi**2 / (G * M)
+
+# Set up the range for the theoretical curve based on our planetary data
+x_min = planet_r_cubed.min() * 0.9
+x_max = planet_r_cubed.max() * 1.1
+x_fit = np.linspace(x_min, x_max, 100)
+y_fit = slope * x_fit
 
 # Create the figure and axis
-fig2, ax2 = plt.subplots(figsize=(8,6))
-ax2.set_xlabel("$r^3$ (m$^3$)")
-ax2.set_ylabel("$T^2$ (s$^2$)")
-ax2.set_title("Linear Relation between $T^2$ and $r^3$")
-ax2.grid(True)
-ax2.set_xlim(np.min(r_cubed)*0.9, np.max(r_cubed)*1.1)
-ax2.set_ylim(np.min(T_squared)*0.9, np.max(T_squared)*1.1)
+fig, ax = plt.subplots(figsize=(8, 6))
+ax.set_xlabel("$r^3$ (m$^3$)")
+ax.set_ylabel("$T^2$ (s$^2$)")
+ax.set_title("Kepler's Third Law: $T^2$ vs $r^3$")
+ax.grid(True)
+ax.set_xlim(x_min, x_max)
+ax.set_ylim(y_fit.min() * 0.9, y_fit.max() * 1.1)
 
-# Initialize plot elements: scatter plot and the theoretical line
-scatter = ax2.scatter([], [], color='blue', label="$T^2$ Values")
-line_plot, = ax2.plot([], [], 'r-', label="Theoretical Linear Relation")
-ax2.legend()
+# Plot the planetary data points as a scatter plot
+planet_scatter = ax.scatter(planet_r_cubed, planet_T_squared, color='blue', s=50,
+                            zorder=5, label="Planets")
 
-num_points = len(r_cubed)
+# Annotate each planet with its name
+for i, name in enumerate(planet_names):
+    ax.annotate(name, (planet_r_cubed[i], planet_T_squared[i]), textcoords="offset points",
+                xytext=(5, 5), ha='left')
 
-def init2():
-    # Initialize with an empty 2D array of shape (0,2) to avoid indexing errors
-    scatter.set_offsets(np.empty((0, 2)))
+# Initialize an empty line for the theoretical linear relation
+line_plot, = ax.plot([], [], 'r-', label="Theoretical Linear Relation")
+ax.legend()
+
+# Set up the number of frames for the animation
+num_frames = 100
+
+def init():
     line_plot.set_data([], [])
-    return scatter, line_plot
+    return line_plot,
 
-def update2(frame):
-    # Update scatter points incrementally
-    current_points = np.column_stack((r_cubed[:frame], T_squared[:frame]))
-    scatter.set_offsets(current_points)
-    
-    # Compute and update the theoretical linear relation
-    slope = 4 * np.pi**2 / (G * M)
-    x_fit = np.linspace(np.min(r_cubed), np.max(r_cubed), 100)
-    y_fit = slope * x_fit
-    # Animate the drawing of the line gradually
-    fraction = frame / num_points
+def update(frame):
+    # Animate drawing the theoretical line gradually
+    fraction = frame / num_frames
     idx = int(len(x_fit) * fraction)
     line_plot.set_data(x_fit[:idx], y_fit[:idx])
-    return scatter, line_plot
+    return line_plot,
 
 # Create the animation
-anim2 = FuncAnimation(fig2, update2, frames=num_points, init_func=init2, blit=True, interval=100)
+anim = FuncAnimation(fig, update, frames=num_frames, init_func=init,
+                     blit=True, interval=50)
 
-# Save the animation as an animated GIF
-anim2.save('T2_vs_r3.gif', writer=PillowWriter(fps=10))
+# Save the animation as an animated GIF file
+anim.save('T2_vs_r3_planets.gif', writer=PillowWriter(fps=20))
 plt.close()
+
 ```
 
 ---
