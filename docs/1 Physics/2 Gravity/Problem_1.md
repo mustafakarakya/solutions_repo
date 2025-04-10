@@ -113,69 +113,127 @@ The following Python scripts simulate both circular orbits and the linear relati
 
 The animated GIF below displays the simulation of Earth's circular orbit around the Sun. In the animation, the orbit is gradually traced while a moving point represents the planet. The Python code used to generate this animation is provided below.
 
-![alt text](circular_orbit.gif)
+![alt text](multiple_planets_orbits1.gif)
 
 
 ```python
-# Import necessary libraries
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, PillowWriter
 
-# Universal constants and parameters
-G = 6.67430e-11  # Universal gravitational constant (m^3 kg^-1 s^-2)
-M = 1.989e30     # Mass of the Sun (kg)
-r = 1.496e11     # Average distance of Earth from the Sun (m)
+# Universal constants and masses
+G = 6.67430e-11          # Universal gravitational constant (m^3 kg^-1 s^-2)
+M_sun = 1.989e30         # Mass of the Sun (kg)
+M_earth = 5.972e24       # Mass of the Earth (kg) [Used for the Moon's orbit]
 
-# Earth's orbital speed
-v = np.sqrt(G * M / r)
+# Orbit radii (in meters)
+r_mercury = 5.79e10      # Mercury: approximately 0.39 AU
+r_earth = 1.496e11       # Earth: approximately 1 AU
+r_mars = 2.279e11        # Mars: approximately 1.52 AU
+r_moon = 3.844e8         # Moon: average distance from Earth
 
-# Orbital period calculation
-T = 2 * np.pi * np.sqrt(r**3 / (G * M))
-print(f"Orbital Period (T): {T:.2e} s")
+# Orbital period for each body (Kepler's law: T = 2π * √(r^3/(G*M)))
+T_mercury = 2 * np.pi * np.sqrt(r_mercury**3 / (G * M_sun))
+T_earth   = 2 * np.pi * np.sqrt(r_earth**3   / (G * M_sun))
+T_mars    = 2 * np.pi * np.sqrt(r_mars**3    / (G * M_sun))
+# For the Moon's orbit around the Earth, we use M_earth:
+T_moon    = 2 * np.pi * np.sqrt(r_moon**3    / (G * M_earth))
 
-# Simulation parameters
-num_frames = 200  # Number of frames for the animation
-t = np.linspace(0, T, num_frames)
-theta = 2 * np.pi * t / T  # Angular position as a function of time
+print(f"Mercury Orbital Period: {T_mercury:.2e} s")
+print(f"Earth Orbital Period: {T_earth:.2e} s")
+print(f"Mars Orbital Period: {T_mars:.2e} s")
+print(f"Moon Orbital Period: {T_moon:.2e} s")
 
-# Orbit coordinates in the x-y plane
-x = r * np.cos(theta)
-y = r * np.sin(theta)
+# Simulation parameters: We simulate for one Earth year.
+num_frames = 400
+t = np.linspace(0, T_earth, num_frames)
 
-# Create the figure and axis
-fig, ax = plt.subplots(figsize=(6,6))
-ax.set_xlim(-1.2 * r, 1.2 * r)
-ax.set_ylim(-1.2 * r, 1.2 * r)
-ax.set_title("Circular Orbit Animation")
+# For each body, the angular displacement follows a linear (uniform) relationship:
+# theta = 2π * (t / T)
+theta_mercury = 2 * np.pi * (t / T_mercury)
+theta_earth   = 2 * np.pi * (t / T_earth)
+theta_mars    = 2 * np.pi * (t / T_mars)
+theta_moon    = 2 * np.pi * (t / T_moon)
+
+# Circular orbit coordinates with respect to the Sun:
+x_mercury = r_mercury * np.cos(theta_mercury)
+y_mercury = r_mercury * np.sin(theta_mercury)
+
+x_earth   = r_earth * np.cos(theta_earth)
+y_earth   = r_earth * np.sin(theta_earth)
+
+x_mars    = r_mars * np.cos(theta_mars)
+y_mars    = r_mars * np.sin(theta_mars)
+
+# The Moon's orbit is around the Earth; its absolute position is the Earth's position plus the Moon's orbital position:
+x_moon = x_earth + r_moon * np.cos(theta_moon)
+y_moon = y_earth + r_moon * np.sin(theta_moon)
+
+# Set up the figure and axes
+fig, ax = plt.subplots(figsize=(8, 8))
+limit = 1.3 * r_mars  # This limit ensures that the Mars orbit is fully visible
+ax.set_xlim(-limit, limit)
+ax.set_ylim(-limit, limit)
+ax.set_title("Circular Orbits of Mercury, Earth, Mars, and Moon")
 ax.set_xlabel("x (m)")
 ax.set_ylabel("y (m)")
 ax.grid(True)
 ax.set_aspect('equal')
 
-# Initialize plot elements: orbit line and moving point for the planet
-orbit_line, = ax.plot([], [], 'b-', label="Orbit")
-planet_point, = ax.plot([], [], 'ro', markersize=5)  # moving point for the planet
-ax.scatter(0, 0, color='orange', s=200, label="Sun")
+# Plot the Sun
+ax.scatter(0, 0, color='yellow', s=300, label="Sun", zorder=5)
+
+# Define orbit trace lines and current position markers for each body
+orbit_mercury_line, = ax.plot([], [], color='orange', linestyle='--', label="Mercury Orbit")
+point_mercury, = ax.plot([], [], 'o', color='orange', markersize=4)
+
+orbit_earth_line,   = ax.plot([], [], color='blue', linestyle='--', label="Earth Orbit")
+point_earth,   = ax.plot([], [], 'o', color='blue', markersize=6)
+
+orbit_mars_line,    = ax.plot([], [], color='red', linestyle='--', label="Mars Orbit")
+point_mars,    = ax.plot([], [], 'o', color='red', markersize=5)
+
+orbit_moon_line,    = ax.plot([], [], color='gray', linestyle='--', label="Moon Orbit")
+point_moon,    = ax.plot([], [], 'o', color='gray', markersize=3)
+
 ax.legend()
 
 def init():
-    orbit_line.set_data([], [])
-    planet_point.set_data([], [])
-    return orbit_line, planet_point
+    # Clear all orbit lines and points
+    orbit_mercury_line.set_data([], [])
+    orbit_earth_line.set_data([], [])
+    orbit_mars_line.set_data([], [])
+    orbit_moon_line.set_data([], [])
+    
+    point_mercury.set_data([], [])
+    point_earth.set_data([], [])
+    point_mars.set_data([], [])
+    point_moon.set_data([], [])
+    return (orbit_mercury_line, orbit_earth_line, orbit_mars_line, orbit_moon_line,
+            point_mercury, point_earth, point_mars, point_moon)
 
 def update(frame):
-    # Update the orbit trace and the current position of the planet
-    orbit_line.set_data(x[:frame], y[:frame])
-    # Wrap the single x,y values in lists to provide sequences
-    planet_point.set_data([x[frame-1]], [y[frame-1]])
-    return orbit_line, planet_point
+    # Update orbit traces up to the current frame
+    orbit_mercury_line.set_data(x_mercury[:frame], y_mercury[:frame])
+    orbit_earth_line.set_data(x_earth[:frame], y_earth[:frame])
+    orbit_mars_line.set_data(x_mars[:frame], y_mars[:frame])
+    orbit_moon_line.set_data(x_moon[:frame], y_moon[:frame])
+    
+    # Update the markers for the current positions (wrap single coordinates in lists)
+    point_mercury.set_data([x_mercury[frame-1]], [y_mercury[frame-1]])
+    point_earth.set_data([x_earth[frame-1]], [y_earth[frame-1]])
+    point_mars.set_data([x_mars[frame-1]], [y_mars[frame-1]])
+    point_moon.set_data([x_moon[frame-1]], [y_moon[frame-1]])
+    
+    return (orbit_mercury_line, orbit_earth_line, orbit_mars_line, orbit_moon_line,
+            point_mercury, point_earth, point_mars, point_moon)
 
-# Create the animation using frames from 1 to num_frames (avoiding frame 0)
-anim = FuncAnimation(fig, update, frames=range(1, num_frames+1), init_func=init, blit=True, interval=50)
+# Create the animation: each frame represents an update
+anim = FuncAnimation(fig, update, frames=range(1, num_frames+1), 
+                     init_func=init, blit=True, interval=30)
 
-# Save the animation as an animated GIF
-anim.save('circular_orbit.gif', writer=PillowWriter(fps=20))
+# Save the animation as a GIF file
+anim.save('multiple_planets_orbits.gif', writer=PillowWriter(fps=20))
 plt.close()
 ```
 
@@ -183,7 +241,7 @@ plt.close()
 
 The animated GIF below illustrates how the scatter plot of \(T^2\) versus \(r^3\) is built up incrementally, along with the gradual drawing of the theoretical linear relation. Following the GIF, the Python code used to generate this animation is provided.
 
-![alt text](T2_vs_r3.gif)
+![alt text](T2_vs_r3_planets.gif)
 
 
 ```python
