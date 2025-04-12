@@ -114,6 +114,21 @@ For **Earth**, this yields approximately:
 - \( v_2 \approx 11.18\, \text{km/s} \)
 - \( v_3 \approx \sqrt{(11.18)^2 + (29.78)^2} \approx 31.60\, \text{km/s} \)
 
+For **Moon**, this yields approximately:
+- \( v_1 \approx 1.68\, \text{km/s} \)
+- \( v_2 \approx \sqrt{2}\times 1.68 \approx 2.38\, \text{km/s} \)
+- \( v_3 \approx \sqrt{(2.38)^2 + (29.78)^2} \approx 29.87\, \text{km/s} \)
+
+For **Mars**, this yields approximately:
+- \( v_1 \approx 3.55\, \text{km/s} \)
+- \( v_2 \approx \sqrt{2}\times 3.55 \approx 5.03\, \text{km/s} \)
+- \( v_3 \approx \sqrt{(5.03)^2 + (24.08)^2} \approx 24.60\, \text{km/s} \)
+
+For **Jupiter**, this yields approximately:
+- \( v_1 \approx 42.55\, \text{km/s} \)
+- \( v_2 \approx \sqrt{2}\times 42.55 \approx 60.20\, \text{km/s} \)
+- \( v_3 \approx \sqrt{(60.20)^2 + (13.07)^2} \approx 61.63\, \text{km/s} \)
+
 ---
 
 ## 3. Python Implementation and Simulation
