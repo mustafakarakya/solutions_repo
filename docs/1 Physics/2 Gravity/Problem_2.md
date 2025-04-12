@@ -219,3 +219,5 @@ This document provided a detailed derivation of the three cosmic velocities and 
 
 ![alt text](image-1.png)
 
+
+![alt text](233.gif)
