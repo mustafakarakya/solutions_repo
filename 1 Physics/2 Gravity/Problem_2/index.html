@@ -253,7 +253,7 @@ v_3 = \sqrt{v_2^2 + v_{orb}^2}.
 - <span class="arithmatex">\( v_3 \approx \sqrt{(11.18)^2 + (29.78)^2} \approx 31.60\, \text{km/s} \)</span></p>
 <hr/>
 <h2 id="3-python-implementation-and-simulation">3. Python Implementation and Simulation</h2>
-<p>Below is a Python script (or notebook cell) that calculates these velocities for each celestial body and produces a bar chart for visual comparison.</p>
+<p>Below are Python scripts that (1) calculate the velocities for each celestial body and generate a bar chart for comparison, and (2) create and save an animated GIF illustrating the three stages of cosmic velocity visually.</p>
 <pre><code class="language-python">import math
 import matplotlib.pyplot as plt
 import numpy as np
@@ -329,6 +329,195 @@ autolabel(rects3)
 plt.tight_layout()
 plt.show()
 </code></pre>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation, PillowWriter
+import matplotlib.patches as patches
+
+# Frame counts for each stage:
+N1 = 100  # Stage 1: Stable Orbit (First Cosmic Speed)
+N2 = 100  # Stage 2: Acceleration and Escape (Second Cosmic Speed)
+N3 = 100  # Stage 3: Heliocentric Escape (Third Cosmic Speed)
+
+# Orbital radii of the planets in the solar system (scaled values)
+orbit_radii = {
+    'Mercury': 0.4,
+    'Venus': 0.7,
+    'Earth': 1.0,
+    'Mars': 1.5,
+}
+# Orbital periods of the planets (in frames; conceptual values)
+orbit_periods = {
+    'Mercury': 40,
+    'Venus': 70,
+    'Earth': 100,
+    'Mars': 150,
+}
+
+# Create a figure with 3 rows and 1 column (subplots stacked vertically).
+fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 18))
+
+def draw_solar_system(ax, frame, lim):
+    """
+    On the given axis, draw the solar system background: the Sun, the planetary orbits, and the planetary positions.
+    """
+    ax.set_xlim(-lim, lim)
+    ax.set_ylim(-lim, lim)
+    ax.set_aspect('equal')
+
+    # Sun: at the center, yellow circle
+    sun = patches.Circle((0, 0), 0.2, color='yellow')
+    ax.add_patch(sun)
+
+    # Draw each planet's orbit
+    for planet, r in orbit_radii.items():
+        orbit_circle = patches.Circle((0, 0), r, fill=False, linestyle='--', color='gray', alpha=0.5)
+        ax.add_patch(orbit_circle)
+
+    # Compute the positions of the planets based on their periods
+    positions = {}
+    for planet, r in orbit_radii.items():
+        period = orbit_periods[planet]
+        angle = 2 * np.pi * (frame / period)
+        x = r * np.cos(angle)
+        y = r * np.sin(angle)
+        positions[planet] = (x, y)
+        # Display the planets as small circles. Earth in blue, the others in black.
+        color = 'blue' if planet == 'Earth' else 'black'
+        planet_circle = patches.Circle((x, y), 0.05 * lim, color=color)
+        ax.add_patch(planet_circle)
+        ax.text(x + 0.05, y + 0.05, planet, fontsize=8)
+    return positions
+
+def update_stage1(frame):
+    """
+    Stage 1: Animation of an object in a stable orbit around Earth (First Cosmic Speed)
+    """
+    ax1.cla()  # Clear this subplot
+    positions = draw_solar_system(ax1, frame, lim=2)
+    earth_pos = positions['Earth']
+
+    # The object's orbit around Earth (small satellite orbit):
+    r_sat = 0.2
+    # The object rotates, making 3 full revolutions (using frame mod N1)
+    theta_sat = 2 * np.pi * (3 * frame / N1)
+    sat_rel = np.array([r_sat * np.cos(theta_sat), r_sat * np.sin(theta_sat)])
+    sat_pos = np.array(earth_pos) + sat_rel
+
+    # Plot the object's position (red dot)
+    ax1.plot(sat_pos[0], sat_pos[1], marker='o', markersize=8, color='red')
+
+    # Calculate the approximate velocity vector (using a small delta for the derivative)
+    delta = 0.01
+    theta_sat_next = 2 * np.pi * (3 * (frame + delta) / N1)
+    sat_rel_next = np.array([r_sat * np.cos(theta_sat_next), r_sat * np.sin(theta_sat_next)])
+    sat_pos_next = np.array(earth_pos) + sat_rel_next
+    vel = sat_pos_next - sat_pos
+    ax1.arrow(sat_pos[0], sat_pos[1], vel[0]*5, vel[1]*5, head_width=0.05, head_length=0.05,
+              fc='green', ec='green')
+
+    # Information text
+    ax1.text(-1.8, 1.8, "First Cosmic Speed:\nv₁ = √(GM/R) = 7.91 km/s", fontsize=10,
+             bbox=dict(facecolor='white', alpha=0.5))
+    ax1.set_title("Stage 1: Stable Orbit")
+    ax1.set_xlabel("X [units]")
+    ax1.set_ylabel("Y [units]")
+    ax1.grid(True)
+
+def update_stage2(frame):
+    """
+    Stage 2: Object's escape from Earth orbit (Second Cosmic Speed)
+    """
+    ax2.cla()
+    positions = draw_solar_system(ax2, frame, lim=3)
+    earth_pos = positions['Earth']
+
+    # Parameter t: from 0 to 1 (using frame mod N2)
+    t = frame / float(N2)
+    r_sat = 0.2 + 0.5 * (t**2)  # Distance increasing in a spiral
+    theta_sat = 2 * np.pi * (3 * t)
+    sat_rel = np.array([r_sat * np.cos(theta_sat), r_sat * np.sin(theta_sat)])
+    sat_pos = np.array(earth_pos) + sat_rel
+    ax2.plot(sat_pos[0], sat_pos[1], marker='o', markersize=8, color='red')
+
+    # Compute the velocity vector using a small derivative difference:
+    delta = 0.01
+    t_next = (frame + delta) / float(N2)
+    r_sat_next = 0.2 + 0.5 * (t_next**2)
+    theta_sat_next = 2 * np.pi * (3 * t_next)
+    sat_rel_next = np.array([r_sat_next * np.cos(theta_sat_next), r_sat_next * np.sin(theta_sat_next)])
+    sat_pos_next = np.array(earth_pos) + sat_rel_next
+    vel = sat_pos_next - sat_pos
+    ax2.arrow(sat_pos[0], sat_pos[1], vel[0]*5, vel[1]*5, head_width=0.05, head_length=0.05,
+              fc='green', ec='green')
+
+    ax2.text(-2.8, 2.5, "Second Cosmic Speed:\nv₂ = √(2GM/R) = 11.18 km/s", fontsize=10,
+             bbox=dict(facecolor='white', alpha=0.5))
+    ax2.set_title("Stage 2: Acceleration and Escape")
+    ax2.set_xlabel("X [units]")
+    ax2.set_ylabel("Y [units]")
+    ax2.grid(True)
+
+def update_stage3(frame):
+    """
+    Stage 3: Object's transition to a heliocentric orbit (Third Cosmic Speed)
+    """
+    ax3.cla()
+    positions = draw_solar_system(ax3, frame, lim=5)
+    earth_pos = positions['Earth']
+
+    # Parameter t: from 0 to 1 (using frame mod N3)
+    t = frame / float(N3)
+    # In the heliocentric orbit, the distance increases: starting from Earth's orbit, adding 2 units extra.
+    new_radius = 1.0 + 2 * t
+    earth_angle = np.arctan2(earth_pos[1], earth_pos[0])
+    sat_x = new_radius * np.cos(earth_angle)
+    sat_y = new_radius * np.sin(earth_angle)
+    sat_pos = np.array([sat_x, sat_y])
+    ax3.plot(sat_pos[0], sat_pos[1], marker='o', markersize=8, color='red')
+
+    # Calculate the velocity vector
+    delta = 0.01
+    t_next = (frame + delta) / float(N3)
+    new_radius_next = 1.0 + 2 * t_next
+    sat_x_next = new_radius_next * np.cos(earth_angle)
+    sat_y_next = new_radius_next * np.sin(earth_angle)
+    sat_pos_next = np.array([sat_x_next, sat_y_next])
+    vel = sat_pos_next - sat_pos
+    ax3.arrow(sat_pos[0], sat_pos[1], vel[0]*5, vel[1]*5, head_width=0.1, head_length=0.1,
+              fc='green', ec='green')
+
+    ax3.text(-4.8, 4.5, "Third Cosmic Speed:\nv₃ = √(v₂² + v_orb²) = 31.60 km/s", fontsize=10,
+             bbox=dict(facecolor='white', alpha=0.5))
+    ax3.set_title("Stage 3: Heliocentric Escape")
+    ax3.set_xlabel("X [units]")
+    ax3.set_ylabel("Y [units]")
+    ax3.grid(True)
+
+def update_all(global_frame):
+    """
+    global_frame: A single global frame number for all subplots.
+    Each stage uses its own frame count (mod N1, N2, N3).
+    """
+    frame1 = global_frame % N1
+    frame2 = global_frame % N2
+    frame3 = global_frame % N3
+
+    update_stage1(frame1)
+    update_stage2(frame2)
+    update_stage3(frame3)
+
+    plt.tight_layout()
+
+# Create a single animation where the global frame count increases from 0 to 1000.
+anim = FuncAnimation(fig, update_all, frames=np.arange(0, 1000), interval=50, blit=False, repeat=True)
+
+# Use PillowWriter to save the animation as a GIF
+writer = PillowWriter(fps=20)
+anim.save("cosmic_speeds.gif", writer=writer)
+
+plt.show()
+</code></pre>
 <h2 id="4-discussion">4. Discussion</h2>
 <ul>
 <li>
@@ -349,7 +538,7 @@ plt.show()
 <h2 id="5-conclusion">5. Conclusion</h2>
 <p>This document provided a detailed derivation of the three cosmic velocities and computed their numerical values for Earth, while also offering a comparative analysis with the Moon, Mars, and Jupiter. These analyses are critical for planning and executing space missions—from satellite launches to interplanetary travel—by addressing the challenges of overcoming both a celestial body's local gravitational field and the broader gravitational pull of the host star.</p>
 <p><img alt="alt text" src="../image-1.png"/></p>
-<p><img alt="alt text" src="../233.gif"/></p>
+<p><img alt="alt text" src="../cosmic%20speed.gif"/></p>
 </div>
 </div><footer>
 <div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
