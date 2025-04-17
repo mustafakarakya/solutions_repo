@@ -27,15 +27,15 @@ where:
 
 The resulting acceleration on the payload is:
 
-```math
+$$
 \mathbf{a}(\mathbf{r}) = -\frac{G M_e}{r^3} \mathbf{r}.
-```
+$$
 
 #### 2.2 Specific Orbital Energy
 
-```math
+$$
 \epsilon = \frac{v^2}{2} - \frac{G M_e}{r}.
-```
+$$
 
 - \(\epsilon < 0\): elliptical orbit
 - \(\epsilon = 0\): parabolic (escape)
@@ -43,27 +43,27 @@ The resulting acceleration on the payload is:
 
 The escape velocity at radius \(r\) is:
 
-```math
+$$
 v_{esc} = \sqrt{\frac{2 G M_e}{r}}.
-```
+$$
 
 ---
 
 ### 3. Equations of Motion and Numerical Integration
 We integrate the second-order ODE:
 
-```math
+$$
 \ddot{\mathbf{r}} = -\frac{G M_e}{\|\mathbf{r}\|^3} \mathbf{r}
-```
+$$
 
 into a system of first-order ODEs:
 
-```math
+$$
 \begin{cases}
 \dot{\mathbf{r}} = \mathbf{v}, \\
 \dot{\mathbf{v}} = -\frac{G M_e}{\|\mathbf{r}\|^3} \mathbf{r}.
 \end{cases}
-```
+$$
 
 We use a fourth-order Runge–Kutta integrator (RK4).
 
