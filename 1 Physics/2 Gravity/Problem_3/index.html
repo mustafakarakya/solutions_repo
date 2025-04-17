@@ -209,30 +209,35 @@ F = \frac{G M_e m}{r^2},
 <li><span class="arithmatex">\(r\)</span> = distance from Earth's center</li>
 </ul>
 <p>The resulting acceleration on the payload is:</p>
-<pre><code class="language-math">\mathbf{a}(\mathbf{r}) = -\frac{G M_e}{r^3} \mathbf{r}.
-</code></pre>
+<div class="arithmatex">\[
+\mathbf{a}(\mathbf{r}) = -\frac{G M_e}{r^3} \mathbf{r}.
+\]</div>
 <h4 id="22-specific-orbital-energy">2.2 Specific Orbital Energy</h4>
-<pre><code class="language-math">\epsilon = \frac{v^2}{2} - \frac{G M_e}{r}.
-</code></pre>
+<div class="arithmatex">\[
+\epsilon = \frac{v^2}{2} - \frac{G M_e}{r}.
+\]</div>
 <ul>
 <li><span class="arithmatex">\(\epsilon &lt; 0\)</span>: elliptical orbit</li>
 <li><span class="arithmatex">\(\epsilon = 0\)</span>: parabolic (escape)</li>
 <li><span class="arithmatex">\(\epsilon &gt; 0\)</span>: hyperbolic (escape)</li>
 </ul>
 <p>The escape velocity at radius <span class="arithmatex">\(r\)</span> is:</p>
-<pre><code class="language-math">v_{esc} = \sqrt{\frac{2 G M_e}{r}}.
-</code></pre>
+<div class="arithmatex">\[
+v_{esc} = \sqrt{\frac{2 G M_e}{r}}.
+\]</div>
 <hr/>
 <h3 id="3-equations-of-motion-and-numerical-integration">3. Equations of Motion and Numerical Integration</h3>
 <p>We integrate the second-order ODE:</p>
-<pre><code class="language-math">\ddot{\mathbf{r}} = -\frac{G M_e}{\|\mathbf{r}\|^3} \mathbf{r}
-</code></pre>
+<div class="arithmatex">\[
+\ddot{\mathbf{r}} = -\frac{G M_e}{\|\mathbf{r}\|^3} \mathbf{r}
+\]</div>
 <p>into a system of first-order ODEs:</p>
-<pre><code class="language-math">\begin{cases}
+<div class="arithmatex">\[
+\begin{cases}
 \dot{\mathbf{r}} = \mathbf{v}, \\
 \dot{\mathbf{v}} = -\frac{G M_e}{\|\mathbf{r}\|^3} \mathbf{r}.
 \end{cases}
-</code></pre>
+\]</div>
 <p>We use a fourth-order Runge–Kutta integrator (RK4).</p>
 <hr/>
 <p><img alt="alt text" src="../trajectories.gif"/></p>
