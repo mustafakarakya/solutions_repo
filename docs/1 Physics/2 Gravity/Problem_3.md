@@ -15,9 +15,9 @@ This document analyzes these cases, derives the governing equations, and provide
 
 #### 2.1 Newton's Law of Gravitation
 
-```math
+$$
 F = \frac{G M_e m}{r^2},
-```
+$$
 
 where:
 
@@ -96,7 +96,7 @@ These outcomes map directly onto real mission profiles:
 This tool and analysis enable exploration of payload trajectories near Earth, from suborbital hops to interplanetary escape, illustrating the critical dependence on initial conditions and gravitational dynamics.
 
 
-### 7. Python Simulation Script
+### 7. Python Simulation Scripts
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
