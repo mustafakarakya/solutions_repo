@@ -1,4 +1,4 @@
-### Problem 3 :
+        Problem 3 :
 
 ## Trajectories of a Freely Released Payload Near Earth
 
@@ -269,4 +269,3 @@ for ax, angle in zip(axes, angles):
 plt.tight_layout()
 plt.show()
 ```
-                                                               Mustafa Karakaya
