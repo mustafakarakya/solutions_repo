@@ -1,4 +1,4 @@
-# Problem 1
+### Problem 1
 
 # Interference Patterns on a Water Surface
 
@@ -153,18 +153,11 @@ The simulations confirm that:
 
 
 ![alt text](one_heatmap.gif)
-
 ![alt text](one_surface1.gif)
-
 ![alt text](two_heatmap.gif)
-
 ![alt text](two_surface2.gif)
-
 ![alt text](triangle_heatmap.gif)
-
 ![alt text](triangle_surface3.gif)
-
 ![alt text](pentagon_heatmap.gif)
-
 ![alt text](pentagon_surface4.gif)
 
