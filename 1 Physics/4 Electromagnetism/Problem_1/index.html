@@ -175,7 +175,184 @@
 </div>
 <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
 <div class="section" itemprop="articleBody">
-<h1 id="problem-1">Problem 1</h1>
+<h2 id="problem-1">Problem 1</h2>
+<h1 id="simulating-the-effects-of-the-lorentz-force">Simulating the Effects of the Lorentz Force</h1>
+<h2 id="introduction">Introduction</h2>
+<p>The Lorentz force governs the motion of a charged particle in electromagnetic fields and is given by</p>
+<div class="arithmatex">\[
+\mathbf{F} = q\,\mathbf{E} + q\,\mathbf{v} \times \mathbf{B}.
+\]</div>
+<p>This force underlies the operation of cyclotrons, mass spectrometers, plasma confinement devices, and many astrophysical processes.</p>
+<h2 id="theory">Theory</h2>
+<ol>
+<li><strong>Uniform Magnetic Field</strong><br/>
+   When <span class="arithmatex">\(\mathbf{E} = \mathbf{0}\)</span> and <span class="arithmatex">\(\mathbf{B} = B\,\hat{\mathbf{z}}\)</span>, a particle of charge <span class="arithmatex">\(q\)</span> and mass <span class="arithmatex">\(m\)</span> undergoes circular motion in the plane perpendicular to <span class="arithmatex">\(\mathbf{B}\)</span>, with Larmor radius</li>
+</ol>
+<p>$$
+   r_L = \frac{m\,v_\perp}{|q|\,B}, 
+   $$</p>
+<p>and angular frequency (cyclotron frequency)</p>
+<p>$$
+   \omega_c = \frac{|q|\,B}{m}.
+   $$</p>
+<ol>
+<li>
+<p><strong>Parallel Electric and Magnetic Fields</strong><br/>
+   If both <span class="arithmatex">\(\mathbf{E}\)</span> and <span class="arithmatex">\(\mathbf{B}\)</span> point along <span class="arithmatex">\(\hat{\mathbf{z}}\)</span>, the particle experiences circular motion plus uniform acceleration along the field, resulting in a helical trajectory.</p>
+</li>
+<li>
+<p><strong>Crossed Electric and Magnetic Fields</strong><br/>
+   For <span class="arithmatex">\(\mathbf{E} \perp \mathbf{B}\)</span>, in addition to gyration, the particle drifts with velocity</p>
+</li>
+</ol>
+<p>$$
+   \mathbf{v}_d = \frac{\mathbf{E} \times \mathbf{B}}{B^2}.
+   $$</p>
+<h2 id="numerical-method">Numerical Method</h2>
+<p>We employ a simple Euler integrator with time step <span class="arithmatex">\(\Delta t\)</span>:</p>
+<div class="arithmatex">\[
+\mathbf{v}_{n+1} = \mathbf{v}_n + \frac{q}{m}\bigl(\mathbf{E} + \mathbf{v}_n \times \mathbf{B}\bigr)\Delta t,
+\quad
+\mathbf{r}_{n+1} = \mathbf{r}_n + \mathbf{v}_n\,\Delta t.
+\]</div>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>Charge: <span class="arithmatex">\(q = 1.0\ \mathrm{C}\)</span> </li>
+<li>Mass: <span class="arithmatex">\(m = 1.0\ \mathrm{kg}\)</span> </li>
+<li>Time step: <span class="arithmatex">\(\Delta t = 0.01\ \mathrm{s}\)</span> </li>
+<li>Number of steps: <span class="arithmatex">\(1000\)</span> </li>
+</ul>
+<h2 id="python-implementation">Python Implementation</h2>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation, PillowWriter
+
+def lorentz_acceleration(v, q, m, E, B):
+    return (q/m) * (E + np.cross(v, B))
+
+def simulate_rk4(q, m, E, B, v0, dt, steps):
+    r = np.zeros((steps, 3))
+    v = np.zeros((steps, 3))
+    r[0] = np.zeros(3)
+    v[0] = np.array(v0, float)
+    for i in range(steps-1):
+        k1_v = lorentz_acceleration(v[i], q, m, E, B)
+        k1_r = v[i]
+        k2_v = lorentz_acceleration(v[i] + 0.5*dt*k1_v, q, m, E, B)
+        k2_r = v[i] + 0.5*dt*k1_v
+        k3_v = lorentz_acceleration(v[i] + 0.5*dt*k2_v, q, m, E, B)
+        k3_r = v[i] + 0.5*dt*k2_v
+        k4_v = lorentz_acceleration(v[i] + dt*k3_v, q, m, E, B)
+        k4_r = v[i] + dt*k3_v
+
+        v[i+1] = v[i] + (dt/6)*(k1_v + 2*k2_v + 2*k3_v + k4_v)
+        r[i+1] = r[i] + (dt/6)*(k1_r + 2*k2_r + 2*k3_r + k4_r)
+    return r, v
+
+def animate_trajectory(r, title_top, title_bottom, filename, xlim, ylim, zlim):
+    fig = plt.figure(figsize=(6,6))
+    ax = fig.add_subplot(projection='3d')
+    # Two-line centered title
+    ax.set_title(f"{title_top}\n{title_bottom}", pad=20)
+    ax.set_xlabel('x (m)'); ax.set_ylabel('y (m)'); ax.set_zlabel('z (m)')
+    ax.set_xlim(*xlim); ax.set_ylim(*ylim); ax.set_zlim(*zlim)
+    line, = ax.plot([], [], [], lw=2)
+
+    def update(frame):
+        line.set_data(r[:frame,0], r[:frame,1])
+        line.set_3d_properties(r[:frame,2])
+        return line,
+
+    ani = FuncAnimation(fig, update, frames=len(r), interval=20, blit=True)
+    ani.save(filename, writer=PillowWriter(fps=30))
+    plt.close(fig)
+
+if __name__ == '__main__':
+    dt = 0.01   # time step [s]
+    steps = 1000
+
+    # Scenarios with separated title lines
+    scenarios = [
+        {
+            'title_top': 'Uniform Magnetic Field',
+            'title_bottom': '(B=1.0 T): Circular Motion',
+            'E': np.zeros(3), 'B': np.array([0,0,1.0]),
+            'v0': [1.0,0,0], 'q':1.0, 'm':1.0,
+            'xlim':(-1.2,1.2), 'ylim':(-1.2,1.2), 'zlim':(-0.2,0.2),
+            'filename':'uniform_magnetic.gif'
+        },
+        {
+            'title_top': 'Parallel Electric &amp; Magnetic Fields',
+            'title_bottom': '(E=0.5 V/m, B=1.0 T): Helical Motion',
+            'E': np.array([0,0,0.5]), 'B': np.array([0,0,1.0]),
+            'v0': [1.0,0,0], 'q':1.0, 'm':1.0,
+            'xlim':(-1.2,1.2), 'ylim':(-1.2,1.2), 'zlim':(0,10),
+            'filename':'parallel_fields.gif'
+        },
+        {
+            'title_top': 'Crossed Electric &amp; Magnetic Fields',
+            'title_bottom': '(E⊥B, E=0.5 V/m, B=1.0 T): Drift Motion',
+            'E': np.array([0.5,0,0]), 'B': np.array([0,0,1.0]),
+            'v0': [1.0,0,0], 'q':1.0, 'm':1.0,
+            'xlim':(-5,5), 'ylim':(-5,5), 'zlim':(-0.2,0.2),
+            'filename':'crossed_fields.gif'
+        }
+    ]
+
+    for sc in scenarios:
+        r, v = simulate_rk4(sc['q'], sc['m'], sc['E'], sc['B'], sc['v0'], dt, steps)
+        animate_trajectory(
+            r,
+            title_top=sc['title_top'],
+            title_bottom=sc['title_bottom'],
+            filename=sc['filename'],
+            xlim=sc['xlim'],
+            ylim=sc['ylim'],
+            zlim=sc['zlim']
+        )
+        print(f"Saved animation: {sc['filename']} with titles '{sc['title_top']}' and '{sc['title_bottom']}'")
+
+</code></pre>
+<hr/>
+<h2 id="results">Results</h2>
+<ol>
+<li>
+<p><strong>Uniform Magnetic Field</strong><br/>
+   The particle executes uniform circular motion in the <span class="arithmatex">\(xy\)</span>-plane with radius<br/>
+   $$
+   r_L = \frac{m\,v_0}{q\,B}.
+   $$</p>
+</li>
+<li>
+<p><strong>Parallel Electric &amp; Magnetic Fields</strong><br/>
+   A helical trajectory appears: circular gyration in the <span class="arithmatex">\(xy\)</span>-plane plus linear acceleration along <span class="arithmatex">\(\hat{\mathbf{z}}\)</span>.</p>
+</li>
+<li>
+<p><strong>Crossed Electric &amp; Magnetic Fields</strong><br/>
+   Besides gyration, a steady drift occurs perpendicular to both <span class="arithmatex">\(\mathbf{E}\)</span> and <span class="arithmatex">\(\mathbf{B}\)</span>, with<br/>
+   $$
+   \mathbf{v}_d = \frac{\mathbf{E}\times\mathbf{B}}{B^2}.
+   $$</p>
+</li>
+</ol>
+<h2 id="discussion">Discussion</h2>
+<ul>
+<li><strong>Cyclotrons:</strong> Utilize a uniform magnetic field to bend charged particles into circular orbits; a perpendicular electric field accelerates them across gaps.  </li>
+<li><strong>Magnetic Traps (Penning/Mirrors):</strong> Combine static <span class="arithmatex">\(\mathbf{E}\)</span> and <span class="arithmatex">\(\mathbf{B}\)</span> to confine plasmas; drift motions play critical roles in confinement stability.  </li>
+<li><strong>Mass Spectrometers:</strong> Exploit the dependence of <span class="arithmatex">\(r_L\)</span> on <span class="arithmatex">\(m/q\)</span> to separate ion species by their curvature in a known <span class="arithmatex">\(\mathbf{B}\)</span>.</li>
+</ul>
+<h2 id="extensions">Extensions</h2>
+<ol>
+<li><strong>Non-uniform Fields:</strong> Introduce gradients in <span class="arithmatex">\(\mathbf{B}(r)\)</span> to observe magnetic mirror effects.  </li>
+<li><strong>Relativistic Dynamics:</strong> Modify equations to include Lorentz factor <span class="arithmatex">\(\gamma = (1 - v^2/c^2)^{-1/2}\)</span>.  </li>
+<li><strong>Monte Carlo Ensemble:</strong> Simulate many particles with randomized initial velocities to study beam dynamics or thermal plasmas.  </li>
+<li><strong>Numerical Methods Comparison:</strong> Compare Euler, Runge–Kutta 4, and symplectic integrators for energy conservation.</li>
+</ol>
+<hr/>
+<p><img alt="alt text" src="../uniform_magnetic.gif"/></p>
+<p><img alt="alt text" src="../parallel_fields.gif"/></p>
+<p><img alt="alt text" src="../crossed_fields.gif"/></p>
+<p><img alt="alt text" src="../The_Lorentz_Force.gif"/></p>
 </div>
 </div><footer>
 <div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
