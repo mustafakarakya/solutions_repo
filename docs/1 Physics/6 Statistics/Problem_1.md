@@ -93,7 +93,7 @@ for name, means_dict in sampling_means.items():
 
     plt.tight_layout(rect=[0,0,1,0.93])
     plt.show()
-````
+```
 ## 2. Theoretical Means and Standard Deviations
 
 For each distribution, the **theoretical mean** \(\mu\) and **population standard deviation** \(\sigma\) are:
@@ -176,3 +176,10 @@ Through large‑scale simulations of uniform, exponential, and binomial populati
 - CLT’s foundational role in statistics, engineering, and finance.
 
 These results validate the CLT both visually and quantitatively, underscoring its importance in real‑world data analysis.  
+
+
+![alt text](image-3.png)
+
+![alt text](image-4.png)
+
+![alt text](image-5.png)
