@@ -1,139 +1,116 @@
 # Problem 1
+## Exploring the Central Limit Theorem through Simulations
 
-# Exploring the Central Limit Theorem via Simulations
+### 1. Motivation
 
-## 1. Introduction
-
-The Central Limit Theorem (CLT) states that, given a population with finite mean \(\mu\) and variance \(\sigma^2\), the distribution of the sample mean
-\[
-\overline{X}_n = \frac{1}{n} \sum_{i=1}^n X_i
-\]
-approaches a normal distribution as the sample size \(n\) increases, regardless of the original population’s distribution.
-
-- **Mathematical Statement**:  
-  $$\overline{X}_n \xrightarrow{d} \mathcal{N}\bigl(\mu,\;\sigma^2/n\bigr)\quad\text{as }n\to\infty.$$
-- **Implications**:  
-  1. Even if the underlying population is skewed, the sampling distribution of the mean becomes symmetric.  
-  2. The standard deviation of \(\overline{X}_n\) decreases as \(1/\sqrt{n}\).  
-
-This report demonstrates the CLT by simulating three population distributions—Uniform, Exponential, and Binomial—and animating how their sampling‐mean histograms converge to normality as \(n\) grows.
+The Central Limit Theorem (CLT) states that the sampling distribution of the sample mean approaches a normal distribution as the sample size increases, regardless of the population’s original distribution. By running computational experiments, we can observe how different population shapes and variances affect the convergence to normality.
 
 ---
 
-## 2. Methodology
+### 2. Methods
 
-1. **Population Generation**  
-   - Uniform: \(U(0,1)\)  
-   - Exponential: \(\mathrm{Exp}(\lambda=1)\)  
-   - Binomial: \(\mathrm{Binomial}(N=10, p=0.5)\)  
-   For each, generate a “population” of \(100\,000\) samples.
+**Population Distributions**  
+- Uniform: \(U(0,1)\)  
+- Exponential: \(\mathrm{Exp}(\lambda=1)\)  
+- Binomial: \(\mathrm{Binomial}(n=10, p=0.5)\)  
 
-2. **Sampling and Means**  
-   - Sample sizes \(n = [5,\,10,\,30,\,50]\).  
-   - For each \(n\), repeat \(M=2000\) draws (with replacement), compute \(\overline{X}_n\), and store the results.
+**Sampling Parameters**  
+- Sample sizes: \(n = [5, 10, 30, 50]\)  
+- Number of repeated samples per simulation: \(R = 500\)
 
-3. **Animation of Histograms**  
-   - Using Matplotlib’s `FuncAnimation`, produce an animated histogram that transitions through the four sample sizes.  
-   - Overlay the theoretical normal density
-     \[
-     f(x) = \frac{1}{\sqrt{2\pi\,(\sigma^2/n)}}\exp\!\Bigl(-\tfrac{(x-\mu)^2}{2\,(\sigma^2/n)}\Bigr)
-     \]
-     for reference.
-
-4. **Parameter Exploration**  
-   - Observe how skewness in the exponential case slows convergence.  
-   - Compare spreads: a population with larger \(\sigma^2\) yields a wider sampling‐mean distribution for small \(n\).
+**Approach**  
+1. Generate a large “population” of size \(N = 100\,000\) for each distribution.  
+2. For each \(n\), repeat \(R\) times: draw a sample of size \(n\), compute its mean.  
+3. Animate the histogram of sample means as the number of repeats grows from 1 to \(R\).
 
 ---
 
-## 3. Python Implementation
+### 3. Python Implementation (in one block)
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-from scipy.stats import norm
+from matplotlib.animation import FuncAnimation
+from IPython.display import HTML
 
-# 1. Define populations
+# Configure global parameters
 pop_size = 100_000
+sample_sizes = [5, 10, 30, 50]
+R = 500
+bins = 30
+
+# Generate populations
 populations = {
     'Uniform(0,1)': np.random.rand(pop_size),
-    'Exponential(λ=1)': np.random.exponential(scale=1.0, size=pop_size),
-    'Binomial(n=10,p=0.5)': np.random.binomial(n=10, p=0.5, size=pop_size)
+    'Exponential(1)': np.random.exponential(scale=1.0, size=pop_size),
+    'Binomial(10,0.5)': np.random.binomial(n=10, p=0.5, size=pop_size)
 }
 
-sample_sizes = [5, 10, 30, 50]
-M = 2000  # number of samples per n
+def animate_clt(pop_data, label):
+    """Create and return HTML animation of sample‐mean histograms."""
+    fig, ax = plt.subplots(figsize=(6,4))
+    ax.set_xlabel('Sample mean')
+    ax.set_ylabel('Density')
+    ax.set_title(f'{label} → CLT convergence')
 
-def simulate_means(data, n, M):
-    """Draw M samples of size n and return their means."""
-    idx = np.random.randint(0, len(data), size=(M, n))
-    return data[idx].mean(axis=1)
-
-# 2. Prepare figure
-fig, axes = plt.subplots(1, len(populations), figsize=(15, 4))
-plt.tight_layout()
-
-# 3. Animation function
-def animate(k):
-    n = sample_sizes[k]
-    for ax, (label, pop) in zip(axes, populations.items()):
+    def update(k):
         ax.clear()
-        means = simulate_means(pop, n, M)
-        mu, sigma = pop.mean(), pop.std(ddof=1)
-        # Histogram of sample means
-        ax.hist(means, bins=30, density=True, alpha=0.6)
-        # Theoretical normal curve
+        means = np.mean(
+            np.random.choice(pop_data, size=(k+1, current_n)),
+            axis=1
+        )
+        ax.hist(means, bins=bins, density=True, alpha=0.7)
+        # Overlay normal pdf
+        mu, sigma = np.mean(means), np.std(means)
         x = np.linspace(means.min(), means.max(), 200)
-        ax.plot(x, norm.pdf(x, loc=mu, scale=sigma/np.sqrt(n)),
-                lw=2, label=f'Normal PDF\n($n={n}$)')
-        ax.set_title(f'{label}\nSample size $n={n}$')
+        ax.plot(x, 
+                1/(sigma*np.sqrt(2*np.pi)) * np.exp(-(x-mu)**2/(2*sigma**2)),
+                'r--', label='Normal PDF')
         ax.legend()
-        ax.set_xlabel('Sample mean')
-        ax.set_ylabel('Density')
+        ax.set_title(f'{label}, n={current_n}, repeats={k+1}')
+    
+    anim = FuncAnimation(fig, update, frames=R, interval=50, repeat=False)
+    return HTML(anim.to_jshtml())
 
-ani = animation.FuncAnimation(
-    fig, animate, frames=len(sample_sizes), interval=1500, repeat_delay=2000
-)
-
-# To display in Jupyter: from IPython.display import HTML; HTML(ani.to_jshtml())
-# Or save: ani.save('clt_animation.mp4', writer='ffmpeg')
-plt.show()
+# Run animations for each distribution and sample size
+for dist_label, pop in populations.items():
+    for current_n in sample_sizes:
+        display(animate_clt(pop, dist_label))
 ```
 
-## 4. Results
+---
 
-- **Uniform Distribution**  
-  - At \(n=5\), the histogram already shows a bell‑shape, and by \(n=10\) it closely aligns with the normal PDF.  
-  - Variance of the sampling distribution shrinks by a factor of \(1/\sqrt{n}\), yielding narrower histograms as \(n\) increases.
+### 4. Results
 
-- **Exponential Distribution**  
-  - For \(n=5\), the sampling‑mean histogram remains noticeably right‑skewed.  
-  - By \(n=30\), the shape is nearly symmetric, and at \(n=50\) it overlays the theoretical normal curve almost perfectly.
-
-- **Binomial Distribution**  
-  - The original binomial (with parameters \(N=10, p=0.5\)) is already approximately symmetric.  
-  - Convergence is subtler: even at \(n=5\), the sampling mean distribution is very close to Gaussian, tightening further at larger \(n\).
+- As \(n\) increases from 5 to 50, the histogram of sample means rapidly approaches the familiar bell curve of a normal distribution.
+- The rate of convergence varies:  
+  - **Uniform**: converges fairly quickly due to bounded support.  
+  - **Exponential**: a bit slower, since the original distribution is skewed.  
+  - **Binomial**: resembles normality even for moderate \(n\) because of its discrete symmetric shape when \(p=0.5\).
 
 ---
 
-## 5. Discussion
+### 5. Discussion
 
-1. **Sample Size and Shape**  
-   - Smaller samples (\(n\le10\)) retain features of the original distribution (e.g., skewness in the exponential case).  
-   - Moderate sizes (\(n\ge30\)) yield sampling distributions almost indistinguishable from \(\mathcal{N}(\mu,\sigma^2/n)\).
+1. **Convergence Behavior**  
+   - For small \(n\), histograms retain the skew or shape of the parent distribution.  
+   - For larger \(n\), the influence of the population’s higher moments diminishes:  
+     $$
+       \mathrm{Var}(\bar X) = \frac{\sigma^2}{n}\,,
+     $$
+     so dispersion around the mean shrinks as \(n\) grows, sharpening the normal peak.
 
-2. **Variance Effects**  
-   - The standard deviation of the sampling distribution is \(\sigma/\sqrt{n}\).  
-   - Populations with larger \(\sigma^2\) (like the exponential) produce wider histograms for each fixed \(n\), but still converge as \(n\) grows.
+2. **Influence of Variance**  
+   - Populations with larger variance (e.g., exponential) yield broader sampling distributions for a given \(n\).  
+   - Doubling \(n\) halves \(\mathrm{Var}(\bar X)\), tightening the histogram.
 
-3. **Real‑World Implications**  
-   - **Parameter Estimation**: Allows construction of confidence intervals for unknown means.  
-   - **Quality Control**: Control charts use sample means and assume normality for threshold limits.  
-   - **Financial Modeling**: Aggregated returns over days or weeks approximate normality, supporting risk‑management techniques.
+3. **Practical Applications**  
+   - **Parameter Estimation**: Confidence intervals rely on approximate normality of \(\bar X\).  
+   - **Quality Control**: Sampling batches of products and monitoring the mean.  
+   - **Financial Modeling**: Aggregating returns (often non‐normal) still yields near‐normal portfolio returns.
 
 ---
 
-## 6. Conclusion
+### 6. Conclusion
 
-The animated histograms convincingly illustrate that, regardless of the original population distribution—uniform, exponential, or binomial—the sampling distribution of the mean approaches a normal distribution as the sample size increases. Convergence rate depends on the original shape and variance, but by \(n\approx30\), the normal approximation is highly accurate, validating the Central Limit Theorem’s foundational role in statistical inference.  
+Through animated simulations, the CLT’s power is clear: regardless of the original distribution—uniform, skewed, or discrete—the mean of sufficiently large samples is approximately normal, with variance decreasing as \(1/n\). This underpins many inferential techniques across science, engineering, and finance.
