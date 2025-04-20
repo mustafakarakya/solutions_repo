@@ -88,22 +88,6 @@
 <ul class="current">
 <li class="toctree-l2 current"><a class="reference internal current" href="#">Problem 1</a>
 <ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="#exploring-the-central-limit-theorem-through-simulations">Exploring the Central Limit Theorem through Simulations</a>
-<ul>
-<li class="toctree-l4"><a class="reference internal" href="#1-motivation">1. Motivation</a>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="#2-methods">2. Methods</a>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="#3-python-implementation-in-one-block">3. Python Implementation (in one block)</a>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="#4-results">4. Results</a>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="#5-discussion">5. Discussion</a>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="#6-conclusion">6. Conclusion</a>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../Problem_2/">Problem 2</a>
@@ -191,25 +175,23 @@
 </div>
 <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
 <div class="section" itemprop="articleBody">
-<h1 id="problem-1">Problem 1</h1>
-<h2 id="exploring-the-central-limit-theorem-through-simulations">Exploring the Central Limit Theorem through Simulations</h2>
-<h3 id="1-motivation">1. Motivation</h3>
+<h2 id="problem-1">Problem 1</h2>
+<h1 id="exploring-the-central-limit-theorem-through-simulations">Exploring the Central Limit Theorem through Simulations</h1>
+<h2 id="motivation">Motivation</h2>
 <p>The Central Limit Theorem (CLT) states that the sampling distribution of the sample mean approaches a normal distribution as the sample size increases, regardless of the population’s original distribution. By running computational experiments, we can observe how different population shapes and variances affect the convergence to normality.</p>
-<hr/>
-<h3 id="2-methods">2. Methods</h3>
+<h2 id="methods">Methods</h2>
 <p><strong>Population Distributions</strong><br/>
 - Uniform: <span class="arithmatex">\(U(0,1)\)</span><br/>
 - Exponential: <span class="arithmatex">\(\mathrm{Exp}(\lambda=1)\)</span><br/>
 - Binomial: <span class="arithmatex">\(\mathrm{Binomial}(n=10, p=0.5)\)</span> </p>
 <p><strong>Sampling Parameters</strong><br/>
 - Sample sizes: <span class="arithmatex">\(n = [5, 10, 30, 50]\)</span><br/>
-- Number of repeated samples per simulation: <span class="arithmatex">\(R = 500\)</span></p>
+- Number of repeated samples per simulation: <span class="arithmatex">\(R = 500\)</span> </p>
 <p><strong>Approach</strong><br/>
 1. Generate a large “population” of size <span class="arithmatex">\(N = 100\,000\)</span> for each distribution.<br/>
 2. For each <span class="arithmatex">\(n\)</span>, repeat <span class="arithmatex">\(R\)</span> times: draw a sample of size <span class="arithmatex">\(n\)</span>, compute its mean.<br/>
 3. Animate the histogram of sample means as the number of repeats grows from 1 to <span class="arithmatex">\(R\)</span>.</p>
-<hr/>
-<h3 id="3-python-implementation-in-one-block">3. Python Implementation (in one block)</h3>
+<h2 id="python-implementation">Python Implementation</h2>
 <pre><code class="language-python">import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -259,24 +241,22 @@ for dist_label, pop in populations.items():
     for current_n in sample_sizes:
         display(animate_clt(pop, dist_label))
 </code></pre>
-<hr/>
-<h3 id="4-results">4. Results</h3>
+<h2 id="results">Results</h2>
 <ul>
-<li>As <span class="arithmatex">\(n\)</span> increases from 5 to 50, the histogram of sample means rapidly approaches the familiar bell curve of a normal distribution.</li>
+<li>As <span class="arithmatex">\(n\)</span> increases from 5 to 50, the histogram of sample means rapidly approaches the familiar bell curve of a normal distribution.  </li>
 <li>The rate of convergence varies:  </li>
 <li><strong>Uniform</strong>: converges fairly quickly due to bounded support.  </li>
 <li><strong>Exponential</strong>: a bit slower, since the original distribution is skewed.  </li>
 <li><strong>Binomial</strong>: resembles normality even for moderate <span class="arithmatex">\(n\)</span> because of its discrete symmetric shape when <span class="arithmatex">\(p=0.5\)</span>.</li>
 </ul>
-<hr/>
-<h3 id="5-discussion">5. Discussion</h3>
+<h2 id="discussion">Discussion</h2>
 <ol>
 <li><strong>Convergence Behavior</strong> </li>
 <li>For small <span class="arithmatex">\(n\)</span>, histograms retain the skew or shape of the parent distribution.  </li>
 <li>
 <p>For larger <span class="arithmatex">\(n\)</span>, the influence of the population’s higher moments diminishes:<br/>
      $$
-       \mathrm{Var}(\bar X) = \frac{\sigma^2}{n}\,,
+       \mathrm{Var}(\bar X) = \frac{\sigma^2}{n}
      $$
      so dispersion around the mean shrinks as <span class="arithmatex">\(n\)</span> grows, sharpening the normal peak.</p>
 </li>
@@ -290,12 +270,11 @@ for dist_label, pop in populations.items():
 <li>
 <p><strong>Practical Applications</strong> </p>
 </li>
-<li><strong>Parameter Estimation</strong>: Confidence intervals rely on approximate normality of <span class="arithmatex">\(\bar X\)</span>.  </li>
-<li><strong>Quality Control</strong>: Sampling batches of products and monitoring the mean.  </li>
-<li><strong>Financial Modeling</strong>: Aggregating returns (often non‐normal) still yields near‐normal portfolio returns.</li>
+<li><strong>Estimating population parameters</strong>: Confidence intervals rely on approximate normality of <span class="arithmatex">\(\bar X\)</span>.  </li>
+<li><strong>Quality control</strong>: Sampling batches of products and monitoring the mean.  </li>
+<li><strong>Financial modeling</strong>: Aggregating returns (often non‐normal) still yields near‐normal portfolio returns.</li>
 </ol>
-<hr/>
-<h3 id="6-conclusion">6. Conclusion</h3>
+<h2 id="conclusion">Conclusion</h2>
 <p>Through animated simulations, the CLT’s power is clear: regardless of the original distribution—uniform, skewed, or discrete—the mean of sufficiently large samples is approximately normal, with variance decreasing as <span class="arithmatex">\(1/n\)</span>. This underpins many inferential techniques across science, engineering, and finance.</p>
 </div>
 </div><footer>
