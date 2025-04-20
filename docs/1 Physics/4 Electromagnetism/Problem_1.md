@@ -54,6 +54,41 @@ $$
 - Time step: $\Delta t = 0.01\ \mathrm{s}$  
 - Number of steps: $1000$  
 
+
+---
+
+## Results
+
+1. **Uniform Magnetic Field**  
+   The particle executes uniform circular motion in the \(xy\)-plane with radius  
+   $$
+   r_L = \frac{m\,v_0}{q\,B}.
+   $$
+
+2. **Parallel Electric & Magnetic Fields**  
+   A helical trajectory appears: circular gyration in the \(xy\)-plane plus linear acceleration along \(\hat{\mathbf{z}}\).
+
+3. **Crossed Electric & Magnetic Fields**  
+   Besides gyration, a steady drift occurs perpendicular to both \(\mathbf{E}\) and \(\mathbf{B}\), with  
+   $$
+   \mathbf{v}_d = \frac{\mathbf{E}\times\mathbf{B}}{B^2}.
+   $$
+
+## Discussion
+
+- **Cyclotrons:** Utilize a uniform magnetic field to bend charged particles into circular orbits; a perpendicular electric field accelerates them across gaps.  
+- **Magnetic Traps (Penning/Mirrors):** Combine static \(\mathbf{E}\) and \(\mathbf{B}\) to confine plasmas; drift motions play critical roles in confinement stability.  
+- **Mass Spectrometers:** Exploit the dependence of \(r_L\) on \(m/q\) to separate ion species by their curvature in a known \(\mathbf{B}\).
+
+## Extensions
+
+1. **Non-uniform Fields:** Introduce gradients in \(\mathbf{B}(r)\) to observe magnetic mirror effects.  
+2. **Relativistic Dynamics:** Modify equations to include Lorentz factor \(\gamma = (1 - v^2/c^2)^{-1/2}\).  
+3. **Monte Carlo Ensemble:** Simulate many particles with randomized initial velocities to study beam dynamics or thermal plasmas.  
+4. **Numerical Methods Comparison:** Compare Euler, Runge–Kutta 4, and symplectic integrators for energy conservation.
+
+---
+
 ## Python Implementation
 
 ```python
@@ -147,40 +182,8 @@ if __name__ == '__main__':
         print(f"Saved animation: {sc['filename']} with titles '{sc['title_top']}' and '{sc['title_bottom']}'")
 
 ```
-
 ---
 
-## Results
-
-1. **Uniform Magnetic Field**  
-   The particle executes uniform circular motion in the \(xy\)-plane with radius  
-   $$
-   r_L = \frac{m\,v_0}{q\,B}.
-   $$
-
-2. **Parallel Electric & Magnetic Fields**  
-   A helical trajectory appears: circular gyration in the \(xy\)-plane plus linear acceleration along \(\hat{\mathbf{z}}\).
-
-3. **Crossed Electric & Magnetic Fields**  
-   Besides gyration, a steady drift occurs perpendicular to both \(\mathbf{E}\) and \(\mathbf{B}\), with  
-   $$
-   \mathbf{v}_d = \frac{\mathbf{E}\times\mathbf{B}}{B^2}.
-   $$
-
-## Discussion
-
-- **Cyclotrons:** Utilize a uniform magnetic field to bend charged particles into circular orbits; a perpendicular electric field accelerates them across gaps.  
-- **Magnetic Traps (Penning/Mirrors):** Combine static \(\mathbf{E}\) and \(\mathbf{B}\) to confine plasmas; drift motions play critical roles in confinement stability.  
-- **Mass Spectrometers:** Exploit the dependence of \(r_L\) on \(m/q\) to separate ion species by their curvature in a known \(\mathbf{B}\).
-
-## Extensions
-
-1. **Non-uniform Fields:** Introduce gradients in \(\mathbf{B}(r)\) to observe magnetic mirror effects.  
-2. **Relativistic Dynamics:** Modify equations to include Lorentz factor \(\gamma = (1 - v^2/c^2)^{-1/2}\).  
-3. **Monte Carlo Ensemble:** Simulate many particles with randomized initial velocities to study beam dynamics or thermal plasmas.  
-4. **Numerical Methods Comparison:** Compare Euler, Runge–Kutta 4, and symplectic integrators for energy conservation.
-
----
 
 ![alt text](uniform_magnetic.gif)
 
