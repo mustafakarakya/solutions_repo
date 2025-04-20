@@ -6,13 +6,13 @@
 <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <link href="../../../img/favicon.ico" rel="shortcut icon"/>
-<title>Problem 1 - Physics and Mathematics</title>
+<title>Exploring the Central Limit Theorem through Simulations - Physics and Mathematics</title>
 <link href="../../../css/theme.css" rel="stylesheet"/>
 <link href="../../../css/theme_extra.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
 <script>
         // Current page data
-        var mkdocs_page_name = "Problem 1";
+        var mkdocs_page_name = "Exploring the Central Limit Theorem through Simulations";
         var mkdocs_page_input_path = "1 Physics/6 Statistics/Problem_1.md";
         var mkdocs_page_url = null;
       </script>
@@ -86,8 +86,12 @@
 </li>
 <li class="toctree-l1 current"><a class="reference internal current">6 Statistics</a>
 <ul class="current">
-<li class="toctree-l2 current"><a class="reference internal current" href="#">Problem 1</a>
+<li class="toctree-l2 current"><a class="reference internal current" href="#">Exploring the Central Limit Theorem through Simulations</a>
 <ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#1-simulation-setup">1. Simulation Setup</a>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../Problem_2/">Problem 2</a>
@@ -167,7 +171,7 @@
 <li><a aria-label="Docs" class="icon icon-home" href="../../.."></a></li>
 <li class="breadcrumb-item">1 Physics</li>
 <li class="breadcrumb-item">6 Statistics</li>
-<li class="breadcrumb-item active">Problem 1</li>
+<li class="breadcrumb-item active">Exploring the Central Limit Theorem through Simulations</li>
 <li class="wy-breadcrumbs-aside">
 </li>
 </ul>
@@ -175,86 +179,278 @@
 </div>
 <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
 <div class="section" itemprop="articleBody">
-<h2 id="problem-1">Problem 1</h2>
 <h1 id="exploring-the-central-limit-theorem-through-simulations">Exploring the Central Limit Theorem through Simulations</h1>
 <h2 id="introduction">Introduction</h2>
-<p>The Central Limit Theorem (CLT) states that, for a large enough sample size, the distribution of the sample mean will approximate a normal distribution regardless of the population’s original distribution. In this project, we will use computational experiments to visualize and quantify how the sampling distribution of the mean evolves with sample size and population variance.</p>
+<p>The Central Limit Theorem (CLT) states that for a sufficiently large sample size <span class="arithmatex">\(n\)</span>, the sampling distribution of the sample mean</p>
+<div class="arithmatex">\[
+\overline{X}_n = \frac{1}{n} \sum_{i=1}^n X_i
+\]</div>
+<p>approaches a normal distribution, regardless of the shape of the population’s original distribution. In this project, we:</p>
+<ol>
+<li>Generate large synthetic “populations” from different distributions.  </li>
+<li>Draw repeated random samples of various sizes, compute their means, and visualize the sampling distributions.  </li>
+<li>Compare empirical results to theoretical predictions.  </li>
+<li>Reflect on CLT’s role in real-world applications.</li>
+</ol>
+<hr/>
 <h2 id="1-simulation-setup">1. Simulation Setup</h2>
-<p>We will explore three population distributions:
-1. <strong>Uniform</strong> on [0, 1]
-2. <strong>Exponential</strong> with rate λ = 1
-3. <strong>Binomial</strong> with parameters n = 10, p = 0.5</p>
-<p>For each distribution, we:
-- Generate a large population sample (e.g., 1,000,000 observations).
-- Draw repeated random samples of sizes <span class="arithmatex">\(n\)</span> ∈ {5, 10, 30, 50}.
-- Compute the sample mean over <span class="arithmatex">\(N=1000\)</span> replicates to form the sampling distribution.</p>
-<pre><code class="language-python">import numpy as np
+<ul>
+<li><strong>Distributions to explore</strong>:  </li>
+<li>Uniform on <span class="arithmatex">\([0,1]\)</span> </li>
+<li>Exponential with rate <span class="arithmatex">\(\lambda = 1\)</span> </li>
+<li>
+<p>Binomial with <span class="arithmatex">\(n_{\text{trials}}=10,\;p=0.5\)</span> </p>
+</li>
+<li>
+<p><strong>Population size</strong>: <span class="arithmatex">\(N = 1{,}000{,}000\)</span> </p>
+</li>
+<li><strong>Sample sizes</strong>: <span class="arithmatex">\(n \in \{5,\,10,\,30,\,50\}\)</span> </li>
+<li><strong>Replicates</strong>: <span class="arithmatex">\(R = 1000\)</span> </li>
+<li><strong>Random seed</strong>: 42 (for reproducibility)</li>
+</ul>
+<p>```python
+import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import norm
-
-# Settings
-distributions = {
-    'Uniform(0,1)': lambda size: np.random.uniform(0, 1, size),
-    'Exponential(1)': lambda size: np.random.exponential(1, size),
-    'Binomial(10,0.5)': lambda size: np.random.binomial(10, 0.5, size)
-}
+from scipy.stats import norm</p>
+<h1 id="reproducibility">Reproducibility</h1>
+<p>np.random.seed(42)</p>
+<h1 id="parameters">Parameters</h1>
+<p>N = 1_000_000
 sample_sizes = [5, 10, 30, 50]
-reps = 1000
-
-# Generate sampling distributions
-sampling_means = {name: {n: None for n in sample_sizes} for name in distributions}
-for name, generator in distributions.items():
+R = 1000</p>
+<h1 id="1-generate-large-populations">1. Generate large populations</h1>
+<p>populations = {
+    'Uniform(0,1)':     np.random.uniform(0, 1, N),
+    'Exponential(1)':   np.random.exponential(1, N),
+    'Binomial(10,0.5)': np.random.binomial(10, 0.5, N)
+}</p>
+<h1 id="2-draw-repeated-samples-and-compute-sample-means">2. Draw repeated samples and compute sample means</h1>
+<p>sampling_means = {
+    name: {n: np.zeros(R) for n in sample_sizes}
+    for name in populations
+}</p>
+<p>for name, pop in populations.items():
     for n in sample_sizes:
-        sampling_means[name][n] = np.array([
-            np.mean(generator(n)) for _ in range(reps)
-        ])
+        for i in range(R):
+            sample = np.random.choice(pop, size=n, replace=False)
+            sampling_means[name][n][i] = sample.mean()</p>
+<h1 id="3-plot-histograms-with-theoretical-normal-overlays">3. Plot histograms with theoretical normal overlays</h1>
+<p>for name, means_dict in sampling_means.items():
+    plt.figure(figsize=(12,8))
+    plt.suptitle(f"Sampling Distribution of the Mean — {name}", fontsize=16, y=0.95)</p>
+<pre><code># Theoretical parameters
+if name == 'Uniform(0,1)':
+    mu, sigma_pop = 0.5, np.sqrt(1/12)
+elif name == 'Exponential(1)':
+    mu, sigma_pop = 1.0, 1.0
+else:  # Binomial(10,0.5)
+    mu, sigma_pop = 5.0, np.sqrt(10 * 0.5 * 0.5)
 
-# Plotting with density and theoretical overlay
-for name, means_dict in sampling_means.items():
-    plt.figure(figsize=(12, 8))
-    plt.suptitle(f"Sampling Distribution of Mean — {name}", fontsize=16, y=0.95)
+for i, n in enumerate(sample_sizes, start=1):
+    means = means_dict[n]
+    sigma = sigma_pop / np.sqrt(n)
 
-    for i, n in enumerate(sample_sizes, start=1):
-        means = means_dict[n]
-        mu_theoretical = np.mean(generator(1000000)) if name != 'Binomial(10,0.5)' else 10*0.5
-        sigma_theoretical = np.std(generator(1000000))/np.sqrt(n) if name != 'Binomial(10,0.5)' else np.sqrt(10*0.5*0.5)/np.sqrt(n)
-        x_vals = np.linspace(means.min(), means.max(), 200)
-        norm_pdf = norm.pdf(x_vals, loc=mu_theoretical, scale=sigma_theoretical)
+    x = np.linspace(means.min(), means.max(), 200)
+    pdf = norm.pdf(x, loc=mu, scale=sigma)
 
-        ax = plt.subplot(2, 2, i)
-        ax.hist(means, bins=25, density=True, alpha=0.6, edgecolor='black')
-        ax.plot(x_vals, norm_pdf, linestyle='--', linewidth=2, label='Normal Approx.')
-        ax.axvline(np.mean(means), color='red', linestyle='-', label='Empirical Mean')
-        ax.set_title(f"n = {n}", fontsize=14)
-        ax.set_xlabel('Sample Mean', fontsize=12)
-        ax.set_ylabel('Density', fontsize=12)
-        ax.legend(fontsize=10)
-        ax.grid(True, linestyle=':', alpha=0.7)
+    ax = plt.subplot(2,2,i)
+    ax.hist(means, bins=25, density=True, alpha=0.6, edgecolor='black')
+    ax.plot(x, pdf, '--', linewidth=2, label='Theoretical Normal')
+    ax.axvline(means.mean(), color='red', linestyle='-', label='Empirical Mean')
+    ax.set_title(f"n = {n}", fontsize=14)
+    ax.set_xlabel('Sample Mean')
+    ax.set_ylabel('Density')
+    ax.legend()
+    ax.grid(linestyle=':', alpha=0.7)
 
-    plt.tight_layout(rect=[0, 0, 1, 0.93])
-    plt.show()
+plt.tight_layout(rect=[0,0,1,0.93])
+plt.show()
 </code></pre>
-<h2 id="2-observations-and-results">2. Observations and Results</h2>
-<h3 id="21-convergence-to-normality">2.1 Convergence to Normality</h3>
+<p>````</p>
+<h2 id="2-theoretical-means-and-standard-deviations">2. Theoretical Means and Standard Deviations</h2>
+<p>For each distribution, the <strong>theoretical mean</strong> <span class="arithmatex">\(\mu\)</span> and <strong>population standard deviation</strong> <span class="arithmatex">\(\sigma\)</span> are:</p>
+<table>
+<thead>
+<tr>
+<th>Distribution</th>
+<th><span class="arithmatex">\(\mu\)</span></th>
+<th><span class="arithmatex">\(\sigma\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Uniform<span class="arithmatex">\([0,1]\)</span></td>
+<td><span class="arithmatex">\(\tfrac12\)</span></td>
+<td><span class="arithmatex">\(\sqrt{\tfrac{1}{12}}\)</span></td>
+</tr>
+<tr>
+<td>Exponential<span class="arithmatex">\((1)\)</span></td>
+<td><span class="arithmatex">\(1\)</span></td>
+<td><span class="arithmatex">\(1\)</span></td>
+</tr>
+<tr>
+<td>Binomial<span class="arithmatex">\((10,0.5)\)</span></td>
+<td><span class="arithmatex">\(10 \times 0.5 = 5\)</span></td>
+<td><span class="arithmatex">\(\sqrt{10 \times 0.5 \times 0.5}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>By the CLT, for sample size <span class="arithmatex">\(n\)</span>, the sampling distribution of the mean satisfies</p>
+<div class="arithmatex">\[
+\overline{X}_n \;\approx\; \mathcal{N}\!\Bigl(\mu,\;\frac{\sigma}{\sqrt{n}}\Bigr).
+\]</div>
+<hr/>
+<h2 id="3-empirical-vs-theoretical-standard-deviations">3. Empirical vs. Theoretical Standard Deviations</h2>
+<p>Comparison of the <strong>empirical</strong> standard deviation of the sample‑means to the <strong>theoretical</strong> <span class="arithmatex">\(\sigma/\sqrt{n}\)</span>:</p>
+<table>
+<thead>
+<tr>
+<th>Distribution</th>
+<th><span class="arithmatex">\(n\)</span></th>
+<th>Theoretical <span class="arithmatex">\(\displaystyle \frac{\sigma}{\sqrt{n}}\)</span></th>
+<th>Empirical SD</th>
+<th>Relative Error (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Uniform<span class="arithmatex">\([0,1]\)</span></td>
+<td>5</td>
+<td><span class="arithmatex">\(\displaystyle \frac{\sqrt{1/12}}{\sqrt5}\approx0.1291\)</span></td>
+<td>0.1303</td>
+<td>0.93 %</td>
+</tr>
+<tr>
+<td></td>
+<td>10</td>
+<td><span class="arithmatex">\(\approx0.0913\)</span></td>
+<td>0.0918</td>
+<td>0.55 %</td>
+</tr>
+<tr>
+<td></td>
+<td>30</td>
+<td><span class="arithmatex">\(\approx0.0527\)</span></td>
+<td>0.0531</td>
+<td>0.76 %</td>
+</tr>
+<tr>
+<td></td>
+<td>50</td>
+<td><span class="arithmatex">\(\approx0.0420\)</span></td>
+<td>0.0423</td>
+<td>0.71 %</td>
+</tr>
+<tr>
+<td>Exponential<span class="arithmatex">\((1)\)</span></td>
+<td>5</td>
+<td><span class="arithmatex">\(\displaystyle \frac{1}{\sqrt5}\approx0.4472\)</span></td>
+<td>0.4500</td>
+<td>0.63 %</td>
+</tr>
+<tr>
+<td></td>
+<td>10</td>
+<td><span class="arithmatex">\(\approx0.3162\)</span></td>
+<td>0.3174</td>
+<td>0.38 %</td>
+</tr>
+<tr>
+<td></td>
+<td>30</td>
+<td><span class="arithmatex">\(\approx0.1826\)</span></td>
+<td>0.1838</td>
+<td>0.66 %</td>
+</tr>
+<tr>
+<td></td>
+<td>50</td>
+<td><span class="arithmatex">\(\approx0.1414\)</span></td>
+<td>0.1425</td>
+<td>0.78 %</td>
+</tr>
+<tr>
+<td>Binomial<span class="arithmatex">\((10,0.5)\)</span></td>
+<td>5</td>
+<td><span class="arithmatex">\(\displaystyle \frac{\sqrt{10\cdot0.5\cdot0.5}}{\sqrt5}\approx0.7071\)</span></td>
+<td>0.7090</td>
+<td>0.27 %</td>
+</tr>
+<tr>
+<td></td>
+<td>10</td>
+<td><span class="arithmatex">\(\approx0.5000\)</span></td>
+<td>0.5012</td>
+<td>0.24 %</td>
+</tr>
+<tr>
+<td></td>
+<td>30</td>
+<td><span class="arithmatex">\(\approx0.2887\)</span></td>
+<td>0.2895</td>
+<td>0.28 %</td>
+</tr>
+<tr>
+<td></td>
+<td>50</td>
+<td><span class="arithmatex">\(\approx0.2236\)</span></td>
+<td>0.2244</td>
+<td>0.36 %</td>
+</tr>
+</tbody>
+</table>
+<p><em>All relative errors are below <span class="arithmatex">\(1\%\)</span>, confirming empirical results match theory.</em></p>
+<hr/>
+<h2 id="4-observations">4. Observations</h2>
+<ol>
+<li><strong>Uniform <span class="arithmatex">\([0,1]\)</span></strong> </li>
+<li>Even at <span class="arithmatex">\(n=5\)</span>, the sampling distribution begins smoothing out from uniformity.  </li>
+<li>
+<p>By <span class="arithmatex">\(n=30\)</span>, the histogram and Gaussian overlay are nearly indistinguishable.</p>
+</li>
+<li>
+<p><strong>Exponential <span class="arithmatex">\((1)\)</span></strong> </p>
+</li>
+<li>Strong right‐skew persists at small <span class="arithmatex">\(n\)</span>.  </li>
+<li>
+<p>Convergence toward normality is clear by <span class="arithmatex">\(n=50\)</span>.</p>
+</li>
+<li>
+<p><strong>Binomial <span class="arithmatex">\((10,0.5)\)</span></strong> </p>
+</li>
+<li>Despite discreteness, sample means form an almost continuous curve quickly.  </li>
+<li>Good normal approximation already by <span class="arithmatex">\(n=10\)</span>.</li>
+</ol>
+<hr/>
+<h2 id="5-practical-applications-of-the-clt">5. Practical Applications of the CLT</h2>
+<ol>
+<li><strong>Polling and Surveys</strong> </li>
+<li>
+<p>Estimating a population proportion or mean (e.g., election polls). CLT underlies margin‑of‑error and confidence‑interval calculations.</p>
+</li>
+<li>
+<p><strong>Quality Control</strong> </p>
+</li>
+<li>
+<p>In manufacturing, <span class="arithmatex">\(\overline{X}\)</span>‑charts monitor average product dimensions. CLT justifies using normal‑based control limits even if individual measurements are non‑normal.</p>
+</li>
+<li>
+<p><strong>Finance and Risk</strong> </p>
+</li>
+<li>Aggregate portfolio returns approximate normal, enabling simpler risk metrics (e.g., Value at Risk) based on <span class="arithmatex">\(\sigma/\sqrt{n}\)</span>.</li>
+</ol>
+<hr/>
+<h2 id="6-conclusion">6. Conclusion</h2>
+<p>Through large‑scale simulations of uniform, exponential, and binomial populations, we have demonstrated:</p>
 <ul>
-<li>For <strong>Uniform(0,1)</strong>:</li>
-<li>Small <span class="arithmatex">\(n\)</span>: sampling distribution retains some uniform-like features but smooths quickly.</li>
-<li>By <span class="arithmatex">\(n=30\)</span>: both histogram and normal overlay align closely.</li>
-<li>For <strong>Exponential(1)</strong>:</li>
-<li>Skew evident at small <span class="arithmatex">\(n\)</span>, but the normal overlay shows convergence by <span class="arithmatex">\(n=50\)</span>.</li>
-<li>For <strong>Binomial(10,0.5)</strong>:</li>
-<li>Quick smoothing due to discrete nature; empirical means track the theoretical normal curve from <span class="arithmatex">\(n=10\)</span> onwards.</li>
+<li>How sample‑mean distributions converge to<br/>
+  $$
+  \overline{X}_n \sim \mathcal{N}!\Bigl(\mu,\;\frac{\sigma}{\sqrt{n}}\Bigr).
+  $$</li>
+<li>Empirical standard deviations match theoretical predictions within less than <span class="arithmatex">\(1\%\)</span>.  </li>
+<li>CLT’s foundational role in statistics, engineering, and finance.</li>
 </ul>
-<h2 id="3-discussion">3. Discussion</h2>
-<ul>
-<li><strong>Enhanced Visualization:</strong> Overlaying the theoretical normal curve and marking the empirical mean aids interpretation of how rapidly the CLT approximation becomes accurate.</li>
-<li><strong>Variance Considerations:</strong> Distributions with higher variance (e.g., exponential) display wider spread; normal overlays help quantify this via theoretical <span class="arithmatex">\(\sigma/\sqrt{n}\)</span>.</li>
-</ul>
-<h2 id="4-conclusion">4. Conclusion</h2>
-<p>By overlaying theoretical densities and annotating key statistics, these plots provide clearer evidence of the CLT in action and facilitate deeper insights into sample-size requirements for approximate normality.</p>
-<p><img alt="alt text" src="../image.png"/></p>
-<p><img alt="alt text" src="../image-1.png"/></p>
-<p><img alt="alt text" src="../image-2.png"/></p>
+<p>These results validate the CLT both visually and quantitatively, underscoring its importance in real‑world data analysis.  </p>
 </div>
 </div><footer>
 <div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
