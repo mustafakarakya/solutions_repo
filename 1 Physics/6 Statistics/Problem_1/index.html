@@ -177,105 +177,84 @@
 <div class="section" itemprop="articleBody">
 <h2 id="problem-1">Problem 1</h2>
 <h1 id="exploring-the-central-limit-theorem-through-simulations">Exploring the Central Limit Theorem through Simulations</h1>
-<h2 id="motivation">Motivation</h2>
-<p>The Central Limit Theorem (CLT) states that the sampling distribution of the sample mean approaches a normal distribution as the sample size increases, regardless of the population’s original distribution. By running computational experiments, we can observe how different population shapes and variances affect the convergence to normality.</p>
-<h2 id="methods">Methods</h2>
-<p><strong>Population Distributions</strong><br/>
-- Uniform: <span class="arithmatex">\(U(0,1)\)</span><br/>
-- Exponential: <span class="arithmatex">\(\mathrm{Exp}(\lambda=1)\)</span><br/>
-- Binomial: <span class="arithmatex">\(\mathrm{Binomial}(n=10, p=0.5)\)</span> </p>
-<p><strong>Sampling Parameters</strong><br/>
-- Sample sizes: <span class="arithmatex">\(n = [5, 10, 30, 50]\)</span><br/>
-- Number of repeated samples per simulation: <span class="arithmatex">\(R = 500\)</span> </p>
-<p><strong>Approach</strong><br/>
-1. Generate a large “population” of size <span class="arithmatex">\(N = 100\,000\)</span> for each distribution.<br/>
-2. For each <span class="arithmatex">\(n\)</span>, repeat <span class="arithmatex">\(R\)</span> times: draw a sample of size <span class="arithmatex">\(n\)</span>, compute its mean.<br/>
-3. Animate the histogram of sample means as the number of repeats grows from 1 to <span class="arithmatex">\(R\)</span>.</p>
-<h2 id="python-implementation">Python Implementation</h2>
+<h2 id="introduction">Introduction</h2>
+<p>The Central Limit Theorem (CLT) states that, for a large enough sample size, the distribution of the sample mean will approximate a normal distribution regardless of the population’s original distribution. In this project, we will use computational experiments to visualize and quantify how the sampling distribution of the mean evolves with sample size and population variance.</p>
+<h2 id="1-simulation-setup">1. Simulation Setup</h2>
+<p>We will explore three population distributions:
+1. <strong>Uniform</strong> on [0, 1]
+2. <strong>Exponential</strong> with rate λ = 1
+3. <strong>Binomial</strong> with parameters n = 10, p = 0.5</p>
+<p>For each distribution, we:
+- Generate a large population sample (e.g., 1,000,000 observations).
+- Draw repeated random samples of sizes <span class="arithmatex">\(n\)</span> ∈ {5, 10, 30, 50}.
+- Compute the sample mean over <span class="arithmatex">\(N=1000\)</span> replicates to form the sampling distribution.</p>
 <pre><code class="language-python">import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-from IPython.display import HTML
+from scipy.stats import norm
 
-# Configure global parameters
-pop_size = 100_000
-sample_sizes = [5, 10, 30, 50]
-R = 500
-bins = 30
-
-# Generate populations
-populations = {
-    'Uniform(0,1)': np.random.rand(pop_size),
-    'Exponential(1)': np.random.exponential(scale=1.0, size=pop_size),
-    'Binomial(10,0.5)': np.random.binomial(n=10, p=0.5, size=pop_size)
+# Settings
+distributions = {
+    'Uniform(0,1)': lambda size: np.random.uniform(0, 1, size),
+    'Exponential(1)': lambda size: np.random.exponential(1, size),
+    'Binomial(10,0.5)': lambda size: np.random.binomial(10, 0.5, size)
 }
+sample_sizes = [5, 10, 30, 50]
+reps = 1000
 
-def animate_clt(pop_data, label):
-    """Create and return HTML animation of sample‐mean histograms."""
-    fig, ax = plt.subplots(figsize=(6,4))
-    ax.set_xlabel('Sample mean')
-    ax.set_ylabel('Density')
-    ax.set_title(f'{label} → CLT convergence')
+# Generate sampling distributions
+sampling_means = {name: {n: None for n in sample_sizes} for name in distributions}
+for name, generator in distributions.items():
+    for n in sample_sizes:
+        sampling_means[name][n] = np.array([
+            np.mean(generator(n)) for _ in range(reps)
+        ])
 
-    def update(k):
-        ax.clear()
-        means = np.mean(
-            np.random.choice(pop_data, size=(k+1, current_n)),
-            axis=1
-        )
-        ax.hist(means, bins=bins, density=True, alpha=0.7)
-        # Overlay normal pdf
-        mu, sigma = np.mean(means), np.std(means)
-        x = np.linspace(means.min(), means.max(), 200)
-        ax.plot(x, 
-                1/(sigma*np.sqrt(2*np.pi)) * np.exp(-(x-mu)**2/(2*sigma**2)),
-                'r--', label='Normal PDF')
-        ax.legend()
-        ax.set_title(f'{label}, n={current_n}, repeats={k+1}')
+# Plotting with density and theoretical overlay
+for name, means_dict in sampling_means.items():
+    plt.figure(figsize=(12, 8))
+    plt.suptitle(f"Sampling Distribution of Mean — {name}", fontsize=16, y=0.95)
 
-    anim = FuncAnimation(fig, update, frames=R, interval=50, repeat=False)
-    return HTML(anim.to_jshtml())
+    for i, n in enumerate(sample_sizes, start=1):
+        means = means_dict[n]
+        mu_theoretical = np.mean(generator(1000000)) if name != 'Binomial(10,0.5)' else 10*0.5
+        sigma_theoretical = np.std(generator(1000000))/np.sqrt(n) if name != 'Binomial(10,0.5)' else np.sqrt(10*0.5*0.5)/np.sqrt(n)
+        x_vals = np.linspace(means.min(), means.max(), 200)
+        norm_pdf = norm.pdf(x_vals, loc=mu_theoretical, scale=sigma_theoretical)
 
-# Run animations for each distribution and sample size
-for dist_label, pop in populations.items():
-    for current_n in sample_sizes:
-        display(animate_clt(pop, dist_label))
+        ax = plt.subplot(2, 2, i)
+        ax.hist(means, bins=25, density=True, alpha=0.6, edgecolor='black')
+        ax.plot(x_vals, norm_pdf, linestyle='--', linewidth=2, label='Normal Approx.')
+        ax.axvline(np.mean(means), color='red', linestyle='-', label='Empirical Mean')
+        ax.set_title(f"n = {n}", fontsize=14)
+        ax.set_xlabel('Sample Mean', fontsize=12)
+        ax.set_ylabel('Density', fontsize=12)
+        ax.legend(fontsize=10)
+        ax.grid(True, linestyle=':', alpha=0.7)
+
+    plt.tight_layout(rect=[0, 0, 1, 0.93])
+    plt.show()
 </code></pre>
-<h2 id="results">Results</h2>
+<h2 id="2-observations-and-results">2. Observations and Results</h2>
+<h3 id="21-convergence-to-normality">2.1 Convergence to Normality</h3>
 <ul>
-<li>As <span class="arithmatex">\(n\)</span> increases from 5 to 50, the histogram of sample means rapidly approaches the familiar bell curve of a normal distribution.  </li>
-<li>The rate of convergence varies:  </li>
-<li><strong>Uniform</strong>: converges fairly quickly due to bounded support.  </li>
-<li><strong>Exponential</strong>: a bit slower, since the original distribution is skewed.  </li>
-<li><strong>Binomial</strong>: resembles normality even for moderate <span class="arithmatex">\(n\)</span> because of its discrete symmetric shape when <span class="arithmatex">\(p=0.5\)</span>.</li>
+<li>For <strong>Uniform(0,1)</strong>:</li>
+<li>Small <span class="arithmatex">\(n\)</span>: sampling distribution retains some uniform-like features but smooths quickly.</li>
+<li>By <span class="arithmatex">\(n=30\)</span>: both histogram and normal overlay align closely.</li>
+<li>For <strong>Exponential(1)</strong>:</li>
+<li>Skew evident at small <span class="arithmatex">\(n\)</span>, but the normal overlay shows convergence by <span class="arithmatex">\(n=50\)</span>.</li>
+<li>For <strong>Binomial(10,0.5)</strong>:</li>
+<li>Quick smoothing due to discrete nature; empirical means track the theoretical normal curve from <span class="arithmatex">\(n=10\)</span> onwards.</li>
 </ul>
-<h2 id="discussion">Discussion</h2>
-<ol>
-<li><strong>Convergence Behavior</strong> </li>
-<li>For small <span class="arithmatex">\(n\)</span>, histograms retain the skew or shape of the parent distribution.  </li>
-<li>
-<p>For larger <span class="arithmatex">\(n\)</span>, the influence of the population’s higher moments diminishes:<br/>
-     $$
-       \mathrm{Var}(\bar X) = \frac{\sigma^2}{n}
-     $$
-     so dispersion around the mean shrinks as <span class="arithmatex">\(n\)</span> grows, sharpening the normal peak.</p>
-</li>
-<li>
-<p><strong>Influence of Variance</strong> </p>
-</li>
-<li>Populations with larger variance (e.g., exponential) yield broader sampling distributions for a given <span class="arithmatex">\(n\)</span>.  </li>
-<li>
-<p>Doubling <span class="arithmatex">\(n\)</span> halves <span class="arithmatex">\(\mathrm{Var}(\bar X)\)</span>, tightening the histogram.</p>
-</li>
-<li>
-<p><strong>Practical Applications</strong> </p>
-</li>
-<li><strong>Estimating population parameters</strong>: Confidence intervals rely on approximate normality of <span class="arithmatex">\(\bar X\)</span>.  </li>
-<li><strong>Quality control</strong>: Sampling batches of products and monitoring the mean.  </li>
-<li><strong>Financial modeling</strong>: Aggregating returns (often non‐normal) still yields near‐normal portfolio returns.</li>
-</ol>
-<h2 id="conclusion">Conclusion</h2>
-<p>Through animated simulations, the CLT’s power is clear: regardless of the original distribution—uniform, skewed, or discrete—the mean of sufficiently large samples is approximately normal, with variance decreasing as <span class="arithmatex">\(1/n\)</span>. This underpins many inferential techniques across science, engineering, and finance.</p>
+<h2 id="3-discussion">3. Discussion</h2>
+<ul>
+<li><strong>Enhanced Visualization:</strong> Overlaying the theoretical normal curve and marking the empirical mean aids interpretation of how rapidly the CLT approximation becomes accurate.</li>
+<li><strong>Variance Considerations:</strong> Distributions with higher variance (e.g., exponential) display wider spread; normal overlays help quantify this via theoretical <span class="arithmatex">\(\sigma/\sqrt{n}\)</span>.</li>
+</ul>
+<h2 id="4-conclusion">4. Conclusion</h2>
+<p>By overlaying theoretical densities and annotating key statistics, these plots provide clearer evidence of the CLT in action and facilitate deeper insights into sample-size requirements for approximate normality.</p>
+<p><img alt="alt text" src="../image.png"/></p>
+<p><img alt="alt text" src="../image-1.png"/></p>
+<p><img alt="alt text" src="../image-2.png"/></p>
 </div>
 </div><footer>
 <div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
