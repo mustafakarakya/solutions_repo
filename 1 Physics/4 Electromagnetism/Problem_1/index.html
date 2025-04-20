@@ -222,6 +222,42 @@
 <li>Time step: <span class="arithmatex">\(\Delta t = 0.01\ \mathrm{s}\)</span> </li>
 <li>Number of steps: <span class="arithmatex">\(1000\)</span> </li>
 </ul>
+<hr/>
+<h2 id="results">Results</h2>
+<ol>
+<li>
+<p><strong>Uniform Magnetic Field</strong><br/>
+   The particle executes uniform circular motion in the <span class="arithmatex">\(xy\)</span>-plane with radius<br/>
+   $$
+   r_L = \frac{m\,v_0}{q\,B}.
+   $$</p>
+</li>
+<li>
+<p><strong>Parallel Electric &amp; Magnetic Fields</strong><br/>
+   A helical trajectory appears: circular gyration in the <span class="arithmatex">\(xy\)</span>-plane plus linear acceleration along <span class="arithmatex">\(\hat{\mathbf{z}}\)</span>.</p>
+</li>
+<li>
+<p><strong>Crossed Electric &amp; Magnetic Fields</strong><br/>
+   Besides gyration, a steady drift occurs perpendicular to both <span class="arithmatex">\(\mathbf{E}\)</span> and <span class="arithmatex">\(\mathbf{B}\)</span>, with<br/>
+   $$
+   \mathbf{v}_d = \frac{\mathbf{E}\times\mathbf{B}}{B^2}.
+   $$</p>
+</li>
+</ol>
+<h2 id="discussion">Discussion</h2>
+<ul>
+<li><strong>Cyclotrons:</strong> Utilize a uniform magnetic field to bend charged particles into circular orbits; a perpendicular electric field accelerates them across gaps.  </li>
+<li><strong>Magnetic Traps (Penning/Mirrors):</strong> Combine static <span class="arithmatex">\(\mathbf{E}\)</span> and <span class="arithmatex">\(\mathbf{B}\)</span> to confine plasmas; drift motions play critical roles in confinement stability.  </li>
+<li><strong>Mass Spectrometers:</strong> Exploit the dependence of <span class="arithmatex">\(r_L\)</span> on <span class="arithmatex">\(m/q\)</span> to separate ion species by their curvature in a known <span class="arithmatex">\(\mathbf{B}\)</span>.</li>
+</ul>
+<h2 id="extensions">Extensions</h2>
+<ol>
+<li><strong>Non-uniform Fields:</strong> Introduce gradients in <span class="arithmatex">\(\mathbf{B}(r)\)</span> to observe magnetic mirror effects.  </li>
+<li><strong>Relativistic Dynamics:</strong> Modify equations to include Lorentz factor <span class="arithmatex">\(\gamma = (1 - v^2/c^2)^{-1/2}\)</span>.  </li>
+<li><strong>Monte Carlo Ensemble:</strong> Simulate many particles with randomized initial velocities to study beam dynamics or thermal plasmas.  </li>
+<li><strong>Numerical Methods Comparison:</strong> Compare Euler, Runge–Kutta 4, and symplectic integrators for energy conservation.</li>
+</ol>
+<hr/>
 <h2 id="python-implementation">Python Implementation</h2>
 <pre><code class="language-python">import numpy as np
 import matplotlib.pyplot as plt
@@ -313,41 +349,6 @@ if __name__ == '__main__':
         print(f"Saved animation: {sc['filename']} with titles '{sc['title_top']}' and '{sc['title_bottom']}'")
 
 </code></pre>
-<hr/>
-<h2 id="results">Results</h2>
-<ol>
-<li>
-<p><strong>Uniform Magnetic Field</strong><br/>
-   The particle executes uniform circular motion in the <span class="arithmatex">\(xy\)</span>-plane with radius<br/>
-   $$
-   r_L = \frac{m\,v_0}{q\,B}.
-   $$</p>
-</li>
-<li>
-<p><strong>Parallel Electric &amp; Magnetic Fields</strong><br/>
-   A helical trajectory appears: circular gyration in the <span class="arithmatex">\(xy\)</span>-plane plus linear acceleration along <span class="arithmatex">\(\hat{\mathbf{z}}\)</span>.</p>
-</li>
-<li>
-<p><strong>Crossed Electric &amp; Magnetic Fields</strong><br/>
-   Besides gyration, a steady drift occurs perpendicular to both <span class="arithmatex">\(\mathbf{E}\)</span> and <span class="arithmatex">\(\mathbf{B}\)</span>, with<br/>
-   $$
-   \mathbf{v}_d = \frac{\mathbf{E}\times\mathbf{B}}{B^2}.
-   $$</p>
-</li>
-</ol>
-<h2 id="discussion">Discussion</h2>
-<ul>
-<li><strong>Cyclotrons:</strong> Utilize a uniform magnetic field to bend charged particles into circular orbits; a perpendicular electric field accelerates them across gaps.  </li>
-<li><strong>Magnetic Traps (Penning/Mirrors):</strong> Combine static <span class="arithmatex">\(\mathbf{E}\)</span> and <span class="arithmatex">\(\mathbf{B}\)</span> to confine plasmas; drift motions play critical roles in confinement stability.  </li>
-<li><strong>Mass Spectrometers:</strong> Exploit the dependence of <span class="arithmatex">\(r_L\)</span> on <span class="arithmatex">\(m/q\)</span> to separate ion species by their curvature in a known <span class="arithmatex">\(\mathbf{B}\)</span>.</li>
-</ul>
-<h2 id="extensions">Extensions</h2>
-<ol>
-<li><strong>Non-uniform Fields:</strong> Introduce gradients in <span class="arithmatex">\(\mathbf{B}(r)\)</span> to observe magnetic mirror effects.  </li>
-<li><strong>Relativistic Dynamics:</strong> Modify equations to include Lorentz factor <span class="arithmatex">\(\gamma = (1 - v^2/c^2)^{-1/2}\)</span>.  </li>
-<li><strong>Monte Carlo Ensemble:</strong> Simulate many particles with randomized initial velocities to study beam dynamics or thermal plasmas.  </li>
-<li><strong>Numerical Methods Comparison:</strong> Compare Euler, Runge–Kutta 4, and symplectic integrators for energy conservation.</li>
-</ol>
 <hr/>
 <p><img alt="alt text" src="../uniform_magnetic.gif"/></p>
 <p><img alt="alt text" src="../parallel_fields.gif"/></p>
