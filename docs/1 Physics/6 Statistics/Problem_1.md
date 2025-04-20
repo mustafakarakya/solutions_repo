@@ -1,32 +1,28 @@
-# Problem 1
-## Exploring the Central Limit Theorem through Simulations
+## Problem 1
 
-### 1. Motivation
+# Exploring the Central Limit Theorem through Simulations
+
+## Motivation
 
 The Central Limit Theorem (CLT) states that the sampling distribution of the sample mean approaches a normal distribution as the sample size increases, regardless of the population’s original distribution. By running computational experiments, we can observe how different population shapes and variances affect the convergence to normality.
 
----
-
-### 2. Methods
+## Methods
 
 **Population Distributions**  
-- Uniform: \(U(0,1)\)  
-- Exponential: \(\mathrm{Exp}(\lambda=1)\)  
-- Binomial: \(\mathrm{Binomial}(n=10, p=0.5)\)  
+- Uniform: $U(0,1)$  
+- Exponential: $\mathrm{Exp}(\lambda=1)$  
+- Binomial: $\mathrm{Binomial}(n=10, p=0.5)$  
 
 **Sampling Parameters**  
-- Sample sizes: \(n = [5, 10, 30, 50]\)  
-- Number of repeated samples per simulation: \(R = 500\)
+- Sample sizes: $n = [5, 10, 30, 50]$  
+- Number of repeated samples per simulation: $R = 500$  
 
 **Approach**  
-1. Generate a large “population” of size \(N = 100\,000\) for each distribution.  
-2. For each \(n\), repeat \(R\) times: draw a sample of size \(n\), compute its mean.  
-3. Animate the histogram of sample means as the number of repeats grows from 1 to \(R\).
+1. Generate a large “population” of size $N = 100\,000$ for each distribution.  
+2. For each $n$, repeat $R$ times: draw a sample of size $n$, compute its mean.  
+3. Animate the histogram of sample means as the number of repeats grows from 1 to $R$.
 
----
-
-### 3. Python Implementation (in one block)
-
+## Python Implementation
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
@@ -78,39 +74,33 @@ for dist_label, pop in populations.items():
         display(animate_clt(pop, dist_label))
 ```
 
----
+## Results
 
-### 4. Results
-
-- As \(n\) increases from 5 to 50, the histogram of sample means rapidly approaches the familiar bell curve of a normal distribution.
+- As $n$ increases from 5 to 50, the histogram of sample means rapidly approaches the familiar bell curve of a normal distribution.  
 - The rate of convergence varies:  
   - **Uniform**: converges fairly quickly due to bounded support.  
   - **Exponential**: a bit slower, since the original distribution is skewed.  
-  - **Binomial**: resembles normality even for moderate \(n\) because of its discrete symmetric shape when \(p=0.5\).
+  - **Binomial**: resembles normality even for moderate $n$ because of its discrete symmetric shape when $p=0.5$.
 
----
-
-### 5. Discussion
+## Discussion
 
 1. **Convergence Behavior**  
-   - For small \(n\), histograms retain the skew or shape of the parent distribution.  
-   - For larger \(n\), the influence of the population’s higher moments diminishes:  
+   - For small $n$, histograms retain the skew or shape of the parent distribution.  
+   - For larger $n$, the influence of the population’s higher moments diminishes:  
      $$
-       \mathrm{Var}(\bar X) = \frac{\sigma^2}{n}\,,
+       \mathrm{Var}(\bar X) = \frac{\sigma^2}{n}
      $$
-     so dispersion around the mean shrinks as \(n\) grows, sharpening the normal peak.
+     so dispersion around the mean shrinks as $n$ grows, sharpening the normal peak.
 
 2. **Influence of Variance**  
-   - Populations with larger variance (e.g., exponential) yield broader sampling distributions for a given \(n\).  
-   - Doubling \(n\) halves \(\mathrm{Var}(\bar X)\), tightening the histogram.
+   - Populations with larger variance (e.g., exponential) yield broader sampling distributions for a given $n$.  
+   - Doubling $n$ halves $\mathrm{Var}(\bar X)$, tightening the histogram.
 
 3. **Practical Applications**  
-   - **Parameter Estimation**: Confidence intervals rely on approximate normality of \(\bar X\).  
-   - **Quality Control**: Sampling batches of products and monitoring the mean.  
-   - **Financial Modeling**: Aggregating returns (often non‐normal) still yields near‐normal portfolio returns.
+   - **Estimating population parameters**: Confidence intervals rely on approximate normality of $\bar X$.  
+   - **Quality control**: Sampling batches of products and monitoring the mean.  
+   - **Financial modeling**: Aggregating returns (often non‐normal) still yields near‐normal portfolio returns.
 
----
+## Conclusion
 
-### 6. Conclusion
-
-Through animated simulations, the CLT’s power is clear: regardless of the original distribution—uniform, skewed, or discrete—the mean of sufficiently large samples is approximately normal, with variance decreasing as \(1/n\). This underpins many inferential techniques across science, engineering, and finance.
+Through animated simulations, the CLT’s power is clear: regardless of the original distribution—uniform, skewed, or discrete—the mean of sufficiently large samples is approximately normal, with variance decreasing as $1/n$. This underpins many inferential techniques across science, engineering, and finance.
