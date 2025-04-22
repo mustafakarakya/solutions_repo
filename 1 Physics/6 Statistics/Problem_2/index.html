@@ -6,13 +6,13 @@
 <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <link href="../../../img/favicon.ico" rel="shortcut icon"/>
-<title>Problem 2 - Physics and Mathematics</title>
+<title>Estimating π via Monte Carlo Circle Sampling - Physics and Mathematics</title>
 <link href="../../../css/theme.css" rel="stylesheet"/>
 <link href="../../../css/theme_extra.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
 <script>
         // Current page data
-        var mkdocs_page_name = "Problem 2";
+        var mkdocs_page_name = "Estimating \u03c0 via Monte Carlo Circle Sampling";
         var mkdocs_page_input_path = "1 Physics/6 Statistics/Problem_2.md";
         var mkdocs_page_url = null;
       </script>
@@ -88,8 +88,20 @@
 <ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../Problem_1/">Problem 1</a>
 </li>
-<li class="toctree-l2 current"><a class="reference internal current" href="#">Problem 2</a>
+<li class="toctree-l2 current"><a class="reference internal current" href="#">Estimating π via Monte Carlo Circle Sampling</a>
 <ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="#task-option-1-unitcircle-monte-carlo">Task Option 1: Unit‑Circle Monte Carlo</a>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#1-theoretical-background">1. Theoretical Background</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#2-python-script">2. Python Script</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#3-visualization">3. Visualization</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#4-convergence-rate">4. Convergence Rate</a>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -167,7 +179,7 @@
 <li><a aria-label="Docs" class="icon icon-home" href="../../.."></a></li>
 <li class="breadcrumb-item">1 Physics</li>
 <li class="breadcrumb-item">6 Statistics</li>
-<li class="breadcrumb-item active">Problem 2</li>
+<li class="breadcrumb-item active">Estimating π via Monte Carlo Circle Sampling</li>
 <li class="wy-breadcrumbs-aside">
 </li>
 </ul>
@@ -175,7 +187,110 @@
 </div>
 <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
 <div class="section" itemprop="articleBody">
-<h1 id="problem-2">Problem 2</h1>
+<h1 id="estimating-via-monte-carlo-circle-sampling">Estimating π via Monte Carlo Circle Sampling</h1>
+<h2 id="task-option-1-unitcircle-monte-carlo">Task Option 1: Unit‑Circle Monte Carlo</h2>
+<h3 id="1-theoretical-background">1. Theoretical Background</h3>
+<p>A unit circle of radius 1 has area<br/>
+$$
+A_\text{circle} = \pi \times 1^2 = \pi.
+$$<br/>
+If we sample <span class="arithmatex">\(N\)</span> points uniformly in the square <span class="arithmatex">\([0,1]\times[0,1]\)</span>, the fraction that land inside the quarter‑circle <span class="arithmatex">\(x^2 + y^2 \le 1\)</span> approximates<br/>
+$$
+\frac{N_{\rm in}}{N} \approx \frac{A_\text{quarter‑circle}}{1} = \frac{\pi}{4}.
+$$<br/>
+Therefore,<br/>
+$$
+\boxed{\pi \approx 4 \;\frac{N_{\rm in}}{N}}.
+$$</p>
+<h3 id="2-python-script">2. Python Script</h3>
+<ul>
+<li>Estimate π via circle sampling.  </li>
+<li>Display &amp; save a scatter plot of points.  </li>
+<li>Show convergence of the estimate as <span class="arithmatex">\(N\)</span> increases.</li>
+</ul>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+def estimate_pi_monte_carlo(N):
+    """
+    Estimate π by sampling N points in [0,1]^2
+    and counting how many fall inside x^2 + y^2 ≤ 1.
+    """
+    pts = np.random.rand(N, 2)
+    inside = np.sum(pts[:,0]**2 + pts[:,1]**2 &lt;= 1.0)
+    return 4 * inside / N
+
+def plot_monte_carlo(N, save_path=None):
+    """
+    Plot N random points in [0,1]^2, coloring those inside the quarter‑circle.
+    """
+    pts = np.random.rand(N, 2)
+    d2  = np.sum(pts**2, axis=1)
+    inside  = pts[d2 &lt;= 1]
+    outside = pts[d2 &gt;  1]
+
+    fig, ax = plt.subplots(figsize=(6,6))
+    ax.scatter(outside[:,0], outside[:,1], s=1, label='Outside')
+    ax.scatter( inside[:,0],  inside[:,1], s=1, label='Inside')
+    ax.add_patch(plt.Circle((0,0),1, fill=False, linewidth=1))
+    ax.set_aspect('equal', 'box')
+    ax.legend()
+    ax.set_title(f'Monte Carlo π (N={N:,})')
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.show()
+
+def convergence_curve(method, Ns, trials=5, save_path=None):
+    """
+    Plot convergence of π estimates vs. trial counts Ns for a given method.
+    """
+    means, stds = [], []
+    for N in Ns:
+        estimates = [method(N) for _ in range(trials)]
+        means.append(np.nanmean(estimates))
+        stds .append(np.nanstd(estimates))
+    fig, ax = plt.subplots()
+    ax.errorbar(Ns, means, yerr=stds, fmt='o-', capsize=3)
+    ax.set_xscale('log')
+    ax.set_xlabel('Number of samples $N$')
+    ax.set_ylabel('Estimated π ±1σ')
+    ax.axhline(np.pi, color='gray', linestyle='--', label='True π')
+    ax.legend()
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.show()
+
+if __name__ == "__main__":
+    np.random.seed(0)
+
+    # 1) Estimate π
+    N_samples = 100_000
+    pi_est = estimate_pi_monte_carlo(N_samples)
+    print(f"Monte Carlo π estimate (N={N_samples:,}): {pi_est:.6f}")
+
+    # 2) Scatter plot
+    plot_monte_carlo(N_samples, save_path="monte_carlo_scatter.png")
+
+    # 3) Convergence analysis
+    sample_counts = [10**3, 10**4, 10**5, 10**6]
+    convergence_curve(estimate_pi_monte_carlo, sample_counts, trials=5,
+                      save_path="monte_carlo_convergence.png")
+</code></pre>
+<h3 id="3-visualization">3. Visualization</h3>
+<ul>
+<li><strong>Scatter Plot</strong>: Displays <span class="arithmatex">\(N\)</span> points in <span class="arithmatex">\([0,1]^2\)</span>, with  </li>
+<li>Points satisfying <span class="arithmatex">\(x^2 + y^2 \le 1\)</span> colored differently from those with <span class="arithmatex">\(x^2 + y^2 &gt; 1\)</span>.  </li>
+<li>A quarter‑circle arc of radius 1 is overlaid to show the sampling region.  </li>
+<li><strong>Convergence Plot</strong>: Plots the estimated <span class="arithmatex">\(\pi\)</span> versus sample size <span class="arithmatex">\(N\)</span> on a log scale, with  </li>
+<li>Error bars representing <span class="arithmatex">\(\pm1\sigma\)</span> from repeated trials.  </li>
+<li>A dashed horizontal line at the true value <span class="arithmatex">\(\pi\)</span> for reference.</li>
+</ul>
+<h3 id="4-convergence-rate">4. Convergence Rate</h3>
+<p>The standard error (SE) of the Monte Carlo estimate decays as
+$$
+\mathrm{SE} \;\sim\; O!\bigl(N^{-1/2}\bigr).
+$$<br/>
+In practical terms, to reduce the error by one additional decimal digit (i.e.\ by a factor of 10), one must increase the number of samples by approximately <span class="arithmatex">\(10^2 = 100\)</span>.</p>
 </div>
 </div><footer>
 <div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
