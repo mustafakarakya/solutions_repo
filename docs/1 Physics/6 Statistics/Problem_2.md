@@ -39,6 +39,12 @@ $$
 
 A scatter plot distinguishes points inside the unit circle (in **blue**) from those outside (in **orange**), overlaid with the circle boundary.
 
+![alt text](<pi_estimation (1).gif>)
+
+
+![alt text](image-6.png)
+
+
 ##### 4. Analysis
 
 - **Convergence Rate:** The standard error of $\hat\pi$ scales like $O(1/\sqrt{N})$.  
@@ -86,6 +92,11 @@ where $N$ is the total number of drops and $N_{\text{cross}}$ is the count of cr
 ##### 3. Visualization
 
 Graphical representation of the simulation, showing the needle positions relative to the lines, colored **red** if they cross and **blue** if they do not.
+
+![alt text](image-7.png)
+
+
+![alt text](image-8.png)
 
 ##### 4. Analysis
 
@@ -257,21 +268,15 @@ if __name__ == '__main__':
 
 #### Convergence Analysis (Example Results)
 
-| $N$     | $\hat\pi_{\rm circle}$ | $\mathrm{Error}_c$ | $\hat\pi_{\rm buffon}$ | $\mathrm{Error}_b$ |
-|:-------:|:----------------------:|:------------------:|:----------------------:|:------------------:|
-| 1 000   | 3.148296               | 0.006703           | 3.120812               | 0.020781           |
-| 10 000  | 3.142800               | 0.001207           | 3.137600               | 0.003993           |
-| 100 000 | 3.141570               | 0.000023           | 3.144320               | 0.002728           |
-
-
----
+|   \$N\$ | \$\pi\_{\rm circle}\$ | Error$\_c\$ | \$\pi\_{\rm buffon}\$ | Error$\_b\$ |
+| ------: | --------------------: | ----------: | --------------------: | ----------: |
+|   1 000 |              3.148296 |    0.006703 |              3.120812 |    0.020781 |
+|  10 000 |              3.142800 |    0.001793 |              3.137600 |    0.004000 |
+| 100 000 |              3.141570 |    0.000022 |              3.144320 |    0.002727 |
 
 ---
 
-![alt text](<pi_estimation (1).gif>)
 
-![alt text](image-6.png)
 
-![alt text](image-7.png)
 
-![alt text](image-8.png)
+
