@@ -237,6 +237,8 @@ $$</p>
 </ul>
 <h5 id="3-visualization">3. Visualization</h5>
 <p>A scatter plot distinguishes points inside the unit circle (in <strong>blue</strong>) from those outside (in <strong>orange</strong>), overlaid with the circle boundary.</p>
+<p><img alt="alt text" src="../pi_estimation%20%281%29.gif"/></p>
+<p><img alt="alt text" src="../image-6.png"/></p>
 <h5 id="4-analysis">4. Analysis</h5>
 <ul>
 <li><strong>Convergence Rate:</strong> The standard error of <span class="arithmatex">\(\hat\pi\)</span> scales like <span class="arithmatex">\(O(1/\sqrt{N})\)</span>.  </li>
@@ -275,6 +277,8 @@ P(\text{crossing})
 </ul>
 <h5 id="3-visualization_1">3. Visualization</h5>
 <p>Graphical representation of the simulation, showing the needle positions relative to the lines, colored <strong>red</strong> if they cross and <strong>blue</strong> if they do not.</p>
+<p><img alt="alt text" src="../image-7.png"/></p>
+<p><img alt="alt text" src="../image-8.png"/></p>
 <h5 id="4-analysis_1">4. Analysis</h5>
 <ul>
 <li><strong>Convergence Rate:</strong> Also <span class="arithmatex">\(O(1/\sqrt{N})\)</span>, but typically with a larger constant—more variability per trial.  </li>
@@ -441,43 +445,38 @@ if __name__ == '__main__':
 <table>
 <thead>
 <tr>
-<th style="text-align: center;"><span class="arithmatex">\(N\)</span></th>
-<th style="text-align: center;"><span class="arithmatex">\(\hat\pi_{\rm circle}\)</span></th>
-<th style="text-align: center;"><span class="arithmatex">\(\mathrm{Error}_c\)</span></th>
-<th style="text-align: center;"><span class="arithmatex">\(\hat\pi_{\rm buffon}\)</span></th>
-<th style="text-align: center;"><span class="arithmatex">\(\mathrm{Error}_b\)</span></th>
+<th style="text-align: right;">$N$</th>
+<th style="text-align: right;">$\pi_{\rm circle}$</th>
+<th style="text-align: right;">Error$_c$</th>
+<th style="text-align: right;">$\pi_{\rm buffon}$</th>
+<th style="text-align: right;">Error$_b$</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;">1 000</td>
-<td style="text-align: center;">3.148296</td>
-<td style="text-align: center;">0.006703</td>
-<td style="text-align: center;">3.120812</td>
-<td style="text-align: center;">0.020781</td>
+<td style="text-align: right;">1 000</td>
+<td style="text-align: right;">3.148296</td>
+<td style="text-align: right;">0.006703</td>
+<td style="text-align: right;">3.120812</td>
+<td style="text-align: right;">0.020781</td>
 </tr>
 <tr>
-<td style="text-align: center;">10 000</td>
-<td style="text-align: center;">3.142800</td>
-<td style="text-align: center;">0.001207</td>
-<td style="text-align: center;">3.137600</td>
-<td style="text-align: center;">0.003993</td>
+<td style="text-align: right;">10 000</td>
+<td style="text-align: right;">3.142800</td>
+<td style="text-align: right;">0.001793</td>
+<td style="text-align: right;">3.137600</td>
+<td style="text-align: right;">0.004000</td>
 </tr>
 <tr>
-<td style="text-align: center;">100 000</td>
-<td style="text-align: center;">3.141570</td>
-<td style="text-align: center;">0.000023</td>
-<td style="text-align: center;">3.144320</td>
-<td style="text-align: center;">0.002728</td>
+<td style="text-align: right;">100 000</td>
+<td style="text-align: right;">3.141570</td>
+<td style="text-align: right;">0.000022</td>
+<td style="text-align: right;">3.144320</td>
+<td style="text-align: right;">0.002727</td>
 </tr>
 </tbody>
 </table>
 <hr/>
-<hr/>
-<p><img alt="alt text" src="../pi_estimation%20%281%29.gif"/></p>
-<p><img alt="alt text" src="../image-6.png"/></p>
-<p><img alt="alt text" src="../image-7.png"/></p>
-<p><img alt="alt text" src="../image-8.png"/></p>
 </div>
 </div><footer>
 <div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
